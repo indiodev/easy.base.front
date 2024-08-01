@@ -1,0 +1,122 @@
+{
+    "version": "1",
+    "form": {
+        "key": "Screen",
+        "type": "Screen",
+        "props": {},
+        "children": [
+            {
+                "key": "RsInput 1",
+                "type": "RsInput",
+                "props": {
+                    "label": {
+                        "value": "Titulo"
+                    }
+                }
+            },
+            {
+                "key": "RsDropdown 1",
+                "type": "RsDropdown",
+                "props": {
+                    "label": {
+                        "value": "Categoria"
+                    },
+                    "placeholder": {
+                        "value": "Selecione"
+                    },
+                    "data": {
+                        "value": [
+                            {
+                                "value": "Historia",
+                                "label": "Historia"
+                            },
+                            {
+                                "value": "Tecnologia",
+                                "label": "Tecnologia"
+                            },
+                            {
+                                "value": "Matematica",
+                                "label": "Matematica"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "key": "RsDatePicker 1",
+                "type": "RsDatePicker",
+                "props": {
+                    "label": {
+                        "value": "Publicacao"
+                    },
+                    "appearance": {
+                        "value": "default"
+                    },
+                    "format": {
+                        "value": "yyyy-MM-dd"
+                    }
+                }
+            },
+            {
+                "key": "RsContainer 1",
+                "type": "RsContainer",
+                "props": {},
+                "css": {
+                    "any": {
+                        "object": {
+                            "flexDirection": "row"
+                        }
+                    }
+                },
+                "children": [
+                    {
+                        "key": "RsButton 1",
+                        "type": "RsButton",
+                        "props": {
+                            "appearance": {
+                                "value": "default"
+                            },
+                            "children": {
+                                "value": "Resetar"
+                            }
+                        },
+                        "events": {
+                            "onClick": [
+                                {
+                                    "name": "reset",
+                                    "type": "common"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "key": "RsButton 2",
+                        "type": "RsButton",
+                        "props": {
+                            "appearance": {
+                                "value": "primary"
+                            },
+                            "children": {
+                                "value": "Enviar"
+                            }
+                        },
+                        "events": {
+                            "onClick": []
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "localization": {},
+    "languages": [
+        {
+            "code": "en",
+            "dialect": "US",
+            "name": "English",
+            "description": "American English",
+            "bidi": "ltr"
+        }
+    ],
+    "defaultLanguage": "en-US"
+}
