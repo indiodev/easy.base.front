@@ -1,16 +1,16 @@
-import { FormType } from "@/contexts/types"
-import api from "@/utils/api"
+import { FormType } from "@/contexts/types";
+import { API } from "@/utils/api";
 
 export async function GetFormById(id: string) {
+  //check user is logged in
 
-    //check user is logged in
-
-    await api.get(`/form/${id}`).then((response) => {
-        return response.data as FormType
-    }).catch((error) => {
-        throw Error(error.response.data.message)
+  await API.get(`/form/${id}`)
+    .then((response) => {
+      return response.data as FormType;
     })
+    .catch((error) => {
+      throw Error(error.response.data.message);
+    });
 
-    return {} as FormType
-
+  return {} as FormType;
 }

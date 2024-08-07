@@ -1,18 +1,14 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
+  //   const token = sessionStorage.getItem("GBD-TOKEN");
 
-    let cookie = request.cookies.get('gbd-user')
+  //   if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
-
-    if (!cookie)
-        return NextResponse.redirect(new URL('/login', request.url))
-
-    return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/((?!register|api|reset-password|login|form|_next/*|$).*)"],
+  matcher: ["/((?!register|api|reset-password|login|form|_next/*|$).*)"],
 };
