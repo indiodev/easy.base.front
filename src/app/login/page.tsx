@@ -2,7 +2,6 @@
 
 import logo from "@/assets/logo.svg";
 import { API } from "@/utils/api";
-import { useCookies } from "next-client-cookies";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,7 @@ export default function Login() {
 
   const router = useRouter();
 
-  const cookies = useCookies();
+  //   const cookies = useCookies();
 
   function login() {
     setLoading(true);
@@ -31,10 +30,6 @@ export default function Login() {
         if (response.data.erro) {
           toast.error("Credenciais inválidas!");
         } else {
-          sessionStorage.setItem(
-            "GBD-TOKEN",
-            JSON.stringify(response.data.token)
-          );
           toast.success("Autenticado com sucesso!");
 
           router.replace("/app/dashboard");

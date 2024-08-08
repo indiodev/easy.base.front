@@ -56,8 +56,6 @@ export const SidebarMenu = memo(function () {
   }
 
   function logout() {
-    sessionStorage.clear();
-
     router.replace("/login");
   }
 
