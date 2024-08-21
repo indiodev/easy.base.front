@@ -1,20 +1,31 @@
-"use client"
+"use client";
 
+import { API } from "@/utils/api";
+import {
+  PencilSquareIcon,
+  PlusCircleIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import { Button, Card, Label, TextInput, Tooltip } from "flowbite-react";
-import { NewRowModal } from "./NewRowModal";
-import { startTransition, useState } from "react";
-import { PencilSquareIcon, PlusCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { DeleteModal } from "../Modal/DeleteModal";
-import api from "@/utils/api";
 import { useParams, useRouter } from "next/navigation";
+import { startTransition, useState } from "react";
 import { toast } from "react-toastify";
 import { CreateFormBtn } from "../Modal/CreateFormBtn";
+import { DeleteModal } from "../Modal/DeleteModal";
+import { NewRowModal } from "./NewRowModal";
 
-const MenuTable = ({ columnFilters, setColumnFilters, fields, globalFilter, setGlobalFilter, reload, tableName, tableId }: any) => {
-
-
-  const router = useRouter()
-  const { id } = useParams<{ id: string; }>() || { id: null }
+const MenuTable = ({
+  columnFilters,
+  setColumnFilters,
+  fields,
+  globalFilter,
+  setGlobalFilter,
+  reload,
+  tableName,
+  tableId,
+}: any) => {
+  const router = useRouter();
+  const { id } = useParams<{ id: string }>() || { id: null };
   const [newRowModal, setNewRowModal] = useState(false);
   const [deleteTableModal, setDeleteTableModal] = useState(false);
 
@@ -29,50 +40,59 @@ const MenuTable = ({ columnFilters, setColumnFilters, fields, globalFilter, setG
     );
 
   function handleNewRow() {
-    setNewRowModal(true)
+    setNewRowModal(true);
   }
 
   function handleDeleteTable() {
-    setDeleteTableModal(true)
+    setDeleteTableModal(true);
   }
 
   function handleEditTable() {
-    toast.info('Ação em manutenção! Tente novamente mais tarde.');
+    toast.info("Ação em manutenção! Tente novamente mais tarde.");
   }
 
   function handleDelete() {
-
-    api.delete(`/tables/${id}`, {
+    API.delete(`/tables/${id}`, {
       data: { id },
-    }).then(data => {
-      if (data.data.erro)
-        toast.error('Erro ao tentar remover tabela!');
-      else {
-        // console.log(data.data)
-        toast.success('Tabela removida com sucesso!');
+    })
+      .then((data) => {
+        if (data.data.erro) toast.error("Erro ao tentar remover tabela!");
+        else {
+          // console.log(data.data)
+          toast.success("Tabela removida com sucesso!");
 
-        startTransition(() => {
-          router.replace(`/app/dashboard`)
-        });
+          startTransition(() => {
+            router.replace(`/app/dashboard`);
+          });
 
-        router.refresh()
-      }
-
-    }).catch(err => {
-      console.log(err)
-      toast.error('Não foi possivel remover a tabela. Tente novamente mais tarde.');
-    }).finally(() => {
-      setDeleteTableModal(false)
-    });
+          router.refresh();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error(
+          "Não foi possivel remover a tabela. Tente novamente mais tarde."
+        );
+      })
+      .finally(() => {
+        setDeleteTableModal(false);
+      });
   }
 
-
   return (
+    <Card>
+      <NewRowModal
+        onReload={reload}
+        fields={fields}
+        setOpen={setNewRowModal}
+        open={newRowModal}
+      />
 
-    <Card >
-      <NewRowModal onReload={reload} fields={fields} setOpen={setNewRowModal} open={newRowModal} />
-
-      <DeleteModal confirm={handleDelete} open={deleteTableModal} setOpen={setDeleteTableModal} />
+      <DeleteModal
+        confirm={handleDelete}
+        open={deleteTableModal}
+        setOpen={setDeleteTableModal}
+      />
 
       <div className="flex flex-row justify-between">
         <div className="flex flex-row items-center gap-4">
@@ -87,9 +107,11 @@ const MenuTable = ({ columnFilters, setColumnFilters, fields, globalFilter, setG
         </div>
 
         <div className="flex gap-2">
-
           <Tooltip content="Criar formulario">
-            <CreateFormBtn tableId={tableId} tableName={tableName}></CreateFormBtn>
+            <CreateFormBtn
+              tableId={tableId}
+              tableName={tableName}
+            ></CreateFormBtn>
           </Tooltip>
 
           <Tooltip content="Novo registro">
@@ -100,7 +122,11 @@ const MenuTable = ({ columnFilters, setColumnFilters, fields, globalFilter, setG
 
           <Tooltip content="Editar tabela">
             <Button color="gray">
-              <PencilSquareIcon height="20" width="20" onClick={handleEditTable} />
+              <PencilSquareIcon
+                height="20"
+                width="20"
+                onClick={handleEditTable}
+              />
             </Button>
           </Tooltip>
 
@@ -109,21 +135,13 @@ const MenuTable = ({ columnFilters, setColumnFilters, fields, globalFilter, setG
               <TrashIcon height="20" width="20" />
             </Button>
           </Tooltip>
-
-
-
-
-
         </div>
-
       </div>
       {/* <FilterPopover
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
         /> */}
-
     </Card>
-
   );
 };
 export default MenuTable;

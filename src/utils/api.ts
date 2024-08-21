@@ -1,7 +1,25 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from "axios";
 
-const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BASE_URL
-}) as AxiosInstance;
+const API = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  withCredentials: true,
+});
 
-export default api;
+API.interceptors.request.use((config) => {
+  return config;
+});
+
+API.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error?.response?.data?.code === 401) {
+      console.error(error);
+      console.log("Erro 401");
+    }
+    return Promise.reject(error);
+  }
+);
+
+export { API };
