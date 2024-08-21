@@ -36,6 +36,7 @@ export type TableComponentType = {
 
 export function TableComponent({ id, tableData, reload }: TableComponentType) {
   const router = useRouter();
+  console.log(id, tableData);
 
   const [loading, setLoading] = useState(false);
 
@@ -219,106 +220,111 @@ export function TableComponent({ id, tableData, reload }: TableComponentType) {
         tableId={tableData.id}
         tableName={tableData.title}
       />
-
       <DeleteModal
         confirm={deleteRow}
         open={deleteModalOpen}
         setOpen={setDeleteModalOpen}
       ></DeleteModal>
 
-      <Table className="w-full tw-flex-1 bg-gray-100 rounded-lg ">
-        {table.getHeaderGroups().map((headerGroup) => (
-          <Table.Head key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <Table.HeadCell key={header.id}>
-                <div className="flex flex-row gap-2 py-2">
-                  {header.column.columnDef.header as any}
-                  {header.column.getCanSort() && (
-                    <SortIcon
-                      className="h-4 w-4 cursor-pointer"
-                      onClick={header.column.getToggleSortingHandler()}
-                    />
-                  )}
-                </div>
-                <div
-                  onMouseDown={header.getResizeHandler()}
-                  onTouchStart={header.getResizeHandler()}
-                  className={`resizer ${
-                    header.column.getIsResizing() ? "isResizing" : ""
-                  }`}
-                />
-                <div>
-                  <FilterColumn column={header.column} />
-                </div>
-              </Table.HeadCell>
-            ))}
-            <Table.HeadCell>
-              <div className="flex gap-2 w-full h-10 text-center items-center justify-items-center">
-                Ações
-              </div>
-              <div className="h-8"></div>
-            </Table.HeadCell>
-          </Table.Head>
-        ))}
-        <Table.Body>
-          {table
-            .getRowModel()
-            .rows.map(
-              (row: {
-                id: any;
-                getVisibleCells: () => any[];
-                index: number;
-              }) => (
-                <Table.Row key={row.id}>
-                  {row.getVisibleCells().map(
-                    (cell: {
-                      column: {
-                        getSize: () => any;
-                        columnDef: { cell: any };
-                      };
-                      id: any;
-                      getContext: () => any;
-                    }) => (
-                      <Table.Cell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Table.Cell>
-                    )
-                  )}
-                  <Table.Cell align="center">
-                    <div className="flex gap-2 min-w-52">
-                      {toBeSaved.includes(row.index) && (
-                        <div className="flex gap-2">
-                          <Button
-                            color="green"
-                            onClick={() => saveChange(row.index)}
-                          >
-                            <CheckCircleIcon height="20" width="20" />
-                          </Button>
-                          <Button
-                            color="gray"
-                            onClick={() => dismissChange(row.index)}
-                          >
-                            <XCircleIcon height="20" width="20" />
-                          </Button>
-                        </div>
-                      )}
+      <section className="bg-gray-50 rounded-lg tw-flex-1 flex flex-col gap-2">
+        <div className="pl-4 pt-4 font-semibold">
+          <h2>{tableData?.title}</h2>
+        </div>
 
-                      <Button
-                        onClick={() => handleDeleteRow(row.id)}
-                        color="red"
-                      >
-                        <TrashIcon height="20" width="20" />
-                      </Button>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              )
-            )}
-        </Table.Body>
-      </Table>
+        <Table className="w-full bg-transparent">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Table.Head key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <Table.HeadCell key={header.id}>
+                  <div className="flex flex-row gap-2 py-2">
+                    {header.column.columnDef.header as any}
+                    {header.column.getCanSort() && (
+                      <SortIcon
+                        className="h-4 w-4 cursor-pointer"
+                        onClick={header.column.getToggleSortingHandler()}
+                      />
+                    )}
+                  </div>
+                  <div
+                    onMouseDown={header.getResizeHandler()}
+                    onTouchStart={header.getResizeHandler()}
+                    className={`resizer ${
+                      header.column.getIsResizing() ? "isResizing" : ""
+                    }`}
+                  />
+                  <div>
+                    <FilterColumn column={header.column} />
+                  </div>
+                </Table.HeadCell>
+              ))}
+              <Table.HeadCell>
+                <div className="flex gap-2 w-full h-10 text-center items-center justify-items-center">
+                  Ações
+                </div>
+                <div className="h-8"></div>
+              </Table.HeadCell>
+            </Table.Head>
+          ))}
+          <Table.Body>
+            {table
+              .getRowModel()
+              .rows.map(
+                (row: {
+                  id: any;
+                  getVisibleCells: () => any[];
+                  index: number;
+                }) => (
+                  <Table.Row key={row.id}>
+                    {row.getVisibleCells().map(
+                      (cell: {
+                        column: {
+                          getSize: () => any;
+                          columnDef: { cell: any };
+                        };
+                        id: any;
+                        getContext: () => any;
+                      }) => (
+                        <Table.Cell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Table.Cell>
+                      )
+                    )}
+                    <Table.Cell align="center">
+                      <div className="flex gap-2 min-w-52">
+                        {toBeSaved.includes(row.index) && (
+                          <div className="flex gap-2">
+                            <Button
+                              color="green"
+                              onClick={() => saveChange(row.index)}
+                            >
+                              <CheckCircleIcon height="20" width="20" />
+                            </Button>
+                            <Button
+                              color="gray"
+                              onClick={() => dismissChange(row.index)}
+                            >
+                              <XCircleIcon height="20" width="20" />
+                            </Button>
+                          </div>
+                        )}
+
+                        <Button
+                          onClick={() => handleDeleteRow(row.id)}
+                          color="red"
+                        >
+                          <TrashIcon height="20" width="20" />
+                        </Button>
+                      </div>
+                    </Table.Cell>
+                  </Table.Row>
+                )
+              )}
+          </Table.Body>
+        </Table>
+      </section>
 
       <div className="flex flex-col w-full h-full justify-end items-end pb-4">
         <br />
