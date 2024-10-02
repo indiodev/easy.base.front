@@ -38,7 +38,7 @@ export function New(): React.ReactElement {
 					queryKey: [QUERY.TABLE_LIST],
 				});
 				navigate({
-					pathname: `${location.pathname?.replace('/new', '')}/${data.id}`,
+					pathname: `${location.pathname?.replace('/new', '')}/${data._id}`,
 				});
 			},
 		});
