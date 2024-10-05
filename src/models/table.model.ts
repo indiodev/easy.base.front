@@ -6,7 +6,7 @@ export interface Table {
 	id: string;
 	title: string;
 	identifier: string;
-	config: Object | null;
+	config: object | null;
 	category: string | null;
 	status: string | null;
 	created_at: string;
