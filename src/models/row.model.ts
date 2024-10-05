@@ -1,7 +1,7 @@
 export interface Row {
 	_id: string;
 	value: Record<string, number | string>;
-	config: Object | null;
+	config: object | null;
 	createdAt: string;
 	updatedAt: string | null;
 	deletedAt: string | null;

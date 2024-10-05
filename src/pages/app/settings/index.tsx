@@ -7,7 +7,7 @@ export function Settings(): React.ReactElement {
 				strokeWidth={0.5}
 				className="animate-bounce w-32 h-32 stroke-indigo-500"
 			/>
-			<h2 className="text-xl font-bold text-indigo-500"> Em manuntenção</h2>
+			<h2 className="text-xl font-bold text-indigo-500"> Em manutenção</h2>
 		</div>
 	);
 }

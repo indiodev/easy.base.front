@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button } from '@components/ui/button';
 import {
 	DropdownMenu,
@@ -42,17 +43,16 @@ interface Props {
 	rows: Row[];
 }
 
-
 function normalizeRows(props: Row) {
+	const row = { ...props } as any;
 
-	const row = {...props} as any
 	const id = row._id;
 	delete row.value._id;
 	delete row.value.createdAt;
 	delete row.value.created_at;
 	delete row.value.updatedAt;
 	delete row.value.__v;
-	
+
 	const normalized = {
 		value: row.value,
 		id,
@@ -70,8 +70,7 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 		new URLSearchParams(location?.search),
 	);
 
-	const normalizedRow = rows.map(normalizeRows)
-	console.log(columns)
+	const normalizedRow = rows.map(normalizeRows);
 
 	const newFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -190,7 +189,6 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 											}}
 										>
 											<BetweenVerticalStart className="w-5 h-5" />
-											{/* <Plus className="w-5 h-5" /> */}
 											<span>Adicionar coluna</span>
 										</DropdownMenuItem>
 
@@ -200,8 +198,6 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 												newRowButtonRef?.current?.click();
 											}}
 										>
-											{/* <Plus className="w-5 h-5" />
-											 */}
 											<BetweenHorizontalStart className="w-5 h-5" />
 											<span>Adicionar registro</span>
 										</DropdownMenuItem>
