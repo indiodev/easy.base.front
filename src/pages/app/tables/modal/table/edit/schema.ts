@@ -12,6 +12,7 @@ export const Schema = z.object({
 			message: 'Descrição obrigatória',
 		})
 		.trim(),
+	logo: z.instanceof(File, { message: 'Campo obrigatório' }),
 });
 
 export type Type = z.infer<typeof Schema>;

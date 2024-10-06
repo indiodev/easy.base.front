@@ -7,6 +7,7 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Button } from '@components/ui/button';
 import {
 	Form,
@@ -22,7 +23,7 @@ import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
 import { useTableCreateMutation } from '@mutation/table/new.mutation';
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, PencilLine } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -36,6 +37,11 @@ const EditTable = React.forwardRef<
 
 	const location = useLocation();
 	const navigate = useNavigate();
+
+	const [fileImage, setFileImage] = React.useState<string | undefined>();
+
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
+
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
 	});
@@ -88,12 +94,43 @@ const EditTable = React.forwardRef<
 						onSubmit={onSubmit}
 						className="flex flex-col gap-4 w-full"
 					>
-						{/* <h2 className="text-xl font-medium text-indigo-600">
-							Crie uma nova tabela
-						</h2> */}
 						<span className="text-sm font-normal text-red-400">
 							* os campos em vermelho são obrigatórios
 						</span>
+
+						<div className="w-full flex-col gap-1 flex justify-center items-center">
+							<Avatar className="rounded-lg shadow-sm border object-cover w-32 h-32 relative overflow-visible">
+								{!fileImage && (
+									<AvatarImage className="rounded-lg object-cover " />
+								)}
+
+								{fileImage && (
+									<AvatarImage
+										className="rounded-lg object-cover "
+										src={fileImage}
+									/>
+								)}
+
+								<AvatarFallback className="rounded-lg">Logo</AvatarFallback>
+								<Button
+									onClick={() => fileInputRef?.current?.click()}
+									type="button"
+									className="w-8 h-8 z-50 absolute bottom-1 right-1 rounded-full bg-gray-100 p-0 hover:bg-gray-100 border"
+								>
+									<PencilLine
+										className="w-4 h-4 text-blue-500"
+										strokeWidth={3}
+									/>
+								</Button>
+							</Avatar>
+
+							{form.formState.errors?.logo?.message && (
+								<span className="text-red-500 text-xs">
+									{form.formState.errors?.logo?.message}
+								</span>
+							)}
+						</div>
+
 						<FormField
 							control={form.control}
 							name="title"
