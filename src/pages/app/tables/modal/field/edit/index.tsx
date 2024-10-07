@@ -25,7 +25,11 @@ import {
 	SelectValue,
 } from '@components/ui/select';
 import { Switch } from '@components/ui/switch';
-import { COLUMN_FORMAT_LIST, COLUMN_TYPE_LIST } from '@libs/constant';
+import {
+	COLUMN_DATE_FORMAT_LIST,
+	COLUMN_TEXT_SHORT_FORMAT_LIST,
+	COLUMN_TYPE_LIST,
+} from '@libs/constant';
 
 import { Loading } from '@components/loading';
 import { Separator } from '@components/ui/separator';
@@ -275,6 +279,46 @@ const EditField = React.forwardRef<
 								</section>
 							)}
 
+							{form.watch('type') === COLUMN_TYPE.DATE && (
+								<FormField
+									control={form.control}
+									defaultValue={
+										column?.config?.format || COLUMN_FORMAT['AAAA-MM-DD']
+									}
+									name="config.format"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Formato</FormLabel>
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+														<SelectValue
+															placeholder="Selecione um tipo para a coluna"
+															className="placeholder:text-gray-100"
+														/>
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{COLUMN_DATE_FORMAT_LIST.map((col) => (
+														<SelectItem
+															key={col.type}
+															value={col.type}
+														>
+															{col.label}
+														</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+
+											<FormMessage className="text-right" />
+										</FormItem>
+									)}
+								/>
+							)}
+
 							{form.watch('type') === COLUMN_TYPE.SHORT_TEXT && (
 								<FormField
 									control={form.control}
@@ -298,7 +342,7 @@ const EditField = React.forwardRef<
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													{COLUMN_FORMAT_LIST.map((col) => (
+													{COLUMN_TEXT_SHORT_FORMAT_LIST.map((col) => (
 														<SelectItem
 															key={col.type}
 															value={col.type}

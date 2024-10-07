@@ -23,7 +23,7 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 	},
 ];
 
-export const COLUMN_FORMAT_LIST = [
+export const COLUMN_TEXT_SHORT_FORMAT_LIST = [
 	{
 		label: 'Alfanumérico',
 		type: COLUMN_FORMAT.ALPHANUMERIC,
@@ -39,5 +39,56 @@ export const COLUMN_FORMAT_LIST = [
 	{
 		label: 'URL',
 		type: COLUMN_FORMAT.URL,
+	},
+];
+
+export const COLUMN_DATE_FORMAT_LIST = [
+	{
+		label: 'DD/MM/AAAA',
+		type: COLUMN_FORMAT['DD/MM/AAAA'],
+	},
+	{
+		label: 'MM/DD/AAAA',
+		type: COLUMN_FORMAT['MM/DD/AAAA'],
+	},
+	{
+		label: 'AAAA/MM/DD',
+		type: COLUMN_FORMAT['AAAA/MM/DD'],
+	},
+	{
+		label: 'DD/MM/AAAA hh:mm:ss',
+		type: COLUMN_FORMAT['DD-MM-AAAA hh:mm:ss'],
+	},
+	{
+		label: 'MM/DD/AAAA hh:mm:ss',
+		type: COLUMN_FORMAT['MM/DD/AAAA hh:mm:ss'],
+	},
+	{
+		label: 'AAAA/MM/DD hh:mm:ss',
+		type: COLUMN_FORMAT['AAAA/MM/DD hh:mm:ss'],
+	},
+	{
+		label: 'DD-MM-AAAA',
+		type: COLUMN_FORMAT['DD-MM-AAAA'],
+	},
+	{
+		label: 'MM-DD-AAAA',
+		type: COLUMN_FORMAT['MM-DD-AAAA'],
+	},
+	{
+		label: 'AAAA-MM-DD',
+		type: COLUMN_FORMAT['AAAA-MM-DD'],
+	},
+	{
+		label: 'DD-MM-AAAA hh:mm:ss',
+		type: COLUMN_FORMAT['DD-MM-AAAA hh:mm:ss'],
+	},
+	{
+		label: 'MM-DD-AAAA hh:mm:ss',
+		type: COLUMN_FORMAT['MM-DD-AAAA hh:mm:ss'],
+	},
+	{
+		label: 'AAAA-MM-DD hh:mm:ss',
+		type: COLUMN_FORMAT['AAAA-MM-DD hh:mm:ss'],
 	},
 ];
