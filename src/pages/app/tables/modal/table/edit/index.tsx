@@ -38,6 +38,7 @@ const EditTable = React.forwardRef<
 	const location = useLocation();
 	const navigate = useNavigate();
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [fileImage, setFileImage] = React.useState<string | undefined>();
 
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
