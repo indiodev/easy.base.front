@@ -38,7 +38,6 @@ const EditTable = React.forwardRef<
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [fileImage, setFileImage] = React.useState<string | undefined>();
 
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -124,6 +123,20 @@ const EditTable = React.forwardRef<
 									/>
 								</Button>
 							</Avatar>
+
+							<Input
+								type="file"
+								ref={fileInputRef}
+								onChange={(event) => {
+									if (!event?.target?.files?.length) return;
+
+									form.setValue('logo', event.target.files![0]);
+
+									setFileImage(URL.createObjectURL(event.target.files![0]));
+									form.clearErrors('logo');
+								}}
+								className="hidden bg-gray-50 focus-visible:ring-blue-500 focus-visible:ring-1"
+							/>
 
 							{form.formState.errors?.logo?.message && (
 								<span className="text-red-500 text-xs">
