@@ -20,8 +20,23 @@ export enum COLUMN_TYPE {
 }
 
 export enum COLUMN_FORMAT {
+	// SHORT_TEXT
 	ALPHANUMERIC = 'ALPHANUMERIC',
 	INTEGER = 'INTEGER',
 	DECIMAL = 'DECIMAL',
 	URL = 'URL',
+
+	// DATE
+	'DD/MM/AAAA' = 'DD/MM/AAAA',
+	'MM/DD/AAAA' = 'MM/DD/AAAA',
+	'AAAA/MM/DD' = 'AAAA/MM/DD',
+	'DD/MM/AAAA hh:mm:ss' = 'DD/MM/AAAA hh:mm:ss',
+	'MM/DD/AAAA hh:mm:ss' = 'MM/DD/AAAA hh:mm:ss',
+	'AAAA/MM/DD hh:mm:ss' = 'AAAA/MM/DD hh:mm:ss',
+	'DD-MM-AAAA' = 'DD-MM-AAAA',
+	'MM-DD-AAAA' = 'MM-DD-AAAA',
+	'AAAA-MM-DD' = 'AAAA-MM-DD',
+	'DD-MM-AAAA hh:mm:ss' = 'DD-MM-AAAA hh:mm:ss',
+	'MM-DD-AAAA hh:mm:ss' = 'MM-DD-AAAA hh:mm:ss',
+	'AAAA-MM-DD hh:mm:ss' = 'AAAA-MM-DD hh:mm:ss',
 }
