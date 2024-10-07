@@ -1,5 +1,6 @@
 import { EditField } from './field/edit';
 import { NewField } from './field/new';
+import { FormFieldOrder } from './form/field/order';
 import { EditRow } from './row/edit';
 import { NewRow } from './row/new';
 import { RemoveRow } from './row/remove';
@@ -14,4 +15,5 @@ export const Modal = {
 	EditField,
 	EditTable,
 	TableFieldOrder,
+	FormFieldOrder,
 };
