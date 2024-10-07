@@ -29,14 +29,6 @@ export function Tables(): React.ReactElement {
 							<h2 className="text-3xl font-medium text-indigo-600">
 								{table?.title}
 							</h2>
-							{/* <Button
-								className="bg-indigo-700 hover:bg-indigo-600 border border-transparent py-2 px-3 rounded-lg"
-								disabled={table?.columns?.length === 0}
-				
-							>
-								<Plus className="w-5 h-5" />
-								<span>Adicionar</span>
-							</Button> */}
 						</div>
 
 						<Separator />

@@ -9,10 +9,12 @@ export function View(): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const params = useParams();
+
 	const { data: row, status: row_status } = useRowShowQuery({
 		id: params.id!,
 		tableId: params.tableId!,
 	});
+
 	return (
 		<section className="bg-slate-50 flex-1 flex-col space-y-4 p-6">
 			<div className="inline-flex">
@@ -32,23 +34,27 @@ export function View(): React.ReactElement {
 					Detalhes do registro (id: {params.id})
 				</h2>
 			</div>
+
 			{row_status === 'pending' && (
 				<Loading className="flex justify-center items-center h-screen flex-1" />
 			)}
+
 			{row_status === 'success' && (
 				<React.Fragment>
 					{Object.entries(row).map(([row_key, row_value]) => {
 						if (row_key === 'value') {
 							const values = Object.entries(row_value);
 							return (
-								<div className="flex flex-col space-y-1">
+								<div className="grid grid-cols-2 gap-4">
 									{values.map(([k, v]) => (
 										<div
 											key={k}
-											className="flex flex-col "
+											className="flex flex-col flex-1 bg-indigo-400 p-3 rounded-lg"
 										>
-											<span className="font-semibold">{k}:</span>
-											<span>{v as React.ReactNode}</span>
+											<span className="font-semibold text-white uppercase">
+												{k}:
+											</span>
+											<span className="text-white">{v as React.ReactNode}</span>
 										</div>
 									))}
 								</div>

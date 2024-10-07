@@ -22,12 +22,15 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Modal } from './modal';
 import { Sidebar } from './sidebar';
 
 export function App(): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const auth = AuthStore();
+
+	const newTableButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
 	const { data: table_list, status: table_list_status } = useTableListQuery();
 
@@ -65,20 +68,21 @@ export function App(): React.ReactElement {
 								</div>
 							</AccordionTrigger>
 							<AccordionContent className="p-0">
-								<Sidebar.Link
-									to="/app/tables/new"
-									isActive={location.pathname === '/app/tables/new'}
+								<Sidebar.Button
 									className="pl-10"
+									onClick={() => newTableButtonRef?.current?.click()}
 								>
 									<Plus className="h-5 w-5" />
 									<span>Criar nova tabela</span>
-								</Sidebar.Link>
+								</Sidebar.Button>
 								{table_list_status === 'success' &&
 									table_list.map((table) => (
 										<Sidebar.Link
 											key={table._id}
 											to={`/app/tables/${table._id}`}
-											isActive={location.pathname === `/app/tables/${table._id}`}
+											isActive={
+												location.pathname === `/app/tables/${table._id}`
+											}
 											className="pl-10"
 										>
 											<Table className="h-5 w-5" />
@@ -137,6 +141,7 @@ export function App(): React.ReactElement {
 					</Sidebar.Button>
 				</Sidebar.Menu>
 			</Sidebar.Root>
+			<Modal.NewTable ref={newTableButtonRef} />
 			<React.Suspense
 				fallback={<Loading className="flex justify-center items-center" />}
 			>

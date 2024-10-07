@@ -121,8 +121,12 @@ const NewRow = React.forwardRef<
 				{columns_status === 'pending' && (
 					<Loading className="flex justify-center items-center h-auto flex-1" />
 				)}
-
-				{columns_status === 'success' && (
+				{columns_status === 'success' && !(columns.length > 0) && (
+					<h2 className="font-semibold text-center">
+						Necessário adicionar campos (colunas) à sua tabela
+					</h2>
+				)}
+				{columns_status === 'success' && columns.length > 0 && (
 					<Form {...form}>
 						<form
 							className="flex flex-col gap-4"

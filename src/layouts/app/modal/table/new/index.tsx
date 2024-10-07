@@ -1,3 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@components/ui/dialog';
+
 import { Button } from '@components/ui/button';
 import {
 	Form,
@@ -7,7 +16,6 @@ import {
 	FormLabel,
 } from '@components/ui/form';
 import { Input } from '@components/ui/input';
-import { Textarea } from '@components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
@@ -16,11 +24,15 @@ import { useTableCreateMutation } from '@mutation/table/new.mutation';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Schema, Type } from './schema';
 
-export function New(): React.ReactElement {
-	const location = useLocation();
+const NewTable = React.forwardRef<
+	React.ElementRef<typeof DialogTrigger>,
+	React.ComponentPropsWithoutRef<typeof DialogTrigger>
+>(({ ...props }, ref) => {
+	const [open, setOpen] = React.useState(false);
+
 	const navigate = useNavigate();
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
@@ -38,8 +50,9 @@ export function New(): React.ReactElement {
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_LIST],
 				});
+				setOpen((state) => !state);
 				navigate({
-					pathname: `${location.pathname?.replace('/new', '')}/${data._id}`,
+					pathname: `/app/tables/${data._id}`,
 				});
 			},
 		});
@@ -49,16 +62,34 @@ export function New(): React.ReactElement {
 	});
 
 	return (
-		<section className="flex h-auto flex-1 flex-col gap-4">
-			<div className="flex-1 w-full bg-neutral-50 p-10 rounded-lg shadow-md flex flex-col gap-6">
+		<Dialog
+			modal
+			open={open}
+			onOpenChange={(o) => {
+				form.reset();
+				setOpen(o);
+			}}
+		>
+			<DialogTrigger
+				className="hidden"
+				ref={ref}
+				{...props}
+			/>
+			<DialogContent className="py-4 px-6">
+				<DialogHeader>
+					<DialogTitle className="text-lg font-medium">
+						Crie uma nova tabela
+					</DialogTitle>
+				</DialogHeader>
+
 				<Form {...form}>
 					<form
 						onSubmit={onSubmit}
 						className="flex flex-col gap-4 w-full"
 					>
-						<h2 className="text-xl font-medium text-indigo-600">
+						{/* <h2 className="text-xl font-medium text-indigo-600">
 							Crie uma nova tabela
-						</h2>
+						</h2> */}
 						<span className="text-sm font-normal text-red-400">
 							* os campos em vermelho são obrigatórios
 						</span>
@@ -86,7 +117,7 @@ export function New(): React.ReactElement {
 							}}
 						/>
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="description"
 							render={({ field }) => (
@@ -95,15 +126,12 @@ export function New(): React.ReactElement {
 									<FormControl>
 										<Textarea
 											placeholder="Uma descrição aqui"
-											// className="resize-none"
 											{...field}
 										/>
 									</FormControl>
-
-									{/* <FormMessage /> */}
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<div className="inline-flex justify-end w-full gap-4 pt-4">
 							<Button className="bg-indigo-700 hover:bg-indigo-600 border border-transparent py-2 px-3 rounded-lg text-neutral-50 max-w-40 w-full">
@@ -115,7 +143,11 @@ export function New(): React.ReactElement {
 						</div>
 					</form>
 				</Form>
-			</div>
-		</section>
+			</DialogContent>
+		</Dialog>
 	);
-}
+});
+
+NewTable.displayName = 'NewTable';
+
+export { NewTable };

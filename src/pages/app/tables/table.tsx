@@ -17,12 +17,9 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
-import { cn } from '@libs/utils';
 import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
 import {
-	BetweenHorizontalStart,
-	BetweenVerticalStart,
 	ChevronsLeftRight,
 	Ellipsis,
 	Eye,
@@ -72,59 +69,9 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 
 	const normalizedRow = rows.map(normalizeRows);
 
-	const newFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
-	const newRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
-
-	const [draggedColId, setDraggedColId] = React.useState<string | null>(null);
-	const [currentColumns, setCurrentColumns] = React.useState(columns);
-
-	const handleDragStart = (
-		event: React.DragEvent<HTMLTableCellElement>,
-		columnId: string,
-	) => {
-		event.dataTransfer.setData('text/plain', columnId);
-		setDraggedColId(columnId); // Armazena a coluna que está sendo arrastada
-	};
-
-	const handleDragEnd = (event: React.DragEvent<HTMLTableCellElement>) => {
-		event.dataTransfer.clearData(); // Limpa os dados transferidos
-		setDraggedColId(null); // Limpa o estado da coluna arrastada
-	};
-
-	const handleDragOver = (event: React.DragEvent<HTMLTableCellElement>) => {
-		event.preventDefault(); // Necessário para permitir o "drop"
-	};
-
-	const handleDrop = (
-		event: React.DragEvent<HTMLTableCellElement>,
-		dropColId: string,
-	) => {
-		event.preventDefault();
-
-		const draggedColId = event.dataTransfer.getData('text/plain');
-		if (!draggedColId) return;
-
-		const draggedColIndex = currentColumns.findIndex(
-			(col) => col._id === draggedColId,
-		);
-		const dropColIndex = currentColumns.findIndex(
-			(col) => col._id === dropColId,
-		);
-
-		// Evita ações desnecessárias se a coluna arrastada e a coluna alvo forem as mesmas
-		if (draggedColIndex === dropColIndex) return;
-
-		// Reordena as colunas
-		const reorderedColumns = [...currentColumns];
-		const [removed] = reorderedColumns.splice(draggedColIndex, 1);
-		reorderedColumns.splice(dropColIndex, 0, removed);
-
-		// Atualiza o estado com a nova ordem de colunas
-		setCurrentColumns(reorderedColumns);
-	};
 
 	return (
 		<React.Fragment>
@@ -133,23 +80,10 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 					<TableRow className="bg-indigo-100/30 hover:bg-indigo-100/30">
 						<TableHead>ID</TableHead>
 
-						{currentColumns.map(
+						{columns.map(
 							(col) =>
 								col?.config?.display && (
-									<TableHead
-										key={col._id}
-										draggable
-										onDragStart={(e) => handleDragStart(e, col._id)}
-										onDragEnd={handleDragEnd}
-										onDragOver={handleDragOver}
-										onDrop={(e) => handleDrop(e, col._id)}
-										className={cn(
-											draggedColId === col._id && 'bg-indigo-100',
-											draggedColId &&
-												!(draggedColId === col._id) &&
-												'border-l border-r',
-										)}
-									>
+									<TableHead key={col._id}>
 										<div className="inline-flex items-center gap-1">
 											<Button className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300">
 												<ChevronsLeftRight className="w-4 h-4 rotate-90" />
@@ -178,47 +112,23 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 									<Settings className="w-5 h-5  text-gray-600" />
 								</DropdownMenuTrigger>
 								<DropdownMenuContent className="mr-10">
-									<DropdownMenuLabel>Tabela</DropdownMenuLabel>
-									<DropdownMenuSeparator />
-
 									<DropdownMenuGroup>
+										<DropdownMenuLabel>Colunas</DropdownMenuLabel>
+										<DropdownMenuSeparator />
 										<DropdownMenuItem
-											className="inline-flex space-x-1 w-full"
-											onClick={() => {
-												newFieldButtonRef?.current?.click();
-											}}
+											disabled
+											className="inline-flex w-full space-x-1"
 										>
-											<BetweenVerticalStart className="w-5 h-5" />
-											<span>Adicionar coluna</span>
-										</DropdownMenuItem>
-
-										<DropdownMenuItem
-											className="inline-flex space-x-1 w-full"
-											onClick={() => {
-												newRowButtonRef?.current?.click();
-											}}
-										>
-											<BetweenHorizontalStart className="w-5 h-5" />
-											<span>Adicionar registro</span>
-										</DropdownMenuItem>
-
-										<DropdownMenuItem className="inline-flex space-x-1 w-full">
 											<Pencil className="w-4 h-4" />
-											<span>Editar</span>
+											<span>ID</span>
 										</DropdownMenuItem>
-
-										<DropdownMenuItem className="inline-flex space-x-1 w-full">
-											<Trash className="w-4 h-4" />
-											<span>Lixeira</span>
+										<DropdownMenuItem
+											disabled
+											className="inline-flex w-full space-x-1"
+										>
+											<Pencil className="w-4 h-4" />
+											<span>Criador</span>
 										</DropdownMenuItem>
-									</DropdownMenuGroup>
-
-									<DropdownMenuSeparator />
-
-									<DropdownMenuGroup>
-										<DropdownMenuLabel>Campos</DropdownMenuLabel>
-										<DropdownMenuItem disabled>ID</DropdownMenuItem>
-										<DropdownMenuItem disabled>Criador</DropdownMenuItem>
 
 										{columns?.map((col) => (
 											<DropdownMenuItem
@@ -314,11 +224,10 @@ export function Table({ columns, rows }: Props): React.ReactElement {
 					))}
 				</TableBody>
 			</Root>
-			<Modal.NewField ref={newFieldButtonRef} />
+
 			<Modal.EditField ref={editFieldButtonRef} />
 			<Modal.RemoveRow ref={removeRowButtonRef} />
 			<Modal.EditRow ref={editRowButtonRef} />
-			<Modal.NewRow ref={newRowButtonRef} />
 		</React.Fragment>
 	);
 }

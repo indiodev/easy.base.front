@@ -13,8 +13,6 @@ export function Filter() {
 			tableId: params?.id || '',
 		});
 
-	
-
 	return (
 		<aside className="p-4 flex flex-col space-y-3 max-w-xs w-full bg-indigo-100/20 animate-fade-in-left h-auto">
 			{columns_status === 'success' &&
