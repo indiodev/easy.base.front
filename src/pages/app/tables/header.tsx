@@ -32,6 +32,7 @@ export function Header(): React.ReactElement {
 	const newRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editTableButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const tableOrderFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
+	const formOrderFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
 	return (
 		<React.Fragment>
@@ -145,7 +146,7 @@ export function Header(): React.ReactElement {
 								<DropdownMenuGroup>
 									<DropdownMenuItem
 										className="inline-flex space-x-1 w-full"
-										// onClick={() => tableOrderFieldButtonRef?.current?.click()}
+										onClick={() => formOrderFieldButtonRef?.current?.click()}
 									>
 										<ArrowDownUp className="w-4 h-4" />
 										<span>Ordenar campos</span>
@@ -161,6 +162,7 @@ export function Header(): React.ReactElement {
 			<Modal.NewRow ref={newRowButtonRef} />
 			<Modal.EditTable ref={editTableButtonRef} />
 			<Modal.TableFieldOrder ref={tableOrderFieldButtonRef} />
+			<Modal.FormFieldOrder ref={formOrderFieldButtonRef} />
 		</React.Fragment>
 	);
 }

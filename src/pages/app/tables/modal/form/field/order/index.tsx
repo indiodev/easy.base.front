@@ -14,7 +14,7 @@ import { GripVertical } from 'lucide-react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-const TableFieldOrder = React.forwardRef<
+const FormFieldOrder = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
 >(({ ...props }, ref) => {
@@ -54,7 +54,7 @@ const TableFieldOrder = React.forwardRef<
 			<DialogContent className="py-4 px-6">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
-						Ordenar campos da tabela
+						Ordenar campos do formulário
 					</DialogTitle>
 				</DialogHeader>
 
@@ -95,6 +95,6 @@ const TableFieldOrder = React.forwardRef<
 	);
 });
 
-TableFieldOrder.displayName = 'TableFieldOrder';
+FormFieldOrder.displayName = 'FormFieldOrder';
 
-export { TableFieldOrder };
+export { FormFieldOrder };
