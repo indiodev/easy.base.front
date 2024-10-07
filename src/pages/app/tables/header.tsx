@@ -10,7 +10,15 @@ import {
 } from '@components/ui/dropdown-menu';
 import { Input } from '@components/ui/input';
 import { cn } from '@libs/utils';
-import { Filter, Pencil, Search, Settings2, Trash } from 'lucide-react';
+import {
+	ArrowDownUp,
+	Database,
+	Filter,
+	Newspaper,
+	Pencil,
+	Search,
+	Trash,
+} from 'lucide-react';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Modal } from './modal';
@@ -23,6 +31,7 @@ export function Header(): React.ReactElement {
 	const newFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const newRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editTableButtonRef = React.useRef<HTMLButtonElement | null>(null);
+	const tableOrderFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
 	return (
 		<React.Fragment>
@@ -69,7 +78,7 @@ export function Header(): React.ReactElement {
 								asChild
 							>
 								<Button className="bg-transparent hover:bg-transparent border shadow-none">
-									<Settings2 className="w-5 h-5  text-gray-600" />
+									<Database className="w-5 h-5  text-gray-600" />
 								</Button>
 							</DropdownMenuTrigger>
 							<DropdownMenuContent className="mr-10">
@@ -83,7 +92,7 @@ export function Header(): React.ReactElement {
 											newFieldButtonRef?.current?.click();
 										}}
 									>
-										<span>Adicionar coluna</span>
+										<span>Nova coluna</span>
 									</DropdownMenuItem>
 
 									<DropdownMenuItem
@@ -92,7 +101,15 @@ export function Header(): React.ReactElement {
 											newRowButtonRef?.current?.click();
 										}}
 									>
-										<span>Adicionar registro</span>
+										<span>Novo registro</span>
+									</DropdownMenuItem>
+
+									<DropdownMenuItem
+										className="inline-flex space-x-1 w-full"
+										onClick={() => tableOrderFieldButtonRef?.current?.click()}
+									>
+										<ArrowDownUp className="w-4 h-4" />
+										<span>Ordenar colunas</span>
 									</DropdownMenuItem>
 
 									<DropdownMenuItem
@@ -111,12 +128,39 @@ export function Header(): React.ReactElement {
 								<DropdownMenuSeparator />
 							</DropdownMenuContent>
 						</DropdownMenu>
+
+						<DropdownMenu dir="ltr">
+							<DropdownMenuTrigger
+								className="flex items-center justify-center border"
+								asChild
+							>
+								<Button className="bg-transparent hover:bg-transparent border shadow-none">
+									<Newspaper className="w-5 h-5  text-gray-600" />
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="mr-10">
+								<DropdownMenuLabel>Formulário</DropdownMenuLabel>
+								<DropdownMenuSeparator />
+
+								<DropdownMenuGroup>
+									<DropdownMenuItem
+										className="inline-flex space-x-1 w-full"
+										// onClick={() => tableOrderFieldButtonRef?.current?.click()}
+									>
+										<ArrowDownUp className="w-4 h-4" />
+										<span>Ordenar campos</span>
+									</DropdownMenuItem>
+								</DropdownMenuGroup>
+								<DropdownMenuSeparator />
+							</DropdownMenuContent>
+						</DropdownMenu>
 					</div>
 				</section>
 			</header>
 			<Modal.NewField ref={newFieldButtonRef} />
 			<Modal.NewRow ref={newRowButtonRef} />
 			<Modal.EditTable ref={editTableButtonRef} />
+			<Modal.TableFieldOrder ref={tableOrderFieldButtonRef} />
 		</React.Fragment>
 	);
 }

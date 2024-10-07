@@ -65,6 +65,8 @@ const EditRow = React.forwardRef<
 		tableId: params?.id || '',
 	});
 
+	console.log(row);
+
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
 			onError(error) {
@@ -162,7 +164,7 @@ const EditRow = React.forwardRef<
 										<FormField
 											key={column._id}
 											control={form.control}
-											name={column.slug}
+											name={column.slug || ''}
 											defaultValue={new Date(row?.value[column.slug]!)}
 											render={({ field }) => {
 												const hasError = !!form.formState.errors[column.slug];
@@ -206,8 +208,6 @@ const EditRow = React.forwardRef<
 																/>
 															</PopoverContent>
 														</Popover>
-
-														{/* <FormMessage /> */}
 													</FormItem>
 												);
 											}}
@@ -220,7 +220,7 @@ const EditRow = React.forwardRef<
 										<FormField
 											key={column._id}
 											control={form.control}
-											name={column.slug}
+											name={column.slug || ''}
 											defaultValue={row?.value[column.slug] || ''}
 											render={({ field }) => {
 												const hasError = !!form.formState.errors[column.slug];
@@ -237,59 +237,18 @@ const EditRow = React.forwardRef<
 																{...field}
 															/>
 														</FormControl>
-
-														{/* <FormMessage /> */}
 													</FormItem>
 												);
 											}}
 										/>
 									);
 
-								// if (column.type === COLUMN_TYPE.FILE)
-								// 	return (
-								// 		<FormField
-								// 			key={column._id}
-								// 			control={form.control}
-								// 			name={column.slug}
-								// 			render={() => {
-								// 				const hasError = !!form.formState.errors[column.slug];
-								// 				return (
-								// 					<FormItem className="space-y-1">
-								// 						<FormLabel>{column.title}</FormLabel>
-								// 						<FormControl>
-								// 							<Input
-								// 								onChange={(event) => {
-								// 									if (event.target.files?.length === 0) {
-								// 										form.setValue(column.slug, undefined);
-								// 										return;
-								// 									}
-								// 									form.setValue(
-								// 										column.slug,
-								// 										event.target.files![0],
-								// 									);
-								// 									form.clearErrors(column.slug);
-								// 								}}
-								// 								type="file"
-								// 								placeholder={column.title}
-								// 								className={cn(
-								// 									'focus-visible:ring-indigo-300',
-								// 									hasError && 'border-red-500',
-								// 								)}
-								// 								// {...field}
-								// 							/>
-								// 						</FormControl>
-								// 					</FormItem>
-								// 				);
-								// 			}}
-								// 		/>
-								// 	);
-
 								if (column.type === COLUMN_TYPE.DROPDOWN)
 									return (
 										<FormField
 											key={column._id}
 											control={form.control}
-											name={column.slug}
+											name={column.slug || ''}
 											defaultValue={row?.value[column.slug] || ''}
 											render={({ field }) => {
 												const hasError = !!form.formState.errors[column.slug];
@@ -320,8 +279,6 @@ const EditRow = React.forwardRef<
 																)}
 															</SelectContent>
 														</Select>
-
-														{/* <FormMessage /> */}
 													</FormItem>
 												);
 											}}
@@ -332,7 +289,7 @@ const EditRow = React.forwardRef<
 									<FormField
 										key={column._id}
 										control={form.control}
-										name={column.slug}
+										name={column.slug || ''}
 										defaultValue={row?.value[column.slug] || ''}
 										render={({ field }) => {
 											const hasError = !!form.formState.errors[column.slug];
@@ -382,7 +339,6 @@ const EditRow = React.forwardRef<
 						</form>
 					</Form>
 				)}
-				{/* </section> */}
 			</DialogContent>
 		</Dialog>
 	);

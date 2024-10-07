@@ -4,6 +4,7 @@ import { EditRow } from './row/edit';
 import { NewRow } from './row/new';
 import { RemoveRow } from './row/remove';
 import { EditTable } from './table/edit';
+import { TableFieldOrder } from './table/field/order';
 
 export const Modal = {
 	NewRow,
@@ -12,4 +13,5 @@ export const Modal = {
 	NewField,
 	EditField,
 	EditTable,
+	TableFieldOrder,
 };
