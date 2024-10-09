@@ -97,6 +97,7 @@ const NewRow = React.forwardRef<
 
 	const formHasError = Object.keys(form.formState.errors).length > 0;
 
+
 	return (
 		<Dialog
 			modal
@@ -133,7 +134,7 @@ const NewRow = React.forwardRef<
 							onSubmit={onSubmit}
 						>
 							{columns.map((column) => {
-								if (column.type === COLUMN_TYPE.DATE) {
+								if (column?.type === COLUMN_TYPE.DATE) {
 									return (
 										<FormField
 											key={column._id}
@@ -191,7 +192,7 @@ const NewRow = React.forwardRef<
 									);
 								}
 
-								if (column.type === COLUMN_TYPE.LONG_TEXT)
+								if (column?.type === COLUMN_TYPE.LONG_TEXT)
 									return (
 										<FormField
 											key={column._id}
@@ -259,7 +260,7 @@ const NewRow = React.forwardRef<
 								// 		/>
 								// 	);
 
-								if (column.type === COLUMN_TYPE.DROPDOWN)
+								if (column?.type === COLUMN_TYPE.DROPDOWN)
 									return (
 										<FormField
 											key={column._id}
@@ -301,6 +302,7 @@ const NewRow = React.forwardRef<
 											}}
 										/>
 									);
+
 
 								return (
 									<FormField

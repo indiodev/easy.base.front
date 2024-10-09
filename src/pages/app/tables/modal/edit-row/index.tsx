@@ -37,6 +37,7 @@ import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { useRowUpdateMutation } from '@mutation/row/update.mutation';
 import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
 import { useRowShowQuery } from '@query/row/show';
+import { useTableListQuery } from '@query/table/list.query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -64,6 +65,8 @@ const EditRow = React.forwardRef<
 	const { data: columns } = useColumnFindManyByTableIdQuery({
 		tableId: params?.id || '',
 	});
+
+	const { data: table_list, status: table_list_status } = useTableListQuery();
 
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
@@ -318,6 +321,53 @@ const EditRow = React.forwardRef<
 																		</SelectItem>
 																	),
 																)}
+															</SelectContent>
+														</Select>
+
+														{/* <FormMessage /> */}
+													</FormItem>
+												);
+											}}
+										/>
+									);
+
+								if (column.type === COLUMN_TYPE.RELATIONAL)
+									return (
+										<FormField
+											key={column._id}
+											control={form.control}
+											name={column.slug}
+											defaultValue={row?.value[column.slug] || ''}
+											render={({ field }) => {
+												const hasError = !!form.formState.errors[column.slug];
+												return (
+													<FormItem>
+														<FormLabel>{column.title}</FormLabel>
+														<Select
+															onValueChange={field.onChange}
+															defaultValue={field.value}
+														>
+															<FormControl>
+																<SelectTrigger
+																	className={cn(hasError && 'border-red-500')}
+																>
+																	<SelectValue placeholder="Selecione uma tabela" />
+																</SelectTrigger>
+															</FormControl>
+															<SelectContent>
+
+															{ table_list_status === 'success' ?
+																table_list.map((table, index) => (
+																	<SelectItem
+																		key={index}
+																		value={table._id}
+																	>
+																		{table.title} 
+																		{/* TO BE FIXED */}
+																	</SelectItem>
+																))
+																: (table_list_status === 'pending' ? `Carregando` : `Indisponivel`)
+															}
 															</SelectContent>
 														</Select>
 

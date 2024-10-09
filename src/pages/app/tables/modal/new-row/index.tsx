@@ -122,13 +122,13 @@ const NewRow = React.forwardRef<
 					<Loading className="flex justify-center items-center h-auto flex-1" />
 				)}
 
-				{columns_status === 'success' && (
+				{(columns_status === 'success' && false) && (
 					<Form {...form}>
 						<form
 							className="flex flex-col gap-4"
 							onSubmit={onSubmit}
 						>
-							{columns.map((column) => {
+							{columns?.map((column) => {
 								if (column.type === COLUMN_TYPE.DATE) {
 									return (
 										<FormField

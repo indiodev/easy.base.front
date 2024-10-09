@@ -17,6 +17,7 @@ export enum COLUMN_TYPE {
 	DROPDOWN = 'DROPDOWN',
 	// FILE = 'FILE',
 	DATE = 'DATE',
+	RELATIONAL = 'RELATIONAL',
 }
 
 export enum COLUMN_FORMAT {

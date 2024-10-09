@@ -40,6 +40,7 @@ import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
+import { useTableListQuery } from '@query/table/list.query';
 
 const EditField = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -56,6 +57,8 @@ const EditField = React.forwardRef<
 		id: searchParams?.get('field_id') || '',
 		tableId: params.id || '',
 	});
+
+	const { data: table_list, status: table_list_status } = useTableListQuery();
 
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
@@ -334,6 +337,84 @@ const EditField = React.forwardRef<
 										</FormItem>
 									)}
 								/>
+							)}
+
+{form.watch('type') === COLUMN_TYPE.RELATIONAL && (
+							<>
+								<FormField
+									control={form.control}
+									name="config.relation.collection"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Tabela Base</FormLabel>
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+														<SelectValue
+															placeholder="Selecione uma tabela para relacionar"
+															className="placeholder:text-gray-100"
+														/>
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{ table_list_status === 'success' ?
+														table_list.map((table, index) => (
+															<SelectItem
+																key={index}
+																value={table._id}
+															>
+																{table.title} 
+															</SelectItem>
+														))
+														: (table_list_status === 'pending' ? `Carregando` : `Indisponivel`)
+													}
+												</SelectContent>
+											</Select>
+
+											<FormMessage className="text-right" />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="config.relation.visible"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Coluna exibida</FormLabel>
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+														<SelectValue
+															placeholder="Selecione uma tabela para relacionar"
+															className="placeholder:text-gray-100"
+														/>
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{  form.watch('config.relation.collection') && table_list ?
+														table_list
+															.find((table) => table._id === form.watch('config.relation.collection'))
+															?.columns.map((column) => (
+																<SelectItem key={column._id} value={column._id}>
+																	{column.title}
+																</SelectItem>
+															))
+														: ( `Indisponivel`)
+													}
+												</SelectContent>
+											</Select>
+
+											<FormMessage className="text-right" />
+										</FormItem>
+									)}
+								/>
+								</>
 							)}
 
 							<FormField

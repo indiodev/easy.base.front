@@ -65,8 +65,6 @@ const EditRow = React.forwardRef<
 		tableId: params?.id || '',
 	});
 
-	console.log(row);
-
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
 			onError(error) {

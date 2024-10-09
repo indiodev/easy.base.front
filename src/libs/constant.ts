@@ -21,6 +21,10 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 		label: 'Data',
 		type: COLUMN_TYPE.DATE,
 	},
+	{
+		label: 'Relacional',
+		type: COLUMN_TYPE.RELATIONAL,
+	},
 ];
 
 export const COLUMN_TEXT_SHORT_FORMAT_LIST = [
