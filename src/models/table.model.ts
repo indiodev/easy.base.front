@@ -8,6 +8,7 @@ export interface Table {
 	identifier: string;
 	config: object | null;
 	category: string | null;
+	data_collection: string;
 	status: string | null;
 	created_at: string;
 	updated_at: string | null;

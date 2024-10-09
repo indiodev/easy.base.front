@@ -390,7 +390,7 @@ const NewField = React.forwardRef<
 														table_list.map((table, index) => (
 															<SelectItem
 																key={index}
-																value={table._id}
+																value={table.data_collection}
 															>
 																{table.title} 
 															</SelectItem>
@@ -425,7 +425,7 @@ const NewField = React.forwardRef<
 											<SelectContent>
 												{  form.watch('config.relation.collection') && table_list ?
 													table_list
-														.find((table) => table._id === form.watch('config.relation.collection'))
+														.find((table) => table.data_collection === form.watch('config.relation.collection'))
 														?.columns.map((column) => (
 															<SelectItem key={column._id} value={column._id}>
 																{column.title}
