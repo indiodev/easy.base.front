@@ -3,11 +3,11 @@ import { Button } from '@components/ui/button';
 import { useRowShowQuery } from '@query/row/show';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function View(): React.ReactElement {
 	const navigate = useNavigate();
-	const location = useLocation();
+	// const location = useLocation();
 	const params = useParams();
 
 	const { data: row, status: row_status } = useRowShowQuery({
@@ -21,11 +21,7 @@ export function View(): React.ReactElement {
 				<Button
 					className="bg-transparent shadow-none text-black hover:bg-transparent"
 					onClick={() => {
-						navigate(
-							location.pathname
-								.replace(`/${params.id!}`, '')
-								.replace('/view', ''),
-						);
+						navigate(-1);
 					}}
 				>
 					<ArrowLeft />

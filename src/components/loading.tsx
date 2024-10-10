@@ -2,9 +2,10 @@ import { cn } from '@libs/utils';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 
-interface Props extends React.ComponentPropsWithoutRef<'section'> {}
-
-export function Loading({ className, ...props }: Props): React.ReactElement {
+export function Loading({
+	className,
+	...props
+}: React.ComponentPropsWithoutRef<'section'>): React.ReactElement {
 	return (
 		<section
 			className={cn('flex-1 w-full h-full', className)}

@@ -79,10 +79,10 @@ export function App(): React.ReactElement {
 									table_list.map((table) => (
 										<Sidebar.Link
 											key={table._id}
-											to={`/app/tables/${table._id}`}
-											isActive={
-												location.pathname === `/app/tables/${table._id}`
-											}
+											to={`/app/tables/${table._id}?filtered=false&view-layout=list`}
+											isActive={location.pathname.includes(
+												`/app/tables/${table._id}`,
+											)}
 											className="pl-10"
 										>
 											<Table className="h-5 w-5" />
