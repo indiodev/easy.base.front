@@ -61,9 +61,10 @@ const EditRow = React.forwardRef<
 		id: searchParams.get('row_id') || '',
 	});
 
-	const { data: columns } = useColumnFindManyByTableIdQuery({
-		tableId: params?.id || '',
-	});
+	const { data: columns, status: columns_status } =
+		useColumnFindManyByTableIdQuery({
+			tableId: params?.id || '',
+		});
 
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
@@ -150,10 +151,13 @@ const EditRow = React.forwardRef<
 					<Loading className="flex justify-center items-center h-auto flex-1" />
 				)}
 
-				{row_status === 'success' && (
+				{row_status === 'success' && columns_status === 'success' && (
 					<Form {...form}>
 						<form
-							className="flex flex-col gap-4 overflow-y-auto"
+							className={cn(
+								columns?.length > 5 && 'grid grid-cols-2 gap-4',
+								!(columns?.length > 5) && 'flex flex-col gap-4',
+							)}
 							onSubmit={onSubmit}
 						>
 							{columns?.map((column) => {
