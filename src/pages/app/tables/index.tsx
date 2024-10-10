@@ -5,7 +5,8 @@ import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Header } from './header';
-import { Table } from './table';
+import { Grid } from './layout/grid';
+import { List } from './layout/list';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
@@ -15,6 +16,17 @@ export function Tables(): React.ReactElement {
 	const { data: table, status: table_status } = useTableShowQuery({
 		id: params?.id || '',
 	});
+
+	const filterActive =
+		searchParams.has('filtered') && searchParams.get('filtered') !== 'false';
+
+	const layoutListActive =
+		searchParams.has('view-layout') &&
+		searchParams.get('view-layout') === 'list';
+
+	const LayoutGridActive =
+		searchParams.has('view-layout') &&
+		searchParams.get('view-layout') === 'grid';
 
 	return (
 		<section className="flex h-auto flex-1 flex-col gap-4">
@@ -36,11 +48,19 @@ export function Tables(): React.ReactElement {
 						<Header />
 
 						<section className="inline-flex space-x-6">
-							{searchParams.has('filtered') && <Filter />}
-							<Table
-								columns={table?.columns}
-								rows={table.rows}
-							/>
+							{filterActive && <Filter />}
+							{layoutListActive && (
+								<List
+									columns={table?.columns}
+									rows={table.rows}
+								/>
+							)}
+							{LayoutGridActive && (
+								<Grid
+									columns={table?.columns}
+									rows={table?.rows}
+								/>
+							)}
 						</section>
 					</div>
 				</React.Fragment>

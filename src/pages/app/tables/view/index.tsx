@@ -22,9 +22,10 @@ export function View(): React.ReactElement {
 					className="bg-transparent shadow-none text-black hover:bg-transparent"
 					onClick={() => {
 						navigate(
-							location.pathname
-								.replace(`/${params.id!}`, '')
-								.replace('/view', ''),
+							-1,
+							// location.pathname
+							// 	.replace(`/${params.id!}`, '')
+							// 	.replace('/view', ''),
 						);
 					}}
 				>

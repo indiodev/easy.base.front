@@ -34,7 +34,7 @@ import {
 	useParams,
 	useSearchParams,
 } from 'react-router-dom';
-import { Modal } from './modal';
+import { Modal } from '../modal';
 interface Props {
 	columns: Column[];
 	rows: Row[];
@@ -58,7 +58,7 @@ function normalizeRows(props: Row) {
 	return normalized;
 }
 
-export function Table({ columns, rows }: Props): React.ReactElement {
+export function List({ columns, rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const params = useParams();

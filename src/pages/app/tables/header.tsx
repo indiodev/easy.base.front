@@ -16,6 +16,8 @@ import {
 	ArrowDownUp,
 	Database,
 	Filter,
+	LayoutDashboard,
+	LayoutList,
 	Newspaper,
 	Pencil,
 	Search,
@@ -26,13 +28,22 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Modal } from './modal';
 
 export function Header(): React.ReactElement {
+	const { id } = useParams();
+
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
 
-	const { id } = useParams();
+	const filterActive =
+		searchParams.has('filtered') && searchParams.get('filtered') !== 'false';
 
-	console.log({ id });
+	const layout =
+		searchParams.has('view-layout') &&
+		searchParams.get('view-layout') === 'grid'
+			? 'grid'
+			: 'list';
+
+	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>(layout);
 
 	const newFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const newRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -47,12 +58,11 @@ export function Header(): React.ReactElement {
 					<Button
 						className={cn(
 							'bg-transparent shadow-none text-indigo-600 hover:bg-indigo-50 border border-indigo-200 inline-flex gap-1',
-							searchParams.has('filtered') &&
-								'bg-indigo-600 text-white hover:bg-indigo-600',
+							filterActive && 'bg-indigo-600 text-white hover:bg-indigo-600',
 						)}
 						onClick={() => {
-							if (searchParams.has('filtered')) {
-								searchParams.delete('filtered');
+							if (filterActive) {
+								searchParams.set('filtered', 'false');
 								setSearchParams(searchParams);
 								return;
 							}
@@ -68,6 +78,33 @@ export function Header(): React.ReactElement {
 					</Button>
 
 					<div className="inline-flex space-x-2 w-full justify-end">
+						<Button
+							className="bg-transparent hover:bg-transparent border shadow-none"
+							onClick={() => {
+								if (viewLayout === 'list') {
+									setViewLayout('grid');
+									setSearchParams((state) => {
+										state.set('view-layout', 'grid');
+										return state;
+									});
+									return;
+								}
+
+								setViewLayout('list');
+								setSearchParams((state) => {
+									state.set('view-layout', 'list');
+									return state;
+								});
+							}}
+						>
+							{viewLayout === 'list' && (
+								<LayoutDashboard className="w-5 h-5  text-gray-600" />
+							)}
+
+							{viewLayout === 'grid' && (
+								<LayoutList className="w-5 h-5  text-gray-600" />
+							)}
+						</Button>
 						<div className="inline-flex items-center relative max-w-96 w-full">
 							<Search
 								className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-indigo-600"
