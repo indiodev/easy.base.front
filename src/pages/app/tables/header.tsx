@@ -9,7 +9,9 @@ import {
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
 import { Input } from '@components/ui/input';
+import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
+import { QUERY } from '@models/base.model';
 import {
 	ArrowDownUp,
 	Database,
@@ -20,13 +22,17 @@ import {
 	Trash,
 } from 'lucide-react';
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Modal } from './modal';
 
 export function Header(): React.ReactElement {
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
+
+	const { id } = useParams();
+
+	console.log({ id });
 
 	const newFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const newRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -99,6 +105,9 @@ export function Header(): React.ReactElement {
 									<DropdownMenuItem
 										className="inline-flex space-x-1 w-full"
 										onClick={() => {
+											tanstack.refetchQueries({
+												queryKey: [QUERY.COLUMN_FIND_MANY_BY_TABLE_ID, id],
+											});
 											newRowButtonRef?.current?.click();
 										}}
 									>

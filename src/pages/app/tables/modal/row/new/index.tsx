@@ -130,7 +130,10 @@ const NewRow = React.forwardRef<
 				{columns_status === 'success' && columns.length > 0 && (
 					<Form {...form}>
 						<form
-							className="flex flex-col gap-4"
+							className={cn(
+								columns.length > 5 && 'grid grid-cols-2 gap-4',
+								!(columns.length > 5) && 'flex flex-col gap-4',
+							)}
 							onSubmit={onSubmit}
 						>
 							{columns.map((column) => {
