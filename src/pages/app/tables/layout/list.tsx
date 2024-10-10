@@ -28,12 +28,7 @@ import {
 	Trash,
 } from 'lucide-react';
 import React from 'react';
-import {
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
 	columns: Column[];
@@ -61,9 +56,9 @@ function normalizeRows(props: Row) {
 export function List({ columns, rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const params = useParams();
+	// const params = useParams();
 
-	const [, setSearchParams] = useSearchParams(
+	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
 
@@ -85,7 +80,26 @@ export function List({ columns, rows }: Props): React.ReactElement {
 								col?.config?.display && (
 									<TableHead key={col._id}>
 										<div className="inline-flex items-center gap-1">
-											<Button className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300">
+											<Button
+												onClick={() => {
+													if (
+														searchParams.has(col.slug) &&
+														searchParams.get(col.slug) === 'DESC'
+													) {
+														setSearchParams((state) => {
+															state.set(col.slug, 'ASC');
+															return state;
+														});
+														return;
+													}
+
+													setSearchParams((state) => {
+														state.set(col.slug, 'DESC');
+														return state;
+													});
+												}}
+												className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300"
+											>
 												<ChevronsLeftRight className="w-4 h-4 rotate-90" />
 											</Button>
 											<span>{col.title}</span>
@@ -178,7 +192,6 @@ export function List({ columns, rows }: Props): React.ReactElement {
 										<DropdownMenuItem
 											className="inline-flex space-x-1 w-full"
 											onClick={() => {
-												console.log(params);
 												navigate({
 													pathname: location.pathname
 														.concat('/view/')
