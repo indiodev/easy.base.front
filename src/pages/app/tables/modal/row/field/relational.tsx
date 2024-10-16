@@ -26,18 +26,14 @@ export function Relational({
 	column: Partial<Column>;
 }): React.ReactElement {
 	const form = useFormContext();
-	console.log({ column });
 
 	const { data: row_list, status: row_list_status } = useRowFindManyQuery({
 		collection: column.config!.relation!.collection!,
 		columnId: column.config!.relation!.visible!,
 	});
 
-	console.log({ row_list, row_list_status, column });
-
 	return (
 		<FormField
-			// key={column._id}
 			control={form.control}
 			name={column!.slug!}
 			render={({ field }) => {
@@ -67,7 +63,7 @@ export function Relational({
 											return (
 												<SelectItem
 													key={option._id}
-													value={option[field]}
+													value={option._id}
 												>
 													{option[field]}
 												</SelectItem>
