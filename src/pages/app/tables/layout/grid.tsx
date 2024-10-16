@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from '@components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -19,6 +18,7 @@ import {
 	useSearchParams,
 } from 'react-router-dom';
 import { Modal } from '../modal';
+import { Setting } from './setting';
 interface Props {
 	columns: Column[];
 	rows: Row[];
@@ -58,96 +58,90 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
 	return (
-		<section className="grid grid-cols-4">
-			{normalizedRow?.map(({ value, id }) => {
-				return (
-					<div
-						key={id}
-						className="flex flex-col space-y-1 bg-indigo-200/50 p-4 rounded-lg shadow-md w-full"
-					>
-						<div className="inline-flex items-center justify-end">
-							<DropdownMenu>
-								<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
-									<Ellipsis className="w-4 h-4" />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent>
-									<DropdownMenuLabel>Ações</DropdownMenuLabel>
-									<DropdownMenuSeparator />
+		<main className="flex-1 w-full flex flex-col  rounded-md gap-4">
+			<div className="inline-flex justify-end pr-14 py-2 bg-indigo-100/30 hover:bg-indigo-100/30 ">
+				<Setting />
+			</div>
 
-									<DropdownMenuItem
-										className="inline-flex space-x-1 w-full"
-										onClick={() => {
-											console.log(params);
-											navigate({
-												pathname: location.pathname.concat('/view/').concat(id),
-											});
-										}}
-									>
-										<Eye className="w-4 h-4" />
-										<span>Visualizar</span>
-									</DropdownMenuItem>
+			<section className="grid grid-cols-4 gap-4">
+				{normalizedRow?.map(({ value, id }) => {
+					return (
+						<div
+							key={id}
+							className="flex flex-col space-y-1 bg-indigo-200/50 p-4 rounded-lg shadow-md w-full"
+						>
+							<div className="inline-flex items-center justify-end">
+								<DropdownMenu>
+									<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
+										<Ellipsis className="w-4 h-4" />
+									</DropdownMenuTrigger>
+									<DropdownMenuContent>
+										<DropdownMenuLabel>Ações</DropdownMenuLabel>
+										<DropdownMenuSeparator />
 
-									<DropdownMenuItem
-										className="inline-flex space-x-1 w-full"
-										onClick={() => {
-											setSearchParams((state) => {
-												state.set('row_id', id);
-												return state;
-											});
-											editRowButtonRef?.current?.click();
-										}}
-									>
-										<Pencil className="w-4 h-4" />
-										<span>Editar</span>
-									</DropdownMenuItem>
+										<DropdownMenuItem
+											className="inline-flex space-x-1 w-full"
+											onClick={() => {
+												console.log(params);
+												navigate({
+													pathname: location.pathname
+														.concat('/view/')
+														.concat(id),
+												});
+											}}
+										>
+											<Eye className="w-4 h-4" />
+											<span>Visualizar</span>
+										</DropdownMenuItem>
 
-									<DropdownMenuItem
-										className="inline-flex space-x-1 w-full"
-										onClick={() => {
-											setSearchParams((state) => {
-												state.set('row_id', id);
-												return state;
-											});
-											removeRowButtonRef?.current?.click();
-										}}
-									>
-										<Trash className="w-4 h-4" />
-										<span>Remover</span>
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+										<DropdownMenuItem
+											className="inline-flex space-x-1 w-full"
+											onClick={() => {
+												setSearchParams((state) => {
+													state.set('row_id', id);
+													return state;
+												});
+												editRowButtonRef?.current?.click();
+											}}
+										>
+											<Pencil className="w-4 h-4" />
+											<span>Editar</span>
+										</DropdownMenuItem>
+
+										<DropdownMenuItem
+											className="inline-flex space-x-1 w-full"
+											onClick={() => {
+												setSearchParams((state) => {
+													state.set('row_id', id);
+													return state;
+												});
+												removeRowButtonRef?.current?.click();
+											}}
+										>
+											<Trash className="w-4 h-4" />
+											<span>Remover</span>
+										</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
+							</div>
+							<div className="space-x-2 pt-2">
+								<span>ID</span>:<span>{id}</span>
+							</div>
+							{Object.entries(value).map(([key, val]) => {
+								const column = columns.find((col) => col.slug === key);
+								if (!column || !column?.config?.display) return null;
+
+								return (
+									<div className="space-x-2">
+										<span>{column.title}</span>:<span>{val}</span>
+									</div>
+								);
+							})}
 						</div>
-						<div className="space-x-2 pt-2">
-							<span>ID</span>:<span>{id}</span>
-						</div>
-						{Object.entries(value).map(([key, val]) => {
-							const column = columns.find((col) => col.slug === key);
-							if (!column || !column?.config?.display) return null;
-
-							return (
-								<div className="space-x-2">
-									<Button
-										className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300"
-										onClick={() => {
-											setSearchParams((state) => {
-												state.set('field_id', column._id);
-												return state;
-											});
-
-											editFieldButtonRef?.current?.click();
-										}}
-									>
-										<Pencil className="w-4 h-4" />
-									</Button>
-									<span>{column.title}</span>:<span>{val}</span>
-								</div>
-							);
-						})}
-					</div>
-				);
-			})}
-			{/* {columns.map((col) => col?.config?.display && <div>col.title</div>)} */}
-			{/* <Root>
+					);
+				})}
+				{/* {columns.map((col) => col?.config?.display && <div>col.title</div>)} */}
+				{/* <Root>
 				<TableHeader>
 					<TableRow className="bg-indigo-100/30 hover:bg-indigo-100/30">
 						<TableHead>ID</TableHead>
@@ -297,9 +291,10 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 				</TableBody>
 			</Root> */}
 
-			<Modal.EditField ref={editFieldButtonRef} />
-			<Modal.RemoveRow ref={removeRowButtonRef} />
-			<Modal.EditRow ref={editRowButtonRef} />
-		</section>
+				<Modal.EditField ref={editFieldButtonRef} />
+				<Modal.RemoveRow ref={removeRowButtonRef} />
+				<Modal.EditRow ref={editRowButtonRef} />
+			</section>
+		</main>
 	);
 }

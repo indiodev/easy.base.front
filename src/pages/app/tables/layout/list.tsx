@@ -3,7 +3,6 @@ import { Button } from '@components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
@@ -19,17 +18,11 @@ import {
 } from '@components/ui/table';
 import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
-import {
-	ChevronsLeftRight,
-	Ellipsis,
-	Eye,
-	Pencil,
-	Settings,
-	Trash,
-} from 'lucide-react';
+import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
+import { Setting } from './setting';
 interface Props {
 	columns: Column[];
 	rows: Row[];
@@ -56,7 +49,6 @@ function normalizeRows(props: Row) {
 export function List({ columns, rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
-	// const params = useParams();
 
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
@@ -64,7 +56,6 @@ export function List({ columns, rows }: Props): React.ReactElement {
 
 	const normalizedRow = rows.map(normalizeRows);
 
-	const editFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
@@ -103,71 +94,12 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												<ChevronsLeftRight className="w-4 h-4 rotate-90" />
 											</Button>
 											<span>{col.title}</span>
-											<Button
-												className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300"
-												onClick={() => {
-													setSearchParams((state) => {
-														state.set('field_id', col._id);
-														return state;
-													});
-
-													editFieldButtonRef?.current?.click();
-												}}
-											>
-												<Pencil className="w-4 h-4" />
-											</Button>
 										</div>
 									</TableHead>
 								),
 						)}
-						<TableHead className="w-[80px]">
-							<DropdownMenu dir="ltr">
-								<DropdownMenuTrigger className="w-full flex items-center justify-center">
-									<Settings className="w-5 h-5  text-gray-600" />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent className="mr-10">
-									<DropdownMenuGroup>
-										<DropdownMenuLabel>Colunas</DropdownMenuLabel>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem
-											disabled
-											className="inline-flex w-full space-x-1"
-										>
-											<Pencil className="w-4 h-4" />
-											<span>ID</span>
-										</DropdownMenuItem>
-										<DropdownMenuItem
-											disabled
-											className="inline-flex w-full space-x-1"
-										>
-											<Pencil className="w-4 h-4" />
-											<span>Criador</span>
-										</DropdownMenuItem>
-
-										{columns?.map((col) => (
-											<DropdownMenuItem
-												key={col._id}
-												className="inline-flex w-full space-x-1"
-												onClick={() => {
-													setSearchParams((state) => {
-														state.set('field_id', col._id);
-														return state;
-													});
-
-													editFieldButtonRef?.current?.click();
-												}}
-											>
-												<Pencil className="w-4 h-4" />
-												{!col.config?.display && (
-													<span className="opacity-50">{col?.title}</span>
-												)}
-
-												{col.config?.display && <span>{col?.title}</span>}
-											</DropdownMenuItem>
-										))}
-									</DropdownMenuGroup>
-								</DropdownMenuContent>
-							</DropdownMenu>
+						<TableHead>
+							<Setting />
 						</TableHead>
 					</TableRow>
 				</TableHeader>
@@ -181,11 +113,11 @@ export function List({ columns, rows }: Props): React.ReactElement {
 							})}
 
 							<TableCell className="w-[80px]">
-								<DropdownMenu>
-									<DropdownMenuTrigger className="w-full flex items-center justify-center">
+								<DropdownMenu dir="ltr">
+									<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
 										<Ellipsis className="w-4 h-4" />
 									</DropdownMenuTrigger>
-									<DropdownMenuContent>
+									<DropdownMenuContent className="mr-10">
 										<DropdownMenuLabel>Ações</DropdownMenuLabel>
 										<DropdownMenuSeparator />
 
@@ -237,8 +169,6 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					))}
 				</TableBody>
 			</Root>
-
-			<Modal.EditField ref={editFieldButtonRef} />
 			<Modal.RemoveRow ref={removeRowButtonRef} />
 			<Modal.EditRow ref={editRowButtonRef} />
 		</React.Fragment>
