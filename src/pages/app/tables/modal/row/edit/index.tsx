@@ -36,7 +36,7 @@ import { cn } from '@libs/utils';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { useRowUpdateMutation } from '@mutation/row/update.mutation';
 import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
-import { useRowShowQuery } from '@query/row/show';
+import { useRowShowQuery } from '@query/row/show.query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -44,6 +44,7 @@ import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { Relational } from '../field/relational';
 
 const EditRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -284,6 +285,14 @@ const EditRow = React.forwardRef<
 													</FormItem>
 												);
 											}}
+										/>
+									);
+
+								if (column?.type === COLUMN_TYPE.RELATIONAL)
+									return (
+										<Relational
+											key={column._id}
+											column={column}
 										/>
 									);
 

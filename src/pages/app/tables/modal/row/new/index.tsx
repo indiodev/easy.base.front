@@ -43,6 +43,7 @@ import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { Relational } from '../field/relational';
 
 const NewRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -96,7 +97,6 @@ const NewRow = React.forwardRef<
 	});
 
 	const formHasError = Object.keys(form.formState.errors).length > 0;
-
 
 	return (
 		<Dialog
@@ -306,6 +306,54 @@ const NewRow = React.forwardRef<
 										/>
 									);
 
+								if (column?.type === COLUMN_TYPE.RELATIONAL)
+									return (
+										<Relational
+											key={column._id}
+											column={column}
+										/>
+									);
+								// return (
+								// 	<FormField
+								// 		key={column._id}
+								// 		control={form.control}
+								// 		name={column.slug}
+								// 		render={({ field }) => {
+								// 			const hasError = !!form.formState.errors[column.slug];
+								// 			return (
+								// 				<FormItem>
+								// 					<FormLabel>{column.title}</FormLabel>
+								// 					<Select
+								// 						onValueChange={field.onChange}
+								// 						defaultValue={field.value}
+								// 					>
+								// 						<FormControl>
+								// 							<SelectTrigger
+								// 								className={cn(hasError && 'border-red-500')}
+								// 							>
+								// 								<SelectValue placeholder="Selecione uma opção" />
+								// 							</SelectTrigger>
+								// 						</FormControl>
+								// 						<SelectContent>
+								// 							{/* {column.config?.options?.map(
+								// 								(option, index) => (
+								// 									<SelectItem
+								// 										key={index}
+								// 										value={option.name}
+								// 									>
+								// 										{option.name}
+								// 									</SelectItem>
+								// 								),
+								// 							)} */}
+								// 						</SelectContent>
+								// 					</Select>
+
+								// 					{/* <FormMessage /> */}
+								// 				</FormItem>
+								// 			);
+								// 		}}
+								// 	/>
+								// );
 
 								return (
 									<FormField

@@ -1,6 +1,6 @@
 import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
-import { useRowShowQuery } from '@query/row/show';
+import { useRowShowQuery } from '@query/row/show.query';
 import { ArrowLeft } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
