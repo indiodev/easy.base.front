@@ -11,12 +11,7 @@ import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
 import { Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
-import {
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
 import { Setting } from './setting';
 interface Props {
@@ -45,7 +40,7 @@ function normalizeRows(props: Row) {
 export function Grid({ columns, rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const params = useParams();
+	// const params = useParams();
 
 	const [, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),

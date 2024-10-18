@@ -14,6 +14,10 @@ export interface Column {
 		filter?: boolean;
 		default?: string;
 		format?: COLUMN_FORMAT;
+		relation?: {
+			collection: string;
+			visible: string;
+		};
 	};
 	status: string | null;
 	created_at: string;

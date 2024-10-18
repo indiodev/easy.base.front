@@ -43,6 +43,21 @@ export default class RowService {
 		return data;
 	}
 
+	public async findMany({
+		collection,
+		columnId,
+	}: {
+		columnId: string;
+		collection: string;
+	}) {
+		//
+
+		const { data } = await API.get(
+			`/tables/${collection}/column/${columnId}/row`,
+		);
+		return data;
+	}
+
 	public async delete(payload: { tableId: string; id: string }) {
 		const { data } = await API.delete(
 			`/tables/${payload.tableId}/row/${payload.id}`,
