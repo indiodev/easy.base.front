@@ -35,12 +35,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { tanstack } from '@libs/tanstack';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { useColumnCreateMutation } from '@mutation/column/new.mutation';
+import { useTableListQuery } from '@query/table/list.query';
 import { LoaderCircle, Plus, Trash } from 'lucide-react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
-import { useTableListQuery } from '@query/table/list.query';
 const NewField = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
@@ -63,12 +63,6 @@ const NewField = React.forwardRef<
 	const { mutateAsync: create_column, status: create_column_status } =
 		useColumnCreateMutation({
 			onSuccess() {
-				// queryKey: [QUERY.COLUMN_FIND_MANY_BY_TABLE_ID, tableId],
-				// queryKey: [QUERY.COLUMN_SHOW, query.id, query.tableId],
-				// queryKey: [QUERY.TABLE_LIST],
-				// queryKey: [QUERY.TABLE_SHOW, id],
-				// queryKey: [QUERY.ROW_SHOW, query.id, query.tableId],
-
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_SHOW, params.id],
 				});
@@ -386,17 +380,20 @@ const NewField = React.forwardRef<
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													{ table_list_status === 'success' ?
-														table_list.map((table, index) => (
-															<SelectItem
-																key={index}
-																value={table.data_collection}
-															>
-																{table.title} 
-															</SelectItem>
-														))
-														: (table_list_status === 'pending' ? `Carregando` : `Indisponivel`)
-													}
+													{table_list_status === 'success'
+														? table_list
+																.filter((table) => table._id !== params.id)
+																.map((table, index) => (
+																	<SelectItem
+																		key={index}
+																		value={table.data_collection}
+																	>
+																		{table.title}
+																	</SelectItem>
+																))
+														: table_list_status === 'pending'
+															? `Carregando`
+															: `Indisponivel`}
 												</SelectContent>
 											</Select>
 
@@ -405,41 +402,48 @@ const NewField = React.forwardRef<
 									)}
 								/>
 								<FormField
-								control={form.control}
-								name="config.relation.visible"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Coluna exibida</FormLabel>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<FormControl>
-												<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
-													<SelectValue
-														placeholder="Selecione uma tabela para relacionar"
-														className="placeholder:text-gray-100"
-													/>
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{  form.watch('config.relation.collection') && table_list ?
+									control={form.control}
+									name="config.relation.visible"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Coluna exibida</FormLabel>
+											<Select
+												onValueChange={field.onChange}
+												defaultValue={field.value}
+											>
+												<FormControl>
+													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+														<SelectValue
+															placeholder="Selecione uma tabela para relacionar"
+															className="placeholder:text-gray-100"
+														/>
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{form.watch('config.relation.collection') &&
 													table_list
-														.find((table) => table.data_collection === form.watch('config.relation.collection'))
-														?.columns.map((column) => (
-															<SelectItem key={column._id} value={column._id}>
-																{column.title}
-															</SelectItem>
-														))
-													: ( `Indisponivel`)
-												}
-											</SelectContent>
-										</Select>
+														? table_list
+																.find(
+																	(table) =>
+																		table.data_collection ===
+																		form.watch('config.relation.collection'),
+																)
+																?.columns.map((column) => (
+																	<SelectItem
+																		key={column._id}
+																		value={column._id}
+																	>
+																		{column.title}
+																	</SelectItem>
+																))
+														: `Indisponivel`}
+												</SelectContent>
+											</Select>
 
-										<FormMessage className="text-right" />
-									</FormItem>
-								)}
-							/>
+											<FormMessage className="text-right" />
+										</FormItem>
+									)}
+								/>
 							</>
 						)}
 
