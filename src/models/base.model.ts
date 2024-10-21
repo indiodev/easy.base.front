@@ -9,6 +9,7 @@ export enum QUERY {
 	COLUMN_SHOW = 'COLUMN_SHOW',
 	ROW_SHOW = 'ROW_SHOW',
 	ROW_FIND_MANY = 'ROW_FIND_MANY',
+	USER_LIST = 'USER_LIST',
 }
 
 export enum COLUMN_TYPE {
