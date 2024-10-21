@@ -12,7 +12,9 @@
       "@services/*": ["./src/services/*"],
       "@store/*": ["./src/store/*"],
       "@query/*": ["./src/query/*"],
-      "@debounces/*": ["./src/debounces/*"]
+      "@debounces/*": ["./src/debounces/*"],
+      "@hooks/*": ["./src/hooks/*"]
+
     },
 
     "composite": true,

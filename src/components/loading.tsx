@@ -8,7 +8,10 @@ export function Loading({
 }: React.ComponentPropsWithoutRef<'section'>): React.ReactElement {
 	return (
 		<section
-			className={cn('flex-1 w-full h-full', className)}
+			className={cn(
+				'flex-1 w-full h-full justify-center items-center',
+				className,
+			)}
 			{...props}
 		>
 			<LoaderCircle className="w-10 h-10 animate-spin stroke-indigo-500" />
