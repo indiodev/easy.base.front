@@ -45,18 +45,12 @@ import {
 	Users,
 } from 'lucide-react';
 import React from 'react';
-import {
-	NavLink,
-	Outlet,
-	useLocation,
-	useNavigate,
-	useParams,
-} from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from './modal';
 
 export function App(): React.ReactElement {
 	const { toggleSidebar, open, isMobile } = useSidebar();
-	const params = useParams();
+	// const params = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const auth = AuthStore();
