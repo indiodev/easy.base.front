@@ -29,7 +29,7 @@ export function Tables(): React.ReactElement {
 		searchParams.get('view-layout') === 'grid';
 
 	return (
-		<section className="flex h-auto flex-1 flex-col gap-4">
+		<section className="flex h-auto flex-1 flex-col gap-4 w-full">
 			{table_status === 'pending' && (
 				<Loading className="flex justify-center items-center h-screen flex-1" />
 			)}
