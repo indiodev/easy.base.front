@@ -28,42 +28,42 @@ export function Tables(): React.ReactElement {
 		searchParams.has('view-layout') &&
 		searchParams.get('view-layout') === 'grid';
 
+	if (table_status === 'pending') {
+		return (
+			<Loading className="flex justify-center items-center h-full flex-1" />
+		);
+	}
+
 	return (
-		<section className="flex h-auto flex-1 flex-col gap-4 w-full">
-			{table_status === 'pending' && (
-				<Loading className="flex justify-center items-center h-screen flex-1" />
-			)}
-
+		<section className="flex h-full flex-1 flex-col gap-4 w-full overflow-y-auto">
 			{table_status === 'success' && (
-				<React.Fragment>
-					<div className="flex-1 w-full bg-neutral-50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-						<div className="inline-flex items-center justify-between">
-							<h2 className="text-3xl font-medium text-indigo-600">
-								{table?.title}
-							</h2>
-						</div>
-
-						<Separator />
-
-						<Header />
-
-						<section className="inline-flex space-x-6">
-							{filterActive && <Filter />}
-							{layoutListActive && (
-								<List
-									columns={table?.columns}
-									rows={table.rows}
-								/>
-							)}
-							{LayoutGridActive && (
-								<Grid
-									columns={table?.columns}
-									rows={table?.rows}
-								/>
-							)}
-						</section>
+				<div className="flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
+					<div className="inline-flex items-center justify-between">
+						<h2 className="text-3xl font-medium text-indigo-600">
+							{table?.title}
+						</h2>
 					</div>
-				</React.Fragment>
+
+					<Separator />
+
+					<Header />
+
+					<section className="inline-flex space-x-6">
+						{filterActive && <Filter />}
+						{layoutListActive && (
+							<List
+								columns={table?.columns}
+								rows={table.rows}
+							/>
+						)}
+						{LayoutGridActive && (
+							<Grid
+								columns={table?.columns}
+								rows={table?.rows}
+							/>
+						)}
+					</section>
+				</div>
 			)}
 		</section>
 	);
