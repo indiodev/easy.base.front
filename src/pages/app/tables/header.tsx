@@ -104,7 +104,7 @@ export function Header(): React.ReactElement {
 
 			<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
 				<span>Resultados por página: </span>
-				<Select>
+				<Select defaultValue="10">
 					<SelectTrigger className="w-[180px]">
 						<SelectValue placeholder="Selecione uma opção" />
 					</SelectTrigger>
