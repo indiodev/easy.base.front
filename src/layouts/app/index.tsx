@@ -28,7 +28,9 @@ export function App(): React.ReactElement {
 						</section>
 					)}
 
-					<Outlet />
+					<section className="flex h-full flex-1 flex-col gap-4 w-full overflow-y-auto">
+						<Outlet />
+					</section>
 				</main>
 			</React.Suspense>
 		</React.Fragment>
