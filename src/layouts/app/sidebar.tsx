@@ -154,7 +154,7 @@ export function Sidebar() {
 													)}
 												>
 													<NavLink
-														to={`/app/tables/${table._id}?filtered=false&view-layout=list`}
+														to={`/app/tables/${table._id}?filtered=false`}
 													>
 														<Table className="h-5 w-5 text-neutral-600" />
 														<span className="text-lg text-neutral-600">

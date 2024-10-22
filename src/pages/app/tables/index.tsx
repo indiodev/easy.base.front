@@ -1,6 +1,20 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Loading } from '@components/loading';
+import { Button } from '@components/ui/button';
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+} from '@components/ui/pagination';
 import { Separator } from '@components/ui/separator';
 import { useTableShowQuery } from '@query/table/show.query';
+import { useUserProfileQuery } from '@query/user/profile.query';
+import {
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+} from 'lucide-react';
 import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
@@ -17,29 +31,23 @@ export function Tables(): React.ReactElement {
 		id: params?.id || '',
 	});
 
+	const { data: user, status: user_status } = useUserProfileQuery();
+
 	const filterActive =
 		searchParams.has('filtered') && searchParams.get('filtered') !== 'false';
 
-	const layoutListActive =
-		searchParams.has('view-layout') &&
-		searchParams.get('view-layout') === 'list';
-
-	const LayoutGridActive =
-		searchParams.has('view-layout') &&
-		searchParams.get('view-layout') === 'grid';
-
-	if (table_status === 'pending') {
+	if (table_status === 'pending' || user_status === 'pending') {
 		return (
 			<Loading className="flex justify-center items-center h-full flex-1" />
 		);
 	}
 
-	if (table_status === 'error') {
+	if (table_status === 'error' || user_status === 'error') {
 		return (
 			<section className="flex h-full flex-1 flex-col gap-4 w-full overflow-y-auto">
 				<div className="flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
 					<h2 className="text-3xl font-medium text-indigo-600">
-						Tabela não encontrada
+						Houve um problema ao buscar dados
 					</h2>
 				</div>
 			</section>
@@ -56,18 +64,66 @@ export function Tables(): React.ReactElement {
 
 			<section className="inline-flex space-x-6">
 				{filterActive && <Filter />}
-				{layoutListActive && (
+				{user?.config?.table?.[params?.id!]?.layout === 'list' && (
 					<List
 						columns={table?.columns}
 						rows={table.rows}
 					/>
 				)}
-				{LayoutGridActive && (
+				{user?.config?.table?.[params?.id!]?.layout === 'grid' && (
 					<Grid
 						columns={table?.columns}
 						rows={table?.rows}
 					/>
 				)}
+			</section>
+
+			<section className="inline-flex w-full justify-end">
+				<div className="inline-flex space-x-8 items-center">
+					<label className="inline-block max-w-32 w-full">
+						Página <strong>1</strong> de <strong>100</strong>
+					</label>
+					<Pagination className="justify-end">
+						<PaginationContent>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronsLeft />
+								</Button>
+							</PaginationItem>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronLeft />
+								</Button>
+							</PaginationItem>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronRight />
+								</Button>
+							</PaginationItem>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronsRight />
+								</Button>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				</div>
 			</section>
 		</div>
 	);
