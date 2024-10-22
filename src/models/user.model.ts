@@ -10,6 +10,15 @@ export interface User {
 	rows: Row[];
 	// forms: Form[],
 	created_at: string;
+	config?: {
+		table?: Record<string, { layout: 'grid' | 'list' }>;
+	};
 }
 
-//name, email, 
+//name, email,
+
+export interface UserTableUpdate {
+	// id: string;
+	tableId: string;
+	layout: 'grid' | 'list';
+}

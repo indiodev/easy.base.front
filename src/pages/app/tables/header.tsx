@@ -8,26 +8,44 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@components/ui/select';
+import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
+import { QUERY } from '@models/base.model';
+import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
+import { useUserProfileQuery } from '@query/user/profile.query';
 import { Filter, LayoutDashboard, LayoutList, Search } from 'lucide-react';
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 export function Header(): React.ReactElement {
+	const params = useParams();
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
 
+	const { data: user, status: user_status } = useUserProfileQuery();
+
+	const { mutateAsync: update_table_layout } = useUserTableLayoutMutation({
+		onSuccess() {
+			tanstack.refetchQueries({
+				queryKey: [QUERY.USER_PROFILE],
+			});
+		},
+		onError(error) {
+			console.error(error);
+		},
+	});
+
 	const filterActive =
 		searchParams.has('filtered') && searchParams.get('filtered') !== 'false';
 
-	const layout =
-		searchParams.has('view-layout') &&
-		searchParams.get('view-layout') === 'grid'
-			? 'grid'
-			: 'list';
+	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>('list');
 
-	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>(layout);
+	React.useEffect(() => {
+		if (user_status === 'success' && params.id && user?.config?.table) {
+			setViewLayout(user?.config.table[params.id]?.layout);
+		}
+	}, [params, user, user_status]);
 
 	return (
 		<header className="w-full inline-flex items-center">
@@ -68,19 +86,9 @@ export function Header(): React.ReactElement {
 				<Button
 					className="bg-transparent hover:bg-transparent border shadow-none"
 					onClick={() => {
-						if (viewLayout === 'list') {
-							setViewLayout('grid');
-							setSearchParams((state) => {
-								state.set('view-layout', 'grid');
-								return state;
-							});
-							return;
-						}
-
-						setViewLayout('list');
-						setSearchParams((state) => {
-							state.set('view-layout', 'list');
-							return state;
+						update_table_layout({
+							layout: viewLayout === 'list' ? 'grid' : 'list',
+							tableId: params.id,
 						});
 					}}
 				>
