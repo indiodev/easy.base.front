@@ -38,11 +38,9 @@ export function Tables(): React.ReactElement {
 		<section className="flex h-full flex-1 flex-col gap-4 w-full overflow-y-auto">
 			{table_status === 'success' && (
 				<div className="flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-					<div className="inline-flex items-center justify-between">
-						<h2 className="text-3xl font-medium text-indigo-600">
-							{table?.title}
-						</h2>
-					</div>
+					<h2 className="text-3xl font-medium text-indigo-600">
+						{table?.title}
+					</h2>
 
 					<Separator />
 
