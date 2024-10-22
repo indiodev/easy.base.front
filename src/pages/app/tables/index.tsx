@@ -1,6 +1,18 @@
 import { Loading } from '@components/loading';
+import { Button } from '@components/ui/button';
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+} from '@components/ui/pagination';
 import { Separator } from '@components/ui/separator';
 import { useTableShowQuery } from '@query/table/show.query';
+import {
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+} from 'lucide-react';
 import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
@@ -68,6 +80,54 @@ export function Tables(): React.ReactElement {
 						rows={table?.rows}
 					/>
 				)}
+			</section>
+
+			<section className="inline-flex w-full justify-end">
+				<div className="inline-flex space-x-8 items-center">
+					<label className="inline-block max-w-32 w-full">
+						Página <strong>1</strong> de <strong>100</strong>
+					</label>
+					<Pagination className="justify-end">
+						<PaginationContent>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronsLeft />
+								</Button>
+							</PaginationItem>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronLeft />
+								</Button>
+							</PaginationItem>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronRight />
+								</Button>
+							</PaginationItem>
+							<PaginationItem>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border"
+								>
+									<ChevronsRight />
+								</Button>
+							</PaginationItem>
+						</PaginationContent>
+					</Pagination>
+				</div>
 			</section>
 		</div>
 	);
