@@ -12,7 +12,7 @@ export default class UserService {
 		return data;
 	}
 
-	public async tableLayout(payload: UserTableUpdate): Promise<void> {
+	public async tableLayout(payload: Partial<UserTableUpdate>): Promise<void> {
 		await API.patch('/users/table-layout', payload);
 	}
 }
