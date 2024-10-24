@@ -288,7 +288,7 @@ const EditRow = React.forwardRef<
 										/>
 									);
 
-								if (column?.type === COLUMN_TYPE.RELATIONAL)
+								if (column?.type === COLUMN_TYPE.RELATIONAL || column?.type === COLUMN_TYPE.MULTIRELATIONAL)
 									return (
 										<Relational
 											key={column._id}

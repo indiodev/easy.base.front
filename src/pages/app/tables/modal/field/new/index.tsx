@@ -359,7 +359,7 @@ const NewField = React.forwardRef<
 							/>
 						)}
 
-						{form.watch('type') === COLUMN_TYPE.RELATIONAL && (
+						{[COLUMN_TYPE.RELATIONAL, COLUMN_TYPE.MULTIRELATIONAL].includes(form.watch('type')) && (
 							<>
 								<FormField
 									control={form.control}

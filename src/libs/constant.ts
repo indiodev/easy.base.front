@@ -25,6 +25,10 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 		label: 'Relacional',
 		type: COLUMN_TYPE.RELATIONAL,
 	},
+	{
+		label: 'Multirelacional',
+		type: COLUMN_TYPE.MULTIRELATIONAL,
+	},
 ];
 
 export const COLUMN_TEXT_SHORT_FORMAT_LIST = [
