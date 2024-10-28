@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import {
 	Pagination,
@@ -43,9 +44,14 @@ export function Tables(): React.ReactElement {
 
 			<Header />
 
+			{(table_status === 'pending' || user_status === 'pending') && (
+				<Loading className="flex justify-center items-center h-screen flex-1" />
+			)}
+
 			<section className="inline-flex space-x-6">
-				{filterActive && <Filter />}
+				{table_status === 'success' && filterActive && <Filter />}
 				{table_status === 'success' &&
+					user_status === 'success' &&
 					user?.config?.table?.[params?.id!]?.layout === 'list' && (
 						<List
 							columns={table?.columns}
@@ -53,6 +59,7 @@ export function Tables(): React.ReactElement {
 						/>
 					)}
 				{table_status === 'success' &&
+					user_status === 'success' &&
 					user?.config?.table?.[params?.id!]?.layout === 'grid' && (
 						<Grid
 							columns={table?.columns}
