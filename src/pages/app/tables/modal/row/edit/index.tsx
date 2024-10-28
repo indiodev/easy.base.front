@@ -6,6 +6,7 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -40,7 +41,6 @@ import { useRowShowQuery } from '@query/row/show.query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
-import { DialogDescription } from '@radix-ui/react-dialog';
 import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -293,7 +293,10 @@ const EditRow = React.forwardRef<
 										/>
 									);
 
-								if (column?.type === COLUMN_TYPE.RELATIONAL || column?.type === COLUMN_TYPE.MULTIRELATIONAL)
+								if (
+									column?.type === COLUMN_TYPE.RELATIONAL ||
+									column?.type === COLUMN_TYPE.MULTIRELATIONAL
+								)
 									return (
 										<Relational
 											key={column._id}

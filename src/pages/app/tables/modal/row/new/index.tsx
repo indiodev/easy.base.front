@@ -118,6 +118,7 @@ const NewRow = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Crie um registro
 					</DialogTitle>
+
 					<DialogDescription className="sr-only">
 						Crie um registro
 					</DialogDescription>
@@ -310,7 +311,10 @@ const NewRow = React.forwardRef<
 										/>
 									);
 
-								if (column?.type === COLUMN_TYPE.RELATIONAL || column?.type === COLUMN_TYPE.MULTIRELATIONAL)
+								if (
+									column?.type === COLUMN_TYPE.RELATIONAL ||
+									column?.type === COLUMN_TYPE.MULTIRELATIONAL
+								)
 									return (
 										<Relational
 											key={column._id}
