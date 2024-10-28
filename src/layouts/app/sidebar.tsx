@@ -270,7 +270,7 @@ export function Sidebar() {
 					<SidebarMenu>
 						{!(isMobile || !open) && (
 							<SidebarMenuItem>
-								<DropdownMenu>
+								<DropdownMenu modal={false}>
 									<DropdownMenuTrigger asChild>
 										<SidebarMenuButton className="h-14 hover:bg-transparent rounded-md">
 											{user_status === 'success' && (

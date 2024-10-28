@@ -113,7 +113,10 @@ export function List({ columns, rows }: Props): React.ReactElement {
 							})}
 
 							<TableCell className="w-[80px]">
-								<DropdownMenu dir="ltr">
+								<DropdownMenu
+									dir="ltr"
+									modal={false}
+								>
 									<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
 										<Ellipsis className="w-4 h-4" />
 									</DropdownMenuTrigger>

@@ -2,6 +2,7 @@ import { Button } from '@components/ui/button';
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -109,6 +110,10 @@ const NewField = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Adicionar nova coluna
 					</DialogTitle>
+
+					<DialogDescription className="sr-only">
+						Adicionar nova coluna
+					</DialogDescription>
 				</DialogHeader>
 
 				<Form {...form}>

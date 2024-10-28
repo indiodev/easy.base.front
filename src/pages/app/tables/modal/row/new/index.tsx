@@ -6,6 +6,7 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -117,6 +118,9 @@ const NewRow = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Crie um registro
 					</DialogTitle>
+					<DialogDescription className="sr-only">
+						Crie um registro
+					</DialogDescription>
 				</DialogHeader>
 
 				{columns_status === 'pending' && (

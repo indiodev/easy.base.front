@@ -40,6 +40,7 @@ import { useRowShowQuery } from '@query/row/show.query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+import { DialogDescription } from '@radix-ui/react-dialog';
 import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -146,6 +147,10 @@ const EditRow = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Editar registro
 					</DialogTitle>
+
+					<DialogDescription className="sr-only">
+						Edite os valores de cada coluna
+					</DialogDescription>
 				</DialogHeader>
 
 				{row_status === 'pending' && (

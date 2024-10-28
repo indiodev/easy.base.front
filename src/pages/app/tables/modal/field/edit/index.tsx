@@ -3,6 +3,7 @@ import { Button } from '@components/ui/button';
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -39,12 +40,12 @@ import { COLUMN_FORMAT, COLUMN_TYPE, QUERY } from '@models/base.model';
 import { Column } from '@models/column.model';
 import { useColumnUpdateMutation } from '@mutation/column/update.mutation';
 import { useColumnShowQuery } from '@query/column/show';
+import { useTableListQuery } from '@query/table/list.query';
 import { LoaderCircle, Plus, Trash } from 'lucide-react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
-import { useTableListQuery } from '@query/table/list.query';
 
 const EditField = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -154,6 +155,10 @@ const EditField = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Editar coluna
 					</DialogTitle>
+
+					<DialogDescription className="sr-only">
+						Edite os valores de cada coluna
+					</DialogDescription>
 				</DialogHeader>
 
 				{column_status === 'pending' && (
@@ -383,84 +388,93 @@ const EditField = React.forwardRef<
 								/>
 							)}
 
-							{[COLUMN_TYPE.RELATIONAL, COLUMN_TYPE.MULTIRELATIONAL].includes(form.watch('type')) && (
-							<>
-								<FormField
-									control={form.control}
-									name="config.relation.collection"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Tabela Base</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
-											>
-												<FormControl>
-													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
-														<SelectValue
-															placeholder="Selecione uma tabela para relacionar"
-															className="placeholder:text-gray-100"
-														/>
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{ table_list ?
-														table_list.map((table, index) => (
-															<SelectItem
-																key={index}
-																value={table.data_collection}
-															>
-																{table.title} 
-															</SelectItem>
-														))
-														: (table_list_status === 'pending' ? `Carregando` : `Indisponivel`)
-													}
-												</SelectContent>
-											</Select>
+							{[COLUMN_TYPE.RELATIONAL, COLUMN_TYPE.MULTIRELATIONAL].includes(
+								form.watch('type'),
+							) && (
+								<>
+									<FormField
+										control={form.control}
+										name="config.relation.collection"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Tabela Base</FormLabel>
+												<Select
+													onValueChange={field.onChange}
+													defaultValue={field.value}
+												>
+													<FormControl>
+														<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+															<SelectValue
+																placeholder="Selecione uma tabela para relacionar"
+																className="placeholder:text-gray-100"
+															/>
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{table_list
+															? table_list.map((table, index) => (
+																	<SelectItem
+																		key={index}
+																		value={table.data_collection}
+																	>
+																		{table.title}
+																	</SelectItem>
+																))
+															: table_list_status === 'pending'
+																? `Carregando`
+																: `Indisponivel`}
+													</SelectContent>
+												</Select>
 
-											<FormMessage className="text-right" />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="config.relation.visible"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Coluna exibida</FormLabel>
-											<Select
-												onValueChange={field.onChange}
-												defaultValue={field.value}
-											>
-												<FormControl>
-													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
-														<SelectValue
-															placeholder="Selecione uma tabela para relacionar"
-															className="placeholder:text-gray-100"
-														/>
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{  form.watch('config.relation.collection') && table_list ?
+												<FormMessage className="text-right" />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="config.relation.visible"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Coluna exibida</FormLabel>
+												<Select
+													onValueChange={field.onChange}
+													defaultValue={field.value}
+												>
+													<FormControl>
+														<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+															<SelectValue
+																placeholder="Selecione uma tabela para relacionar"
+																className="placeholder:text-gray-100"
+															/>
+														</SelectTrigger>
+													</FormControl>
+													<SelectContent>
+														{form.watch('config.relation.collection') &&
 														table_list
-															.find((table) => table.data_collection === form.watch('config.relation.collection'))
-															?.columns.map((column) => (
-																<SelectItem key={column._id} value={column._id}>
-																	{column.title}
-																</SelectItem>
-															))
-														: ( `Indisponivel`)
-													}
-												</SelectContent>
-											</Select>
+															? table_list
+																	.find(
+																		(table) =>
+																			table.data_collection ===
+																			form.watch('config.relation.collection'),
+																	)
+																	?.columns.map((column) => (
+																		<SelectItem
+																			key={column._id}
+																			value={column._id}
+																		>
+																			{column.title}
+																		</SelectItem>
+																	))
+															: `Indisponivel`}
+													</SelectContent>
+												</Select>
 
-											<FormMessage className="text-right" />
-										</FormItem>
-									)}
-								/>
+												<FormMessage className="text-right" />
+											</FormItem>
+										)}
+									/>
 								</>
 							)}
-
 
 							<FormField
 								control={form.control}
