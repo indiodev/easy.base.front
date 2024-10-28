@@ -37,11 +37,14 @@ export function View(): React.ReactElement {
 
 			{row_status === 'success' && (
 				<React.Fragment>
-					{Object.entries(row).map(([row_key, row_value]) => {
+					{Object.entries(row).map(([row_key, row_value], row_index) => {
 						if (row_key === 'value') {
 							const values = Object.entries(row_value);
 							return (
-								<div className="grid grid-cols-2 gap-4">
+								<div
+									className="grid grid-cols-2 gap-4"
+									key={`${row_key}-${row_index}`}
+								>
 									{values.map(([k, v]) => (
 										<div
 											key={k}
@@ -57,7 +60,9 @@ export function View(): React.ReactElement {
 							);
 						}
 
-						return <React.Fragment></React.Fragment>;
+						return (
+							<React.Fragment key={`${row_key}-${row_index}`}></React.Fragment>
+						);
 					})}
 				</React.Fragment>
 			)}

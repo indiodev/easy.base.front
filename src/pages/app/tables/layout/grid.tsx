@@ -126,7 +126,10 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 								if (!column || !column?.config?.display) return null;
 
 								return (
-									<div className="space-x-2">
+									<div
+										className="space-x-2"
+										key={key}
+									>
 										<span>{column.title}</span>:<span>{val}</span>
 									</div>
 								);
