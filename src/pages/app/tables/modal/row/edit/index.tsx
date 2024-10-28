@@ -6,6 +6,7 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -146,6 +147,10 @@ const EditRow = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Editar registro
 					</DialogTitle>
+
+					<DialogDescription className="sr-only">
+						Edite os valores de cada coluna
+					</DialogDescription>
 				</DialogHeader>
 
 				{row_status === 'pending' && (
@@ -288,7 +293,10 @@ const EditRow = React.forwardRef<
 										/>
 									);
 
-								if (column?.type === COLUMN_TYPE.RELATIONAL || column?.type === COLUMN_TYPE.MULTIRELATIONAL)
+								if (
+									column?.type === COLUMN_TYPE.RELATIONAL ||
+									column?.type === COLUMN_TYPE.MULTIRELATIONAL
+								)
 									return (
 										<Relational
 											key={column._id}

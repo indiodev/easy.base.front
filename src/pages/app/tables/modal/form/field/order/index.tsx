@@ -3,6 +3,7 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -56,6 +57,10 @@ const FormFieldOrder = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Ordenar campos do formulário
 					</DialogTitle>
+
+					<DialogDescription className="sr-only">
+						Ordenar campos do formulário
+					</DialogDescription>
 				</DialogHeader>
 
 				<section className=" space-y-5">

@@ -66,7 +66,7 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 							className="flex flex-col space-y-1 bg-indigo-200/50 p-4 rounded-lg shadow-md w-full"
 						>
 							<div className="inline-flex items-center justify-end">
-								<DropdownMenu>
+								<DropdownMenu modal={false}>
 									<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
 										<Ellipsis className="w-4 h-4" />
 									</DropdownMenuTrigger>

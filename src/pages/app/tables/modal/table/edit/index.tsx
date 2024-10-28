@@ -2,6 +2,7 @@
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -87,6 +88,9 @@ const EditTable = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Editar tabela
 					</DialogTitle>
+					<DialogDescription className="sr-only">
+						Editar tabela
+					</DialogDescription>
 				</DialogHeader>
 
 				<Form {...form}>

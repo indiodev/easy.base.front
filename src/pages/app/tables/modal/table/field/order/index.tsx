@@ -3,6 +3,7 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -56,6 +57,9 @@ const TableFieldOrder = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Ordenar campos da tabela
 					</DialogTitle>
+					<DialogDescription className="sr-only">
+						Ordenar campos da tabela
+					</DialogDescription>
 				</DialogHeader>
 
 				<section className=" space-y-5">

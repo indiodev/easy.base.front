@@ -2,6 +2,7 @@
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -80,6 +81,10 @@ const NewTable = React.forwardRef<
 					<DialogTitle className="text-lg font-medium">
 						Crie uma nova tabela
 					</DialogTitle>
+
+					<DialogDescription className="sr-only">
+						Crie uma nova tabela
+					</DialogDescription>
 				</DialogHeader>
 
 				<Form {...form}>

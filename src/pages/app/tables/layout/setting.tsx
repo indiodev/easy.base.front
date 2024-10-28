@@ -53,7 +53,10 @@ export const Setting = React.forwardRef<
 
 	return (
 		<React.Fragment>
-			<DropdownMenu dir="ltr">
+			<DropdownMenu
+				dir="ltr"
+				modal={false}
+			>
 				<DropdownMenuTrigger
 					ref={ref}
 					{...props}
