@@ -87,9 +87,6 @@ const NewTable = React.forwardRef<
 						onSubmit={onSubmit}
 						className="flex flex-col gap-4 w-full"
 					>
-						{/* <h2 className="text-xl font-medium text-indigo-600">
-							Crie uma nova tabela
-						</h2> */}
 						<span className="text-sm font-normal text-red-400">
 							* os campos em vermelho são obrigatórios
 						</span>
@@ -116,22 +113,6 @@ const NewTable = React.forwardRef<
 								);
 							}}
 						/>
-
-						{/* <FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Descrição</FormLabel>
-									<FormControl>
-										<Textarea
-											placeholder="Uma descrição aqui"
-											{...field}
-										/>
-									</FormControl>
-								</FormItem>
-							)}
-						/> */}
 
 						<div className="inline-flex justify-end w-full gap-4 pt-4">
 							<Button className="bg-indigo-700 hover:bg-indigo-600 border border-transparent py-2 px-3 rounded-lg text-neutral-50 max-w-40 w-full">
