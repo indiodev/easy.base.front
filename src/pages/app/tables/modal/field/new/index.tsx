@@ -198,41 +198,6 @@ const NewField = React.forwardRef<
 									</Button>
 								</div>
 
-								{/* <MultiSelect
-									menuIsOpen={false}
-									// options={fields.map((field) => ({
-									// 	label: field.name,
-									// 	value: field.name,
-									// }))}
-									isMulti
-									// options={[<FormField
-												key={field.id}
-												control={form.control}
-												name={`config.options.${index}.name`}
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>Opção {index + 1}</FormLabel>
-														<FormControl>
-															<Input
-																className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white"
-																{...field}
-															/>
-														</FormControl>
-														<FormMessage className="text-right" />
-													</FormItem>
-												)}
-											/>
-									// 	{
-									// 		label: 'Luca',
-									// 		value: 'Luca',
-									// 	},
-									// ]}
-									defaultValue={fields.map((field) => ({
-										label: field.name,
-										value: field.name,
-									}))}
-								/> */}
-
 								<div className="h-full flex-1 overflow-y-auto space-y-2">
 									{fields.map((field, index) => {
 										return (
