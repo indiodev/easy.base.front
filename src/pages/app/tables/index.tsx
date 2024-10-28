@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import {
 	Pagination,
@@ -36,24 +35,6 @@ export function Tables(): React.ReactElement {
 	const filterActive =
 		searchParams.has('filtered') && searchParams.get('filtered') !== 'false';
 
-	if (table_status === 'pending' || user_status === 'pending') {
-		return (
-			<Loading className="flex justify-center items-center h-full flex-1" />
-		);
-	}
-
-	if (table_status === 'error' || user_status === 'error') {
-		return (
-			<section className="flex h-full flex-1 flex-col gap-4 w-full overflow-y-auto">
-				<div className="flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-					<h2 className="text-3xl font-medium text-indigo-600">
-						Houve um problema ao buscar dados
-					</h2>
-				</div>
-			</section>
-		);
-	}
-
 	return (
 		<div className="flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
 			<h2 className="text-3xl font-medium text-indigo-600">{table?.title}</h2>
@@ -64,18 +45,20 @@ export function Tables(): React.ReactElement {
 
 			<section className="inline-flex space-x-6">
 				{filterActive && <Filter />}
-				{user?.config?.table?.[params?.id!]?.layout === 'list' && (
-					<List
-						columns={table?.columns}
-						rows={table.rows}
-					/>
-				)}
-				{user?.config?.table?.[params?.id!]?.layout === 'grid' && (
-					<Grid
-						columns={table?.columns}
-						rows={table?.rows}
-					/>
-				)}
+				{table_status === 'success' &&
+					user?.config?.table?.[params?.id!]?.layout === 'list' && (
+						<List
+							columns={table?.columns}
+							rows={table.rows}
+						/>
+					)}
+				{table_status === 'success' &&
+					user?.config?.table?.[params?.id!]?.layout === 'grid' && (
+						<Grid
+							columns={table?.columns}
+							rows={table?.rows}
+						/>
+					)}
 			</section>
 
 			<section className="inline-flex w-full justify-end">

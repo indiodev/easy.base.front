@@ -27,6 +27,7 @@ import {
 } from '@components/ui/sidebar';
 import { cn } from '@libs/utils';
 import { useTableListQuery } from '@query/table/list.query';
+import { useUserProfileQuery } from '@query/user/profile.query';
 import { AuthStore } from '@store/auth.store';
 import {
 	ChevronDown,
@@ -53,8 +54,11 @@ export function Sidebar() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const auth = AuthStore();
-	const { data: table_list, status: table_list_status } = useTableListQuery();
 	const newTableButtonRef = React.useRef<HTMLButtonElement | null>(null);
+
+	const { data: user, status: user_status } = useUserProfileQuery();
+
+	const { data: table_list, status: table_list_status } = useTableListQuery();
 
 	return (
 		<React.Fragment>
@@ -153,9 +157,7 @@ export function Sidebar() {
 														`/app/tables/${table._id}`,
 													)}
 												>
-													<NavLink
-														to={`/app/tables/${table._id}?filtered=false`}
-													>
+													<NavLink to={`/app/tables/${table._id}`}>
 														<Table className="h-5 w-5 text-neutral-600" />
 														<span className="text-lg text-neutral-600">
 															{table.title}
@@ -271,17 +273,35 @@ export function Sidebar() {
 								<DropdownMenu>
 									<DropdownMenuTrigger asChild>
 										<SidebarMenuButton className="h-14 hover:bg-transparent rounded-md">
-											<Avatar className="w-10 h-10">
-												<AvatarImage
-													src="https://lh3.googleusercontent.com/a-/ALV-UjWPT5dco9b9EQLGbErRUs1A5ztPRvj6CUwuxXBdjCwtrcAtlv4=s64-p-k-rw-no"
-													loading="lazy"
-													// className="w-6 h-6 rounded-full"
-												/>
-												<AvatarFallback>CN</AvatarFallback>
-											</Avatar>
-											<span className="text-lg text-neutral-100 font-semibold">
-												Marcel
-											</span>
+											{user_status === 'success' && (
+												<React.Fragment>
+													<Avatar className="w-10 h-10">
+														<AvatarImage
+															src="/profile.png"
+															loading="lazy"
+														/>
+														<AvatarFallback>CN</AvatarFallback>
+													</Avatar>
+													<span className="text-lg text-neutral-100 font-semibold">
+														{user?.name?.split(' ')[0]}
+													</span>
+												</React.Fragment>
+											)}
+
+											{!(user_status === 'success') && (
+												<React.Fragment>
+													<Avatar className="w-10 h-10">
+														<AvatarImage
+															src="/profile.png"
+															loading="lazy"
+														/>
+														<AvatarFallback>EB</AvatarFallback>
+													</Avatar>
+													<span className="text-lg text-neutral-100 font-semibold">
+														Easy Base
+													</span>
+												</React.Fragment>
+											)}
 											<ChevronUp className="ml-auto text-white" />
 										</SidebarMenuButton>
 									</DropdownMenuTrigger>
