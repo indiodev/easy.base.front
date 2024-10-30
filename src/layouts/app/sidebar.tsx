@@ -312,31 +312,37 @@ export function Sidebar() {
 										<DropdownMenuItem asChild>
 											<NavLink
 												to="/app/profile"
-												className="space-x-1 text-white"
+												className="space-x-1 group"
 											>
-												<User className="h-5 w-5 " />
-												<span className="text-lg ">Perfil</span>
+												<User className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Perfil
+												</span>
 											</NavLink>
 										</DropdownMenuItem>
 										<DropdownMenuItem asChild>
 											<NavLink
 												to="/app/settings"
-												className="space-x-1 text-white"
+												className="space-x-1 group"
 											>
-												<Settings className="h-5 w-5 " />
-												<span className="text-lg ">Configurações</span>
+												<Settings className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Configurações
+												</span>
 											</NavLink>
 										</DropdownMenuItem>
 										<DropdownMenuItem asChild>
 											<SidebarMenuButton
-												className="py-6 text-white"
+												className="py-5 group"
 												onClick={() => {
 													auth.clear();
 													navigate('/', { replace: true });
 												}}
 											>
-												<LogOut className="h-5 w-5 " />
-												<span className="text-lg ">Sair</span>
+												<LogOut className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Sair
+												</span>
 											</SidebarMenuButton>
 										</DropdownMenuItem>
 									</DropdownMenuContent>
