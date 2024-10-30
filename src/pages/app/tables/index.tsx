@@ -44,14 +44,19 @@ export function Tables(): React.ReactElement {
 		new URLSearchParams(location?.search),
 	);
 
+	const entries = [...searchParams.entries()]
+		.filter(([key]) => key !== 'filter')
+		.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+
 	const { data: table, status: table_status } = useTableShowQuery({
 		id: params?.id || '',
+		...entries,
 	});
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
 	const filterActive =
-		searchParams.has('filtered') && searchParams.get('filtered') !== 'false';
+		searchParams.has('filter') && searchParams.get('filter') === 'active';
 
 	const {
 		mutateAsync: update_table_layout,
@@ -116,13 +121,13 @@ export function Tables(): React.ReactElement {
 						)}
 						onClick={() => {
 							if (filterActive) {
-								searchParams.set('filtered', 'false');
+								searchParams.set('filter', 'inactive');
 								setSearchParams(searchParams);
 								return;
 							}
 
 							setSearchParams((state) => {
-								state.set('filtered', 'true');
+								state.set('filter', 'active');
 								return state;
 							});
 						}}

@@ -73,19 +73,21 @@ export function List({ columns, rows }: Props): React.ReactElement {
 										<div className="inline-flex items-center gap-1">
 											<Button
 												onClick={() => {
-													if (
-														searchParams.has(col.slug) &&
-														searchParams.get(col.slug) === 'DESC'
-													) {
+													const order_slug = 'order-'.concat(col.slug);
+													const has_order_desc_slug =
+														searchParams.has(order_slug) &&
+														searchParams.get(order_slug) === 'desc';
+
+													if (has_order_desc_slug) {
 														setSearchParams((state) => {
-															state.set(col.slug, 'ASC');
+															state.set(order_slug, 'asc');
 															return state;
 														});
 														return;
 													}
 
 													setSearchParams((state) => {
-														state.set(col.slug, 'DESC');
+														state.set(order_slug, 'desc');
 														return state;
 													});
 												}}
