@@ -48,7 +48,7 @@ export function View(): React.ReactElement {
 									{values.map(([k, v]) => (
 										<div
 											key={k}
-											className="flex flex-col flex-1 bg-indigo-400 p-3 rounded-lg"
+											className="flex flex-col flex-1 bg-blue-400 p-3 rounded-lg"
 										>
 											<span className="font-semibold text-white uppercase">
 												{k}:

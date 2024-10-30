@@ -215,7 +215,7 @@ const NewRow = React.forwardRef<
 															<Textarea
 																placeholder={column.title}
 																className={cn(
-																	'focus-visible:ring-indigo-300',
+																	'focus-visible:ring-blue-300',
 																	hasError && 'border-red-500',
 																)}
 																{...field}
@@ -256,7 +256,7 @@ const NewRow = React.forwardRef<
 								// 								type="file"
 								// 								placeholder={column.title}
 								// 								className={cn(
-								// 									'focus-visible:ring-indigo-300',
+								// 									'focus-visible:ring-blue-300',
 								// 									hasError && 'border-red-500',
 								// 								)}
 								// 								// {...field}
@@ -377,7 +377,7 @@ const NewRow = React.forwardRef<
 														<Input
 															placeholder={column.title}
 															className={cn(
-																'focus-visible:ring-indigo-300',
+																'focus-visible:ring-blue-300',
 																hasError && 'border-red-500',
 															)}
 															{...field}
@@ -406,7 +406,7 @@ const NewRow = React.forwardRef<
 										Cancelar
 									</Button>
 								</DialogClose>
-								<Button className="bg-indigo-500 text-neutral-50 hover:bg-indigo-600">
+								<Button className="bg-blue-500 text-neutral-50 hover:bg-blue-600">
 									{create_row_status === 'pending' && (
 										<LoaderCircle className="w-6 h-6 animate-spin" />
 									)}

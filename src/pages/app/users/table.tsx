@@ -19,7 +19,7 @@ export function Table({ data, labels }: Props): React.ReactElement {
 		<React.Fragment>
 			<Root>
 				<TableHeader>
-					<TableRow className="bg-indigo-100/30 hover:bg-indigo-100/30">
+					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
 						{labels.map((label) => (
 							<TableHead key={label}>
 								<span>{label}</span>

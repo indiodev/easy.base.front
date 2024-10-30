@@ -112,7 +112,7 @@ export function Auth(): React.ReactElement {
 					/>
 					<Button
 						type="submit"
-						className="w-full bg-indigo-500 hover:bg-indigo-600"
+						className="w-full bg-blue-500 hover:bg-blue-600"
 						disabled={status === 'pending'}
 					>
 						{status === 'pending' && (

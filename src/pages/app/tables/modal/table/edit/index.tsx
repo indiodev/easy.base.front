@@ -161,7 +161,7 @@ const EditTable = React.forwardRef<
 											<Input
 												placeholder="Insira o nome da tabela"
 												className={cn(
-													'focus-visible:ring-indigo-300 focus-visible:ring-0',
+													'focus-visible:ring-blue-300 focus-visible:ring-0',
 													hasError && 'border-red-500',
 												)}
 												{...field}
@@ -193,7 +193,7 @@ const EditTable = React.forwardRef<
 						/>
 
 						<div className="inline-flex justify-end w-full gap-4 pt-4">
-							<Button className="bg-indigo-700 hover:bg-indigo-600 border border-transparent py-2 px-3 rounded-lg text-neutral-50 max-w-40 w-full">
+							<Button className="bg-blue-700 hover:bg-blue-600 border border-transparent py-2 px-3 rounded-lg text-neutral-50 max-w-40 w-full">
 								{create_table_status === 'pending' && (
 									<LoaderCircle className="w-6 h-6 animate-spin" />
 								)}

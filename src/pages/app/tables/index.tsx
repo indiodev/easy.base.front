@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import {
@@ -90,8 +91,8 @@ export function Tables(): React.ReactElement {
 		!isPendingTableOrUserData;
 
 	return (
-		<div className="flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-			<h2 className="text-3xl font-medium text-indigo-600">{table?.title}</h2>
+		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
+			<h2 className="text-3xl font-medium text-blue-600">{table?.title}</h2>
 
 			<Separator />
 
@@ -99,19 +100,19 @@ export function Tables(): React.ReactElement {
 				<section className="inline-flex w-full flex-1 space-x-3">
 					<div className="inline-flex items-center relative w-full">
 						<Search
-							className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-indigo-600"
+							className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-blue-600"
 							strokeWidth={1.5}
 						/>
 						<Input
 							placeholder="Pesquise aqui"
-							className="pl-9 border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600"
+							className="pl-9 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600"
 						/>
 					</div>
 
 					<Button
 						className={cn(
-							'bg-transparent shadow-none text-indigo-600 hover:bg-indigo-50 border border-indigo-200 inline-flex gap-1',
-							filterActive && 'bg-indigo-600 text-white hover:bg-indigo-600',
+							'bg-transparent shadow-none text-blue-600 hover:bg-blue-50 border border-blue-200 inline-flex gap-1',
+							filterActive && 'bg-blue-600 text-white hover:bg-blue-600',
 						)}
 						onClick={() => {
 							if (filterActive) {

@@ -14,7 +14,7 @@ export function Filter() {
 		});
 
 	return (
-		<aside className="p-4 flex flex-col space-y-3 max-w-xs w-full bg-indigo-100/20 animate-fade-in-left h-auto">
+		<aside className="p-4 flex flex-col space-y-3 max-w-xs w-full bg-blue-100/20 animate-fade-in-left h-auto">
 			{columns_status === 'success' &&
 				columns?.map(
 					(col) =>
@@ -26,16 +26,16 @@ export function Filter() {
 								<Label>{col.title}</Label>
 								<div className="inline-flex items-center relative max-w-96 w-full">
 									<Search
-										className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-indigo-600"
+										className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-blue-600"
 										strokeWidth={1.5}
 									/>
-									<Input className="pl-9 border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white" />
+									<Input className="pl-9 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white" />
 								</div>
 							</div>
 						),
 				)}
 
-			<Button className="bg-indigo-600 hover:bg-indigo-500">Pesquisar</Button>
+			<Button className="bg-blue-600 hover:bg-blue-500">Pesquisar</Button>
 		</aside>
 	);
 }

@@ -63,7 +63,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 		<React.Fragment>
 			<Root>
 				<TableHeader>
-					<TableRow className="bg-indigo-100/30 hover:bg-indigo-100/30">
+					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
 						<TableHead>ID</TableHead>
 
 						{columns.map(
@@ -117,7 +117,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									dir="ltr"
 									modal={false}
 								>
-									<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
+									<DropdownMenuTrigger className="bg-blue-200 p-1 rounded-full text-blue-600">
 										<Ellipsis className="w-4 h-4" />
 									</DropdownMenuTrigger>
 									<DropdownMenuContent className="mr-10">

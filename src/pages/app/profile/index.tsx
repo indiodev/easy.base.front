@@ -16,7 +16,7 @@ export function Profile(): React.ReactElement {
 	const form = useForm();
 
 	return (
-		<div className="container max-w-full space-y-3 flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6 justify-center items-center">
+		<div className="container max-w-full space-y-3 flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6 justify-center items-center">
 			{user_status === 'success' && (
 				<Form {...form}>
 					<form
@@ -61,7 +61,7 @@ export function Profile(): React.ReactElement {
 						<div className="inline-flex justify-end">
 							<Button
 								type="submit"
-								className="bg-indigo-600 hover:bg-indigo-500"
+								className="bg-blue-600 hover:bg-blue-500"
 							>
 								Editar
 							</Button>
