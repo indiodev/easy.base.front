@@ -12,7 +12,7 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export function Relational({
+export function MultiRelational({
 	column,
 }: {
 	column: Partial<Column>;
@@ -46,7 +46,7 @@ export function Relational({
 						<FormControl>
 							<MultipleSelector
 								{...field}
-								maxSelected={1}
+								// maxSelected={1}
 								onSearch={async () => {
 									return await ROW_FIND_MANY_DEBOUNCE({
 										collection: column.config!.relation!.collection!,
