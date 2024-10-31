@@ -45,7 +45,10 @@ export function Relational({
 						<FormLabel>{column.title}</FormLabel>
 						<FormControl>
 							<MultipleSelector
-								{...field}
+								onChange={(options) => {
+									const [option] = options;
+									field.onChange(option.value);
+								}}
 								maxSelected={1}
 								onSearch={async () => {
 									return await ROW_FIND_MANY_DEBOUNCE({
@@ -68,6 +71,7 @@ export function Relational({
 									</p>
 								}
 								className={cn(hasError && 'border-red-500')}
+								// {...field}
 							/>
 						</FormControl>
 						{/* <FormMessage /> */}

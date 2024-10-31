@@ -45,3 +45,14 @@ export enum COLUMN_FORMAT {
 	'MM-DD-AAAA hh:mm:ss' = 'MM-DD-AAAA hh:mm:ss',
 	'AAAA-MM-DD hh:mm:ss' = 'AAAA-MM-DD hh:mm:ss',
 }
+
+export interface MetaResponse<T> {
+	data: T;
+	meta: {
+		total: number;
+		per_page: number;
+		page: number;
+		last_page: number;
+		first_page: number;
+	};
+}

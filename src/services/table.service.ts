@@ -1,4 +1,5 @@
 import { API } from '@libs/api';
+import { MetaResponse } from '@models/base.model';
 import { CreateTable, Table } from '@models/table.model';
 
 export default class TableService {
@@ -13,7 +14,7 @@ export default class TableService {
 	}: {
 		id: string;
 		[key: string]: number | string | boolean;
-	}): Promise<Table> {
+	}): Promise<MetaResponse<Table>> {
 		const { data } = await API.get(`/tables/${id}`, {
 			params: query,
 		});
