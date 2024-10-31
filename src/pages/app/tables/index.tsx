@@ -37,6 +37,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
+import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
@@ -153,6 +154,10 @@ export function Tables(): React.ReactElement {
 							<LayoutList className="w-5 h-5  text-gray-600" />
 						)}
 					</Button>
+
+					{/* <Button className="bg-transparent hover:bg-transparent border shadow-none"> */}
+					<Setting />
+					{/* </Button> */}
 				</section>
 
 				<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">

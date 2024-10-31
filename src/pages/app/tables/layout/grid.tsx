@@ -13,7 +13,6 @@ import { Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
-import { Setting } from './setting';
 interface Props {
 	columns: Column[];
 	rows: Row[];
@@ -54,9 +53,9 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 
 	return (
 		<main className="flex-1 w-full flex flex-col  rounded-md gap-4">
-			<div className="inline-flex justify-end pr-14 py-2 bg-blue-100/30 hover:bg-blue-100/30 ">
+			{/* <div className="inline-flex justify-end pr-14 py-2 bg-blue-100/30 hover:bg-blue-100/30 ">
 				<Setting />
-			</div>
+			</div> */}
 
 			<section className="grid grid-cols-4 gap-4">
 				{normalizedRow?.map(({ value, id }) => {

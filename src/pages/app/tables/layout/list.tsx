@@ -22,7 +22,6 @@ import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
-import { Setting } from './setting';
 interface Props {
 	columns: Column[];
 	rows: Row[];
@@ -100,9 +99,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									</TableHead>
 								),
 						)}
-						<TableHead>
-							<Setting />
-						</TableHead>
+						<TableHead></TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
