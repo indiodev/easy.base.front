@@ -20,10 +20,10 @@ export function App(): React.ReactElement {
 								data-sidebar="trigger"
 								variant="ghost"
 								size="icon"
-								className="border border-indigo-300 p-0 w-6 h-6"
+								className="border border-blue-300 p-0 w-6 h-6"
 								onClick={toggleSidebar}
 							>
-								<ChevronsRight className="w-5 h-5 text-indigo-600" />
+								<ChevronsRight className="w-5 h-5 text-blue-600" />
 							</Button>
 						</section>
 					)}

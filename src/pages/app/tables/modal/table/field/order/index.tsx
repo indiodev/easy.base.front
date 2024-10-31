@@ -74,7 +74,7 @@ const TableFieldOrder = React.forwardRef<
 								key={column._id}
 								dragListener={false}
 								value={column}
-								className="inline-flex justify-between px-4 py-2 w-full bg-indigo-500 rounded-lg text-white font-semibold"
+								className="inline-flex justify-between px-4 py-2 w-full bg-blue-500 rounded-lg text-white font-semibold"
 								dragControls={control}
 							>
 								<span>{column.title}</span>
@@ -88,7 +88,7 @@ const TableFieldOrder = React.forwardRef<
 
 					<div className="inline-flex justify-end w-full">
 						<DialogClose asChild>
-							<Button className="bg-indigo-500 hover:bg-indigo-500 text-white">
+							<Button className="bg-blue-500 hover:bg-blue-500 text-white">
 								Salvar
 							</Button>
 						</DialogClose>

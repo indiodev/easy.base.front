@@ -54,7 +54,7 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 
 	return (
 		<main className="flex-1 w-full flex flex-col  rounded-md gap-4">
-			<div className="inline-flex justify-end pr-14 py-2 bg-indigo-100/30 hover:bg-indigo-100/30 ">
+			<div className="inline-flex justify-end pr-14 py-2 bg-blue-100/30 hover:bg-blue-100/30 ">
 				<Setting />
 			</div>
 
@@ -63,11 +63,11 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 					return (
 						<div
 							key={id}
-							className="flex flex-col space-y-1 bg-indigo-200/50 p-4 rounded-lg shadow-md w-full"
+							className="flex flex-col space-y-1 bg-blue-200/50 p-4 rounded-lg shadow-md w-full"
 						>
 							<div className="inline-flex items-center justify-end">
 								<DropdownMenu modal={false}>
-									<DropdownMenuTrigger className="bg-indigo-200 p-1 rounded-full text-indigo-600">
+									<DropdownMenuTrigger className="bg-blue-200 p-1 rounded-full text-blue-600">
 										<Ellipsis className="w-4 h-4" />
 									</DropdownMenuTrigger>
 									<DropdownMenuContent>

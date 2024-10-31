@@ -66,7 +66,7 @@ export function Sidebar() {
 				variant="floating"
 				collapsible="icon"
 			>
-				<SidebarHeader className="bg-indigo-100">
+				<SidebarHeader className="bg-blue-100">
 					<div
 						className={cn(
 							'inline-flex w-full justify-end',
@@ -77,11 +77,11 @@ export function Sidebar() {
 							data-sidebar="trigger"
 							variant="ghost"
 							size="icon"
-							className="border border-indigo-300 p-0 w-6 h-6"
+							className="border border-blue-300 p-0 w-6 h-6"
 							onClick={toggleSidebar}
 						>
-							{open && <ChevronsLeft className="w-5 h-5 text-indigo-600" />}
-							{!open && <ChevronsRight className="w-5 h-5 text-indigo-600" />}
+							{open && <ChevronsLeft className="w-5 h-5 text-blue-600" />}
+							{!open && <ChevronsRight className="w-5 h-5 text-blue-600" />}
 						</Button>
 					</div>
 					<div className="inline-flex w-full justify-center">
@@ -97,15 +97,15 @@ export function Sidebar() {
 					</div>
 				</SidebarHeader>
 
-				<Separator className="w-full bg-indigo-600 h-1" />
+				<Separator className="w-full bg-blue-600 h-1" />
 
-				<SidebarContent className="bg-indigo-50/50">
+				<SidebarContent className="bg-blue-50/50">
 					<SidebarGroup>
 						<SidebarMenu>
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									asChild
-									className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 									isActive={location.pathname === '/app/dashboard'}
 								>
 									<NavLink to="/app/dashboard">
@@ -151,7 +151,7 @@ export function Sidebar() {
 										table_list.map((table) => (
 											<SidebarMenuItem key={table._id}>
 												<SidebarMenuButton
-													className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+													className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 													asChild
 													isActive={location.pathname.includes(
 														`/app/tables/${table._id}`,
@@ -176,7 +176,7 @@ export function Sidebar() {
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									asChild
-									className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 									isActive={location.pathname === '/app/forms'}
 								>
 									<NavLink to="/app/forms">
@@ -190,7 +190,7 @@ export function Sidebar() {
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									asChild
-									className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 									isActive={location.pathname === '/app/notifications'}
 								>
 									<NavLink to="/app/notifications">
@@ -200,7 +200,7 @@ export function Sidebar() {
 										</span>
 									</NavLink>
 								</SidebarMenuButton>
-								<SidebarMenuBadge className="border h-8 min-w-6 peer-hover/menu-button:text-white peer-data-[active=true]/menu-button:text-white bg-indigo-400 text-white">
+								<SidebarMenuBadge className="border h-8 min-w-6 peer-hover/menu-button:text-white peer-data-[active=true]/menu-button:text-white bg-blue-400 text-white">
 									24
 								</SidebarMenuBadge>
 							</SidebarMenuItem>
@@ -208,7 +208,7 @@ export function Sidebar() {
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									asChild
-									className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 									isActive={location.pathname === '/app/users'}
 								>
 									<NavLink to="/app/users">
@@ -223,7 +223,7 @@ export function Sidebar() {
 									<SidebarMenuItem>
 										<SidebarMenuButton
 											asChild
-											className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+											className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 											isActive={location.pathname === '/app/settings'}
 										>
 											<NavLink to="/app/settings">
@@ -238,7 +238,7 @@ export function Sidebar() {
 									<SidebarMenuItem>
 										<SidebarMenuButton
 											asChild
-											className="py-6 [&[data-active=true]]:bg-indigo-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+											className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 											isActive={location.pathname === '/app/profile'}
 										>
 											<NavLink to="/app/profile">
@@ -266,7 +266,7 @@ export function Sidebar() {
 					</SidebarGroup>
 				</SidebarContent>
 
-				<SidebarFooter className="bg-indigo-600/70 p-0 rounded-md">
+				<SidebarFooter className="bg-blue-600/70 p-0 rounded-md">
 					<SidebarMenu>
 						{!(isMobile || !open) && (
 							<SidebarMenuItem>
@@ -307,36 +307,42 @@ export function Sidebar() {
 									</DropdownMenuTrigger>
 									<DropdownMenuContent
 										side="top"
-										className="w-[--radix-popper-anchor-width] bg-indigo-600/70"
+										className="w-[--radix-popper-anchor-width] bg-blue-600/70"
 									>
 										<DropdownMenuItem asChild>
 											<NavLink
 												to="/app/profile"
-												className="space-x-1 text-white"
+												className="space-x-1 group"
 											>
-												<User className="h-5 w-5 " />
-												<span className="text-lg ">Perfil</span>
+												<User className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Perfil
+												</span>
 											</NavLink>
 										</DropdownMenuItem>
 										<DropdownMenuItem asChild>
 											<NavLink
 												to="/app/settings"
-												className="space-x-1 text-white"
+												className="space-x-1 group"
 											>
-												<Settings className="h-5 w-5 " />
-												<span className="text-lg ">Configurações</span>
+												<Settings className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Configurações
+												</span>
 											</NavLink>
 										</DropdownMenuItem>
 										<DropdownMenuItem asChild>
 											<SidebarMenuButton
-												className="py-6 text-white"
+												className="py-5 group"
 												onClick={() => {
 													auth.clear();
 													navigate('/', { replace: true });
 												}}
 											>
-												<LogOut className="h-5 w-5 " />
-												<span className="text-lg ">Sair</span>
+												<LogOut className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Sair
+												</span>
 											</SidebarMenuButton>
 										</DropdownMenuItem>
 									</DropdownMenuContent>

@@ -14,7 +14,7 @@ export function Loading({
 			)}
 			{...props}
 		>
-			<LoaderCircle className="w-10 h-10 animate-spin stroke-indigo-500" />
+			<LoaderCircle className="w-10 h-10 animate-spin stroke-blue-500" />
 		</section>
 	);
 }

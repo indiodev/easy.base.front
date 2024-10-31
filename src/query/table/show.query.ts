@@ -6,18 +6,20 @@ import { QUERY } from '@models/base.model';
 import { Table } from '@models/table.model';
 import { Service } from '@services/index';
 
-async function fetcher(id: string): Promise<Table> {
-	return await Service.table.show(id);
+async function fetcher(query: {
+	id: string;
+	[key: string]: number | string | boolean;
+}): Promise<Table> {
+	return await Service.table.show(query);
 }
 
-export function useTableShowQuery({
-	id,
-}: {
+export function useTableShowQuery(query: {
 	id: string;
+	[key: string]: number | string | boolean;
 }): UseQueryResult<Table, Error | AxiosError> {
 	return useQuery({
-		queryKey: [QUERY.TABLE_SHOW, id],
-		queryFn: () => fetcher(id),
-		enabled: !!id,
+		queryKey: [QUERY.TABLE_SHOW, query.id],
+		queryFn: () => fetcher(query),
+		enabled: !!query.id,
 	});
 }

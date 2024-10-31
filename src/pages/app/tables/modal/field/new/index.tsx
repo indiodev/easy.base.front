@@ -129,7 +129,7 @@ const NewField = React.forwardRef<
 									<FormLabel>Nome</FormLabel>
 									<FormControl>
 										<Input
-											className="focus-visible:ring-0 border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white"
+											className="focus-visible:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"
 											{...field}
 										/>
 									</FormControl>
@@ -155,7 +155,7 @@ const NewField = React.forwardRef<
 										defaultValue={field.value}
 									>
 										<FormControl>
-											<SelectTrigger className="focus:ring-0 border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+											<SelectTrigger className="focus:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
 												<SelectValue
 													placeholder="Selecione um tipo para a coluna"
 													className="placeholder:text-gray-100"
@@ -186,7 +186,7 @@ const NewField = React.forwardRef<
 									<h2>Opções</h2>
 									<Button
 										type="button"
-										className="bg-transparent hover:bg-transparent hover:text-indigo-600 text-indigo-600 shadow-none border-indigo-500 border hover:border-indigo-600 px-2 py-0 h-8"
+										className="bg-transparent hover:bg-transparent hover:text-blue-600 text-blue-600 shadow-none border-blue-500 border hover:border-blue-600 px-2 py-0 h-8"
 										onClick={() => {
 											append({
 												name: '',
@@ -211,7 +211,7 @@ const NewField = React.forwardRef<
 															{/* <FormLabel>Opção {index + 1}</FormLabel> */}
 															<FormControl>
 																<Input
-																	className="focus-visible:ring-0 border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white"
+																	className="focus-visible:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"
 																	{...field}
 																/>
 															</FormControl>
@@ -247,7 +247,7 @@ const NewField = React.forwardRef<
 											defaultValue={field.value}
 										>
 											<FormControl>
-												<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+												<SelectTrigger className="border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
 													<SelectValue
 														placeholder="Selecione um tipo para a coluna"
 														className="placeholder:text-gray-100"
@@ -284,7 +284,7 @@ const NewField = React.forwardRef<
 											defaultValue={field.value}
 										>
 											<FormControl>
-												<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+												<SelectTrigger className="border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
 													<SelectValue
 														placeholder="Selecione um tipo para a coluna"
 														className="placeholder:text-gray-100"
@@ -319,7 +319,7 @@ const NewField = React.forwardRef<
 										<FormLabel>Valor padrão</FormLabel>
 										<FormControl>
 											<Input
-												className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white"
+												className="border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"
 												{...field}
 											/>
 										</FormControl>
@@ -344,7 +344,7 @@ const NewField = React.forwardRef<
 												defaultValue={field.value}
 											>
 												<FormControl>
-													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+													<SelectTrigger className="border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
 														<SelectValue
 															placeholder="Selecione uma tabela para relacionar"
 															className="placeholder:text-gray-100"
@@ -384,7 +384,7 @@ const NewField = React.forwardRef<
 												defaultValue={field.value}
 											>
 												<FormControl>
-													<SelectTrigger className="border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600 bg-white">
+													<SelectTrigger className="border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
 														<SelectValue
 															placeholder="Selecione uma tabela para relacionar"
 															className="placeholder:text-gray-100"
@@ -500,7 +500,7 @@ const NewField = React.forwardRef<
 
 						<div className="inline-flex flex-1 justify-end w-full">
 							<Button
-								className="bg-indigo-600 hover:bg-indigo-500"
+								className="bg-blue-600 hover:bg-blue-500"
 								type="submit"
 								disabled={create_column_status === 'pending'}
 							>

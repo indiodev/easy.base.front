@@ -28,20 +28,20 @@ export function Users(): React.ReactElement {
 	const { data: user_list, status: user_list_status } = useUserListQuery();
 
 	return (
-		<div className="container max-w-full space-y-3 flex-1 w-full border border-indigo-100 bg-indigo-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-			<h1 className="text-3xl font-medium text-indigo-600">Usuários</h1>
+		<div className="container max-w-full space-y-3 flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
+			<h1 className="text-3xl font-medium text-blue-600">Usuários</h1>
 
 			<Separator />
 
 			<section className="inline-flex items-center">
 				<div className="flex-1 inline-flex items-center relative w-full">
 					<Search
-						className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-indigo-600"
+						className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-blue-600"
 						strokeWidth={1.5}
 					/>
 					<Input
 						placeholder="Pesquise aqui"
-						className="pl-9 border border-indigo-200 placeholder:text-indigo-400 text-indigo-600 focus-visible:ring-indigo-600"
+						className="pl-9 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600"
 					/>
 				</div>
 

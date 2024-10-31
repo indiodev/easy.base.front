@@ -7,8 +7,16 @@ export default class TableService {
 		return data;
 	}
 
-	public async show(id: string): Promise<Table> {
-		const { data } = await API.get(`/tables/${id}`);
+	public async show({
+		id,
+		...query
+	}: {
+		id: string;
+		[key: string]: number | string | boolean;
+	}): Promise<Table> {
+		const { data } = await API.get(`/tables/${id}`, {
+			params: query,
+		});
 		return data;
 	}
 
