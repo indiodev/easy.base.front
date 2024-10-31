@@ -33,7 +33,7 @@ import {
 	Search,
 } from 'lucide-react';
 import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
@@ -41,17 +41,24 @@ import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
+	const location = useLocation();
+
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
 
-	const entries = [...searchParams.entries()]
-		.filter(([key]) => key !== 'filter')
-		.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+	// const entries = [...searchParams.entries()]
+	// 	.filter(([key]) => key !== 'filter')
+	// 	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
 	const { data: table, status: table_status } = useTableShowQuery({
-		id: params?.id || '',
-		...entries,
+		id: params?.id!,
+		...(searchParams.get('page') && {
+			page: Number(searchParams.get('page') || 1),
+		}),
+		...(searchParams.get('per_page') && {
+			per_page: Number(searchParams.get('per_page') || 10),
+		}),
 	});
 
 	const { data: user, status: user_status } = useUserProfileQuery();
@@ -66,6 +73,9 @@ export function Tables(): React.ReactElement {
 		onSuccess() {
 			tanstack.refetchQueries({
 				queryKey: [QUERY.USER_PROFILE],
+			});
+			tanstack.refetchQueries({
+				queryKey: [QUERY.TABLE_SHOW, params.id],
 			});
 		},
 		onError(error) {
@@ -96,9 +106,13 @@ export function Tables(): React.ReactElement {
 		user?.config?.table?.[params?.id!]?.layout === 'grid' &&
 		!isPendingTableOrUserData;
 
+	console.log({ table_status });
+
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-			<h2 className="text-3xl font-medium text-blue-600">{table?.title}</h2>
+			<h2 className="text-3xl font-medium text-blue-600">
+				{table?.data?.title}
+			</h2>
 
 			<Separator />
 
@@ -155,14 +169,28 @@ export function Tables(): React.ReactElement {
 						)}
 					</Button>
 
-					{/* <Button className="bg-transparent hover:bg-transparent border shadow-none"> */}
 					<Setting />
-					{/* </Button> */}
 				</section>
 
 				<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
 					<span>Resultados por página: </span>
-					<Select defaultValue="10">
+					<Select
+						defaultValue={searchParams.get('per_page') || '10'}
+						onValueChange={(value) => {
+							setSearchParams((state) => {
+								state.set('page', '1');
+								state.set('per_page', value);
+								return state;
+							});
+							tanstack.fetchQuery({
+								queryKey: [QUERY.TABLE_SHOW, params.id],
+							});
+
+							// tanstack.refetchQueries({
+							// 	queryKey: [QUERY.TABLE_SHOW, params.id],
+							// });
+						}}
+					>
 						<SelectTrigger className="w-[180px]">
 							<SelectValue placeholder="Selecione uma opção" />
 						</SelectTrigger>
@@ -190,65 +218,112 @@ export function Tables(): React.ReactElement {
 					filterActive && <Filter />}
 				{!(update_table_layout_status === 'pending') && isListLayout && (
 					<List
-						columns={table?.columns}
-						rows={table.rows}
+						columns={table?.data?.columns}
+						rows={table?.data?.rows}
 					/>
 				)}
 				{!(update_table_layout_status === 'pending') && isGridLayout && (
 					<Grid
-						columns={table?.columns}
-						rows={table?.rows}
+						columns={table?.data?.columns}
+						rows={table?.data?.rows}
 					/>
 				)}
 			</section>
 
-			<section className="inline-flex w-full justify-end">
-				<div className="inline-flex space-x-8 items-center">
-					<label className="inline-block max-w-32 w-full">
-						Página <strong>1</strong> de <strong>100</strong>
-					</label>
-					<Pagination className="justify-end">
-						<PaginationContent>
-							<PaginationItem>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="border"
-								>
-									<ChevronsLeft />
-								</Button>
-							</PaginationItem>
-							<PaginationItem>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="border"
-								>
-									<ChevronLeft />
-								</Button>
-							</PaginationItem>
-							<PaginationItem>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="border"
-								>
-									<ChevronRight />
-								</Button>
-							</PaginationItem>
-							<PaginationItem>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="border"
-								>
-									<ChevronsRight />
-								</Button>
-							</PaginationItem>
-						</PaginationContent>
-					</Pagination>
-				</div>
-			</section>
+			{table_status === 'success' && (
+				<section className="inline-flex w-full justify-end">
+					<div className="inline-flex space-x-8 items-center">
+						<label className="inline-block max-w-32 w-full">
+							Página <strong>{table?.meta?.page}</strong> de{' '}
+							<strong>{table?.meta?.last_page}</strong>
+						</label>
+						<Pagination className="justify-end">
+							<PaginationContent>
+								<PaginationItem>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="border"
+										onClick={() => {
+											setSearchParams((state) => {
+												state.set('page', '1');
+												return state;
+											});
+
+											tanstack.refetchQueries({
+												queryKey: [QUERY.TABLE_SHOW, params.id],
+											});
+										}}
+									>
+										<ChevronsLeft />
+									</Button>
+								</PaginationItem>
+								<PaginationItem>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="border"
+										onClick={() => {
+											if (table?.meta?.page > 1) {
+												setSearchParams((state) => {
+													state.set('page', String(table?.meta?.page - 1));
+													return state;
+												});
+
+												tanstack.refetchQueries({
+													queryKey: [QUERY.TABLE_SHOW, params.id],
+												});
+											}
+										}}
+									>
+										<ChevronLeft />
+									</Button>
+								</PaginationItem>
+								<PaginationItem>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="border"
+										onClick={() => {
+											if (table?.meta?.page < table?.meta?.last_page) {
+												setSearchParams((state) => {
+													state.set('page', String(table?.meta?.page + 1));
+													return state;
+												});
+
+												tanstack.refetchQueries({
+													queryKey: [QUERY.TABLE_SHOW, params.id],
+												});
+											}
+										}}
+									>
+										<ChevronRight />
+									</Button>
+								</PaginationItem>
+								<PaginationItem>
+									<Button
+										variant="ghost"
+										size="icon"
+										className="border"
+										onClick={() => {
+											setSearchParams((state) => {
+												state.set('page', String(table?.meta?.last_page));
+												return state;
+											});
+
+											tanstack.refetchQueries({
+												queryKey: [QUERY.TABLE_SHOW, params.id],
+											});
+										}}
+									>
+										<ChevronsRight />
+									</Button>
+								</PaginationItem>
+							</PaginationContent>
+						</Pagination>
+					</div>
+				</section>
+			)}
 		</div>
 	);
 }

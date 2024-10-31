@@ -45,8 +45,12 @@ export function MultiRelational({
 						<FormLabel>{column.title}</FormLabel>
 						<FormControl>
 							<MultipleSelector
-								{...field}
+								// {...field}
 								// maxSelected={1}
+								onChange={(options) => {
+									const values = options.flatMap((option) => option.value);
+									field.onChange(values);
+								}}
 								onSearch={async () => {
 									return await ROW_FIND_MANY_DEBOUNCE({
 										collection: column.config!.relation!.collection!,
