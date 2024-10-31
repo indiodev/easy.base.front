@@ -33,7 +33,7 @@ import {
 	Search,
 } from 'lucide-react';
 import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
@@ -41,6 +41,8 @@ import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
+	const location = useLocation();
+
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
@@ -51,10 +53,10 @@ export function Tables(): React.ReactElement {
 
 	const { data: table, status: table_status } = useTableShowQuery({
 		id: params?.id!,
-		...(searchParams.has('page') && {
+		...(searchParams.get('page') && {
 			page: Number(searchParams.get('page') || 1),
 		}),
-		...(searchParams.has('per_page') && {
+		...(searchParams.get('per_page') && {
 			per_page: Number(searchParams.get('per_page') || 10),
 		}),
 	});
@@ -71,6 +73,9 @@ export function Tables(): React.ReactElement {
 		onSuccess() {
 			tanstack.refetchQueries({
 				queryKey: [QUERY.USER_PROFILE],
+			});
+			tanstack.refetchQueries({
+				queryKey: [QUERY.TABLE_SHOW, params.id],
 			});
 		},
 		onError(error) {
@@ -100,6 +105,8 @@ export function Tables(): React.ReactElement {
 		user_status === 'success' &&
 		user?.config?.table?.[params?.id!]?.layout === 'grid' &&
 		!isPendingTableOrUserData;
+
+	console.log({ table_status });
 
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
@@ -175,10 +182,13 @@ export function Tables(): React.ReactElement {
 								state.set('per_page', value);
 								return state;
 							});
-
-							tanstack.refetchQueries({
+							tanstack.fetchQuery({
 								queryKey: [QUERY.TABLE_SHOW, params.id],
 							});
+
+							// tanstack.refetchQueries({
+							// 	queryKey: [QUERY.TABLE_SHOW, params.id],
+							// });
 						}}
 					>
 						<SelectTrigger className="w-[180px]">
