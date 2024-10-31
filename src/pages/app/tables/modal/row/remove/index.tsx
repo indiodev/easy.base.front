@@ -25,7 +25,7 @@ const RemoveRow = React.forwardRef<
 	const { mutateAsync: remove_row, status: remove_row_status } =
 		useRowDeleteMutation({
 			onError(error) {
-				console.log(error);
+				console.error(error);
 			},
 			onSuccess() {
 				tanstack.refetchQueries({

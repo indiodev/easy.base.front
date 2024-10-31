@@ -27,7 +27,7 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 	},
 	{
 		label: 'Multirelacional',
-		type: COLUMN_TYPE.MULTIRELATIONAL,
+		type: COLUMN_TYPE.MULTI_RELATIONAL,
 	},
 ];
 

@@ -44,6 +44,7 @@ import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { MultiRelational } from '../field/multi-relational';
 import { Relational } from '../field/relational';
 
 const NewRow = React.forwardRef<
@@ -61,13 +62,13 @@ const NewRow = React.forwardRef<
 	const { mutateAsync: create_row, status: create_row_status } =
 		useRowCreateMutation({
 			onError(error) {
-				console.log(error);
+				console.error(error);
 			},
 			onSuccess(data) {
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_SHOW, params?.id!],
 				});
-				console.log(data);
+				console.info(data);
 				setOpen(false);
 			},
 		});
@@ -229,45 +230,6 @@ const NewRow = React.forwardRef<
 										/>
 									);
 
-								// if (column.type === COLUMN_TYPE.FILE)
-								// 	return (
-								// 		<FormField
-								// 			key={column.id}
-								// 			control={form.control}
-								// 			name={column.slug}
-								// 			render={() => {
-								// 				const hasError = !!form.formState.errors[column.slug];
-								// 				return (
-								// 					<FormItem className="space-y-1">
-								// 						<FormLabel>{column.title}</FormLabel>
-								// 						<FormControl>
-								// 							<Input
-								// 								onChange={(event) => {
-								// 									if (event.target.files?.length === 0) {
-								// 										form.setValue(column.slug, undefined);
-								// 										return;
-								// 									}
-								// 									form.setValue(
-								// 										column.slug,
-								// 										event.target.files![0],
-								// 									);
-								// 									form.clearErrors(column.slug);
-								// 								}}
-								// 								type="file"
-								// 								placeholder={column.title}
-								// 								className={cn(
-								// 									'focus-visible:ring-blue-300',
-								// 									hasError && 'border-red-500',
-								// 								)}
-								// 								// {...field}
-								// 							/>
-								// 						</FormControl>
-								// 					</FormItem>
-								// 				);
-								// 			}}
-								// 		/>
-								// 	);
-
 								if (column?.type === COLUMN_TYPE.DROPDOWN)
 									return (
 										<FormField
@@ -311,57 +273,23 @@ const NewRow = React.forwardRef<
 										/>
 									);
 
-								if (
-									column?.type === COLUMN_TYPE.RELATIONAL ||
-									column?.type === COLUMN_TYPE.MULTIRELATIONAL
-								)
+								if (column?.type === COLUMN_TYPE.RELATIONAL) {
 									return (
 										<Relational
-											key={column._id}
 											column={column}
+											key={column._id}
 										/>
 									);
-								// return (
-								// 	<FormField
-								// 		key={column._id}
-								// 		control={form.control}
-								// 		name={column.slug}
-								// 		render={({ field }) => {
-								// 			const hasError = !!form.formState.errors[column.slug];
-								// 			return (
-								// 				<FormItem>
-								// 					<FormLabel>{column.title}</FormLabel>
-								// 					<Select
-								// 						onValueChange={field.onChange}
-								// 						defaultValue={field.value}
-								// 					>
-								// 						<FormControl>
-								// 							<SelectTrigger
-								// 								className={cn(hasError && 'border-red-500')}
-								// 							>
-								// 								<SelectValue placeholder="Selecione uma opção" />
-								// 							</SelectTrigger>
-								// 						</FormControl>
-								// 						<SelectContent>
-								// 							{/* {column.config?.options?.map(
-								// 								(option, index) => (
-								// 									<SelectItem
-								// 										key={index}
-								// 										value={option.name}
-								// 									>
-								// 										{option.name}
-								// 									</SelectItem>
-								// 								),
-								// 							)} */}
-								// 						</SelectContent>
-								// 					</Select>
+								}
 
-								// 					{/* <FormMessage /> */}
-								// 				</FormItem>
-								// 			);
-								// 		}}
-								// 	/>
-								// );
+								if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+									return (
+										<MultiRelational
+											column={column}
+											key={column._id}
+										/>
+									);
+								}
 
 								return (
 									<FormField

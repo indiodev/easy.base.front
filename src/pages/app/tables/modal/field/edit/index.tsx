@@ -388,7 +388,7 @@ const EditField = React.forwardRef<
 								/>
 							)}
 
-							{[COLUMN_TYPE.RELATIONAL, COLUMN_TYPE.MULTIRELATIONAL].includes(
+							{[COLUMN_TYPE.RELATIONAL, COLUMN_TYPE.MULTI_RELATIONAL].includes(
 								form.watch('type'),
 							) && (
 								<>

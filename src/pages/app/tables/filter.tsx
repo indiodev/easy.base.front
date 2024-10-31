@@ -71,7 +71,6 @@ export function Filter() {
 														/>
 														<Input
 															className="pl-9 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"
-															// {...field}
 															onChange={(event) => {
 																if (event.target.value === '') {
 																	setSearchParams((state) => {

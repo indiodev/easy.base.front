@@ -45,6 +45,7 @@ import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { MultiRelational } from '../field/multi-relational';
 import { Relational } from '../field/relational';
 
 const EditRow = React.forwardRef<
@@ -71,7 +72,7 @@ const EditRow = React.forwardRef<
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
 			onError(error) {
-				console.log(error);
+				console.error(error);
 			},
 			onSuccess() {
 				setOpen((state) => !state);
@@ -293,12 +294,17 @@ const EditRow = React.forwardRef<
 										/>
 									);
 
-								if (
-									column?.type === COLUMN_TYPE.RELATIONAL ||
-									column?.type === COLUMN_TYPE.MULTIRELATIONAL
-								)
+								if (column?.type === COLUMN_TYPE.RELATIONAL)
 									return (
 										<Relational
+											key={column._id}
+											column={column}
+										/>
+									);
+
+								if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL)
+									return (
+										<MultiRelational
 											key={column._id}
 											column={column}
 										/>
