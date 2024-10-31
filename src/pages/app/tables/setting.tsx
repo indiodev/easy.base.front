@@ -1,3 +1,4 @@
+import { Button } from '@components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -25,7 +26,7 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { Modal } from '../modal';
+import { Modal } from './modal';
 
 export const Setting = React.forwardRef<
 	React.ElementRef<typeof DropdownMenuTrigger>,
@@ -60,8 +61,11 @@ export const Setting = React.forwardRef<
 				<DropdownMenuTrigger
 					ref={ref}
 					{...props}
+					asChild
 				>
-					<Settings className="w-5 h-5  text-gray-600" />
+					<Button className="bg-transparent hover:bg-transparent border shadow-none">
+						<Settings className="w-5 h-5  text-gray-600" />
+					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="mr-10">
 					<DropdownMenuGroup>
