@@ -38,7 +38,6 @@ import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
 import { Setting } from './setting';
-import { Table } from '@models/table.model';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
@@ -52,9 +51,7 @@ export function Tables(): React.ReactElement {
 	// 	.filter(([key]) => key !== 'filter')
 	// 	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
-
-
-	const { data: tableData, status: table_status } = useTableShowQuery({
+	const { data: table, status: table_status } = useTableShowQuery({
 		id: params?.id!,
 		...(searchParams.get('page') && {
 			page: Number(searchParams.get('page') || 1),
@@ -63,8 +60,6 @@ export function Tables(): React.ReactElement {
 			per_page: Number(searchParams.get('per_page') || 10),
 		}),
 	});
-
-	const table = tableData as unknown as Table as any; // REVIEW MARCOS VER O RETORNO ENCAPSULADO PARA TER O META
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
@@ -111,13 +106,10 @@ export function Tables(): React.ReactElement {
 		user?.config?.table?.[params?.id!]?.layout === 'grid' &&
 		!isPendingTableOrUserData;
 
-	console.log({ table_status });
-	console.log(table)
-
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
 			<h2 className="text-3xl font-medium text-blue-600">
-				{table?.title}
+				{table?.data?.title}
 			</h2>
 
 			<Separator />
@@ -178,39 +170,41 @@ export function Tables(): React.ReactElement {
 					<Setting />
 				</section>
 
-				<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
-					<span>Resultados por página: </span>
-					<Select
-						defaultValue={searchParams.get('per_page') || '10'}
-						onValueChange={(value) => {
-							setSearchParams((state) => {
-								state.set('page', '1');
-								state.set('per_page', value);
-								return state;
-							});
-							tanstack.fetchQuery({
-								queryKey: [QUERY.TABLE_SHOW, params.id],
-							});
+				{table_status === 'success' && table?.meta?.total > 0 && (
+					<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
+						<span>Resultados por página: </span>
+						<Select
+							defaultValue={searchParams.get('per_page') || '10'}
+							onValueChange={(value) => {
+								setSearchParams((state) => {
+									state.set('page', '1');
+									state.set('per_page', value);
+									return state;
+								});
+								tanstack.fetchQuery({
+									queryKey: [QUERY.TABLE_SHOW, params.id],
+								});
 
-							// tanstack.refetchQueries({
-							// 	queryKey: [QUERY.TABLE_SHOW, params.id],
-							// });
-						}}
-					>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue placeholder="Selecione uma opção" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectItem value="10">10</SelectItem>
-								<SelectItem value="20">20</SelectItem>
-								<SelectItem value="30">30</SelectItem>
-								<SelectItem value="40">40</SelectItem>
-								<SelectItem value="50">50</SelectItem>
-							</SelectGroup>
-						</SelectContent>
-					</Select>
-				</div>
+								// tanstack.refetchQueries({
+								// 	queryKey: [QUERY.TABLE_SHOW, params.id],
+								// });
+							}}
+						>
+							<SelectTrigger className="w-[180px]">
+								<SelectValue placeholder="Selecione uma opção" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectGroup>
+									<SelectItem value="10">10</SelectItem>
+									<SelectItem value="20">20</SelectItem>
+									<SelectItem value="30">30</SelectItem>
+									<SelectItem value="40">40</SelectItem>
+									<SelectItem value="50">50</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+					</div>
+				)}
 			</header>
 
 			{(isPendingTableOrUserData ||
@@ -224,19 +218,19 @@ export function Tables(): React.ReactElement {
 					filterActive && <Filter />}
 				{!(update_table_layout_status === 'pending') && isListLayout && (
 					<List
-						columns={table?.columns}
-						rows={table?.rows}
+						columns={table?.data?.columns}
+						rows={table?.data?.rows}
 					/>
 				)}
 				{!(update_table_layout_status === 'pending') && isGridLayout && (
 					<Grid
-						columns={table?.columns}
-						rows={table?.rows}
+						columns={table?.data?.columns}
+						rows={table?.data?.rows}
 					/>
 				)}
 			</section>
 
-			{table_status === 'success' && (
+			{table_status === 'success' && table?.meta?.total > 0 && (
 				<section className="inline-flex w-full justify-end">
 					<div className="inline-flex space-x-8 items-center">
 						<label className="inline-block max-w-32 w-full">
