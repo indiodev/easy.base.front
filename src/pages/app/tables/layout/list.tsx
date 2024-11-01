@@ -30,6 +30,8 @@ interface Props {
 function normalizeRows(props: Row) {
 	const row = { ...props } as any;
 
+	console.log(props)
+
 	const id = row._id;
 	delete row.value._id;
 	delete row.value.createdAt;
@@ -106,9 +108,15 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					{normalizedRow.map(({ value, id }) => (
 						<TableRow key={id}>
 							<TableCell className="w-[100px]">{id}</TableCell>
-
+							{/* MAPEAR VALOR EXIBIDO BASEADO NO COLUMN.CONFIG.RELATION.VISIBLE */}
 							{Object.entries(value).map(([key, val]) => {
-								return <TableCell key={`${key}-${id}`}>{val as any}</TableCell>;
+								return <TableCell key={`${key}-${id}`}>
+									{typeof val == 'object' && !Array.isArray(val) 
+										? Object.values(val as any)[1] 
+										: Array.isArray(val)
+											? val.map(x => Object.values(x)[1]).join(', ') 
+											: val as any }
+								</TableCell>;
 							})}
 
 							<TableCell className="w-[80px]">

@@ -38,6 +38,7 @@ import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
 import { Setting } from './setting';
+import { Table } from '@models/table.model';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
@@ -51,7 +52,9 @@ export function Tables(): React.ReactElement {
 	// 	.filter(([key]) => key !== 'filter')
 	// 	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 
-	const { data: table, status: table_status } = useTableShowQuery({
+
+
+	const { data: tableData, status: table_status } = useTableShowQuery({
 		id: params?.id!,
 		...(searchParams.get('page') && {
 			page: Number(searchParams.get('page') || 1),
@@ -60,6 +63,8 @@ export function Tables(): React.ReactElement {
 			per_page: Number(searchParams.get('per_page') || 10),
 		}),
 	});
+
+	const table = tableData as unknown as Table as any; // REVIEW MARCOS VER O RETORNO ENCAPSULADO PARA TER O META
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
@@ -107,11 +112,12 @@ export function Tables(): React.ReactElement {
 		!isPendingTableOrUserData;
 
 	console.log({ table_status });
+	console.log(table)
 
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
 			<h2 className="text-3xl font-medium text-blue-600">
-				{table?.data?.title}
+				{table?.title}
 			</h2>
 
 			<Separator />
@@ -218,14 +224,14 @@ export function Tables(): React.ReactElement {
 					filterActive && <Filter />}
 				{!(update_table_layout_status === 'pending') && isListLayout && (
 					<List
-						columns={table?.data?.columns}
-						rows={table?.data?.rows}
+						columns={table?.columns}
+						rows={table?.rows}
 					/>
 				)}
 				{!(update_table_layout_status === 'pending') && isGridLayout && (
 					<Grid
-						columns={table?.data?.columns}
-						rows={table?.data?.rows}
+						columns={table?.columns}
+						rows={table?.rows}
 					/>
 				)}
 			</section>

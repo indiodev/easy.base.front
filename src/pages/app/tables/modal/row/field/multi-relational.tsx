@@ -28,6 +28,8 @@ export function MultiRelational({
 		});
 
 		setOptions(response);
+
+		console.log(response)
 	}, [column.config]);
 
 	React.useEffect(() => {

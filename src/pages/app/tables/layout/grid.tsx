@@ -129,7 +129,13 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 										className="space-x-2"
 										key={key}
 									>
-										<span>{column.title}</span>:<span>{val}</span>
+										<span>{column.title}</span>:<span>{
+											typeof val == 'object' && !Array.isArray(val) 
+											? Object.values(val as any) 
+											: Array.isArray(val)
+												? val.map(x => Object.values(x)[1]) 
+												: val as any }
+										</span>
 									</div>
 								);
 							})}
