@@ -492,33 +492,34 @@ const EditField = React.forwardRef<
 								</>
 							)}
 
-							<FormField
-								control={form.control}
-								name="config.filter"
-								defaultValue={Boolean(column?.config?.filter)}
-								render={({ field }) => (
-									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-										<div className="space-y-0.5">
-											<FormLabel>Usar no filtro</FormLabel>
-											<FormDescription>
-												Usar este campo para filtrar os dados?
-											</FormDescription>
-										</div>
-										<FormControl>
-											<div className="inline-flex space-x-2">
-												<span className="text-sm">Não</span>
-												<Switch
-													defaultChecked={Boolean(column?.config?.filter)}
-													checked={field.value}
-													onCheckedChange={field.onChange}
-													aria-readonly
-												/>
-												<span className="text-sm">Sim</span>
+							{![COLUMN_TYPE.LIKE].includes(form.watch('type')) && (
+								<FormField
+									control={form.control}
+									name="config.filter"
+									defaultValue={form.watch('config.filter')}
+									render={({ field }) => (
+										<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+											<div className="space-y-0.5">
+												<FormLabel>Usar no filtro</FormLabel>
+												<FormDescription>
+													Usar este campo para filtrar os dados?
+												</FormDescription>
 											</div>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+											<FormControl>
+												<div className="inline-flex space-x-2">
+													<span className="text-sm">Não</span>
+													<Switch
+														checked={field.value}
+														onCheckedChange={field.onChange}
+														aria-readonly
+													/>
+													<span className="text-sm">Sim</span>
+												</div>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							)}
 
 							<FormField
 								control={form.control}
@@ -548,33 +549,36 @@ const EditField = React.forwardRef<
 								)}
 							/>
 
-							<FormField
-								control={form.control}
-								name="config.required"
-								defaultValue={Boolean(column?.config?.required)}
-								render={({ field }) => (
-									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-										<div className="space-y-0.5">
-											<FormLabel>Obrigatório</FormLabel>
-											<FormDescription>
-												Este campo é obrigatório?
-											</FormDescription>
-										</div>
-										<FormControl>
-											<div className="inline-flex space-x-2">
-												<span className="text-sm">Não</span>
-												<Switch
-													defaultChecked={Boolean(column?.config?.required)}
-													checked={field.value}
-													onCheckedChange={field.onChange}
-													aria-readonly
-												/>
-												<span className="text-sm">Sim</span>
+							{![COLUMN_TYPE.LIKE, COLUMN_TYPE.RATING].includes(
+								form.watch('type'),
+							) && (
+								<FormField
+									control={form.control}
+									name="config.required"
+									defaultValue={form.watch('config.required')}
+									render={({ field }) => (
+										<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+											<div className="space-y-0.5">
+												<FormLabel>Obrigatório</FormLabel>
+												<FormDescription>
+													Este campo é obrigatório?
+												</FormDescription>
 											</div>
-										</FormControl>
-									</FormItem>
-								)}
-							/>
+											<FormControl>
+												<div className="inline-flex space-x-2">
+													<span className="text-sm">Não</span>
+													<Switch
+														checked={field.value}
+														onCheckedChange={field.onChange}
+														aria-readonly
+													/>
+													<span className="text-sm">Sim</span>
+												</div>
+											</FormControl>
+										</FormItem>
+									)}
+								/>
+							)}
 
 							<div className="inline-flex flex-1 justify-end w-full">
 								<Button
