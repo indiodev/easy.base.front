@@ -11,10 +11,13 @@ const config = z.object({
 	display: z.boolean().default(false),
 	filter: z.boolean().default(false),
 	default: z.string().optional(),
-	relation: z.object({
-		collection: z.string().trim(),
-		visible: z.string().trim(),
-	}).optional(),
+	relation: z
+		.object({
+			collection: z.string().trim(),
+			path: z.string().trim(),
+			slug: z.string().trim(),
+		})
+		.optional(),
 	options: z
 		.array(
 			z.object({

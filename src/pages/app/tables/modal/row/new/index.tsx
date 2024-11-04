@@ -44,8 +44,8 @@ import { CalendarIcon, LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { MultiRelational } from '../field/multi-relational';
-import { Relational } from '../field/relational';
+import { MultiRelational } from '../components/multi-relational';
+import { Relational } from '../components/relational';
 
 const NewRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
