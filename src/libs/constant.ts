@@ -22,12 +22,22 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 		type: COLUMN_TYPE.DATE,
 	},
 	{
-		label: 'Relacional',
+		label: 'Relacionamento',
 		type: COLUMN_TYPE.RELATIONAL,
 	},
 	{
-		label: 'Multirelacional',
+		label: 'Relacionamento (Múltiplo)',
 		type: COLUMN_TYPE.MULTI_RELATIONAL,
+	},
+
+	{
+		label: 'Avaliação (Estrelas)',
+		type: COLUMN_TYPE.RATING,
+	},
+
+	{
+		label: 'Avaliação (Curtidas)',
+		type: COLUMN_TYPE.LIKE,
 	},
 ];
 
