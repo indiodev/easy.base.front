@@ -16,7 +16,8 @@ export interface Column {
 		format?: COLUMN_FORMAT;
 		relation?: {
 			collection: string;
-			visible: string;
+			path: string;
+			slug: string;
 		};
 	};
 	status: string | null;

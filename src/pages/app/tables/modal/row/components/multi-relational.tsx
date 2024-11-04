@@ -24,12 +24,10 @@ export function MultiRelational({
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({
 			collection: column.config!.relation!.collection!,
-			columnId: column.config!.relation!.visible!,
+			columnId: column.config!.relation!.path,
 		});
 
 		setOptions(response);
-
-		console.log(response)
 	}, [column.config]);
 
 	React.useEffect(() => {
@@ -56,7 +54,7 @@ export function MultiRelational({
 								onSearch={async () => {
 									return await ROW_FIND_MANY_DEBOUNCE({
 										collection: column.config!.relation!.collection!,
-										columnId: column.config!.relation!.visible!,
+										columnId: column.config!.relation!.path!,
 									});
 								}}
 								defaultOptions={options}

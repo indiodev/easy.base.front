@@ -375,12 +375,25 @@ const NewField = React.forwardRef<
 								/>
 								<FormField
 									control={form.control}
-									name="config.relation.visible"
+									name="config.relation.path"
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Coluna exibida</FormLabel>
 											<Select
-												onValueChange={field.onChange}
+												onValueChange={(value) => {
+													const table = table_list?.find(
+														(t) =>
+															t.data_collection ===
+															form.watch('config.relation.collection'),
+													);
+
+													const column = table?.columns.find(
+														(c) => c._id === value,
+													);
+
+													field.onChange(value);
+													form.setValue('config.relation.slug', column!.slug!);
+												}}
 												defaultValue={field.value}
 											>
 												<FormControl>

@@ -184,10 +184,6 @@ export function Tables(): React.ReactElement {
 								tanstack.fetchQuery({
 									queryKey: [QUERY.TABLE_SHOW, params.id],
 								});
-
-								// tanstack.refetchQueries({
-								// 	queryKey: [QUERY.TABLE_SHOW, params.id],
-								// });
 							}}
 						>
 							<SelectTrigger className="w-[180px]">

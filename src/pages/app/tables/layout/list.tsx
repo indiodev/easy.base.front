@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import {
 	DropdownMenu,
@@ -16,6 +17,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
+import { COLUMN_TYPE } from '@models/base.model';
 import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
 import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
@@ -29,8 +31,6 @@ interface Props {
 
 function normalizeRows(props: Row) {
 	const row = { ...props } as any;
-
-	console.log(props)
 
 	const id = row._id;
 	delete row.value._id;
@@ -105,78 +105,98 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{normalizedRow.map(({ value, id }) => (
-						<TableRow key={id}>
-							<TableCell className="w-[100px]">{id}</TableCell>
-							{/* MAPEAR VALOR EXIBIDO BASEADO NO COLUMN.CONFIG.RELATION.VISIBLE */}
-							{Object.entries(value).map(([key, val]) => {
-								return <TableCell key={`${key}-${id}`}>
-									{typeof val == 'object' && !Array.isArray(val) 
-										? Object.values(val as any)[1] 
-										: Array.isArray(val)
-											? val.map(x => Object.values(x)[1]).join(', ') 
-											: val as any }
-								</TableCell>;
-							})}
+					{normalizedRow.map(({ value, id }) => {
+						return (
+							<TableRow key={id}>
+								<TableCell className="w-[100px]">{id}</TableCell>
+								{Object.entries(value).map(([key, val]) => {
+									const column = columns.find((col) => col.slug === key);
+									console.log(column);
 
-							<TableCell className="w-[80px]">
-								<DropdownMenu
-									dir="ltr"
-									modal={false}
-								>
-									<DropdownMenuTrigger className="bg-blue-200 p-1 rounded-full text-blue-600">
-										<Ellipsis className="w-4 h-4" />
-									</DropdownMenuTrigger>
-									<DropdownMenuContent className="mr-10">
-										<DropdownMenuLabel>Ações</DropdownMenuLabel>
-										<DropdownMenuSeparator />
+									if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+										const [first, ...rest] = val as any[];
 
-										<DropdownMenuItem
-											className="inline-flex space-x-1 w-full"
-											onClick={() => {
-												navigate({
-													pathname: location.pathname
-														.concat('/view/')
-														.concat(id),
-												});
-											}}
-										>
-											<Eye className="w-4 h-4" />
-											<span>Visualizar</span>
-										</DropdownMenuItem>
+										console.log(first, rest);
 
-										<DropdownMenuItem
-											className="inline-flex space-x-1 w-full"
-											onClick={() => {
-												setSearchParams((state) => {
-													state.set('row_id', id);
-													return state;
-												});
-												editRowButtonRef?.current?.click();
-											}}
-										>
-											<Pencil className="w-4 h-4" />
-											<span>Editar</span>
-										</DropdownMenuItem>
+										return (
+											<TableCell
+												key={`${key}-${id}`}
+												className="space-x-2"
+											>
+												<Badge variant="outline">
+													{first[column!.config!.relation!.slug!]}
+												</Badge>
+												{rest?.length > 0 && (
+													<Badge variant="outline">+{rest?.length}</Badge>
+												)}
+											</TableCell>
+										);
+									}
 
-										<DropdownMenuItem
-											className="inline-flex space-x-1 w-full"
-											onClick={() => {
-												setSearchParams((state) => {
-													state.set('row_id', id);
-													return state;
-												});
-												removeRowButtonRef?.current?.click();
-											}}
-										>
-											<Trash className="w-4 h-4" />
-											<span>Remover</span>
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</TableCell>
-						</TableRow>
-					))}
+									return (
+										<TableCell key={`${key}-${id}`}>{val as string}</TableCell>
+									);
+								})}
+
+								<TableCell className="w-[80px]">
+									<DropdownMenu
+										dir="ltr"
+										modal={false}
+									>
+										<DropdownMenuTrigger className="bg-blue-200 p-1 rounded-full text-blue-600">
+											<Ellipsis className="w-4 h-4" />
+										</DropdownMenuTrigger>
+										<DropdownMenuContent className="mr-10">
+											<DropdownMenuLabel>Ações</DropdownMenuLabel>
+											<DropdownMenuSeparator />
+
+											<DropdownMenuItem
+												className="inline-flex space-x-1 w-full"
+												onClick={() => {
+													navigate({
+														pathname: location.pathname
+															.concat('/view/')
+															.concat(id),
+													});
+												}}
+											>
+												<Eye className="w-4 h-4" />
+												<span>Visualizar</span>
+											</DropdownMenuItem>
+
+											<DropdownMenuItem
+												className="inline-flex space-x-1 w-full"
+												onClick={() => {
+													setSearchParams((state) => {
+														state.set('row_id', id);
+														return state;
+													});
+													editRowButtonRef?.current?.click();
+												}}
+											>
+												<Pencil className="w-4 h-4" />
+												<span>Editar</span>
+											</DropdownMenuItem>
+
+											<DropdownMenuItem
+												className="inline-flex space-x-1 w-full"
+												onClick={() => {
+													setSearchParams((state) => {
+														state.set('row_id', id);
+														return state;
+													});
+													removeRowButtonRef?.current?.click();
+												}}
+											>
+												<Trash className="w-4 h-4" />
+												<span>Remover</span>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</TableCell>
+							</TableRow>
+						);
+					})}
 				</TableBody>
 			</Root>
 			<Modal.RemoveRow ref={removeRowButtonRef} />

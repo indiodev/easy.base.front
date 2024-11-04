@@ -24,7 +24,7 @@ export function Relational({
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({
 			collection: column.config!.relation!.collection!,
-			columnId: column.config!.relation!.visible!,
+			columnId: column.config!.relation!.path!,
 		});
 
 		setOptions(response);
@@ -53,7 +53,7 @@ export function Relational({
 								onSearch={async () => {
 									return await ROW_FIND_MANY_DEBOUNCE({
 										collection: column.config!.relation!.collection!,
-										columnId: column.config!.relation!.visible!,
+										columnId: column.config!.relation!.path!,
 									});
 								}}
 								defaultOptions={options}
