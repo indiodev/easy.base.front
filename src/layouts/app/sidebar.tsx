@@ -212,21 +212,22 @@ export function Sidebar() {
 								</SidebarMenuBadge>
 							</SidebarMenuItem>
 
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									asChild
-									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-									isActive={location.pathname === '/app/users'}
-								>
-									<NavLink to="/app/users">
-										<Users className="h-5 w-5 text-neutral-600" />
-										<span className="text-lg text-neutral-600">Usuários</span>
-									</NavLink>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-
 							{(isMobile || !open) && (
 								<React.Fragment>
+									<SidebarMenuItem>
+										<SidebarMenuButton
+											asChild
+											className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+											isActive={location.pathname === '/app/users'}
+										>
+											<NavLink to="/app/users">
+												<Users className="h-5 w-5 text-neutral-600" />
+												<span className="text-lg text-neutral-600">
+													Usuários
+												</span>
+											</NavLink>
+										</SidebarMenuButton>
+									</SidebarMenuItem>
 									<SidebarMenuItem>
 										<SidebarMenuButton
 											asChild
@@ -324,6 +325,17 @@ export function Sidebar() {
 												<User className="h-5 w-5 text-white group-hover:text-blue-600" />
 												<span className="text-lg text-white group-hover:text-blue-600">
 													Perfil
+												</span>
+											</NavLink>
+										</DropdownMenuItem>
+										<DropdownMenuItem asChild>
+											<NavLink
+												to="/app/users"
+												className="space-x-1 group"
+											>
+												<User className="h-5 w-5 text-white group-hover:text-blue-600" />
+												<span className="text-lg text-white group-hover:text-blue-600">
+													Usuários
 												</span>
 											</NavLink>
 										</DropdownMenuItem>
