@@ -2,31 +2,15 @@
 import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
-import {
-	Pagination,
-	PaginationContent,
-	PaginationItem,
-} from '@components/ui/pagination';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@components/ui/select';
 import { Separator } from '@components/ui/separator';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
+import { Table } from '@models/table.model';
 import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
-import { useTableShowQuery } from '@query/table/show.query';
+import { useTableListQuery } from '@query/table/list.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
 import {
-	ChevronLeft,
-	ChevronRight,
-	ChevronsLeft,
-	ChevronsRight,
 	Filter as FilterLucideIcon,
 	LayoutDashboard,
 	LayoutList,
@@ -47,11 +31,9 @@ export function Tables(): React.ReactElement {
 		new URLSearchParams(location?.search),
 	);
 
-	// const entries = [...searchParams.entries()]
-	// 	.filter(([key]) => key !== 'filter')
-	// 	.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-
-	const { data: table, status: table_status } = useTableShowQuery({
+	const [query, setQuery] = React.useState<
+		{ id: string } & Partial<Record<string, number | string>>
+	>({
 		id: params?.id!,
 		...(searchParams.get('page') && {
 			page: Number(searchParams.get('page') || 1),
@@ -60,6 +42,13 @@ export function Tables(): React.ReactElement {
 			per_page: Number(searchParams.get('per_page') || 10),
 		}),
 	});
+
+	const {
+		data: table_list,
+		// status: table_list_status
+	} = useTableListQuery();
+
+	const [table, setTable] = React.useState<Partial<Table>>({});
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
@@ -91,26 +80,36 @@ export function Tables(): React.ReactElement {
 		}
 	}, [params, user, user_status]);
 
-	const isPendingTableOrUserData =
-		table_status === 'pending' || user_status === 'pending';
+	// const isPendingTableOrUserData =
+	// 	table_status === 'pending' || user_status === 'pending';
 
 	const isListLayout =
-		table_status === 'success' &&
 		user_status === 'success' &&
-		user?.config?.table?.[params?.id!]?.layout === 'list' &&
-		!isPendingTableOrUserData;
+		user?.config?.table?.[params?.id!]?.layout === 'list';
 
 	const isGridLayout =
-		table_status === 'success' &&
 		user_status === 'success' &&
-		user?.config?.table?.[params?.id!]?.layout === 'grid' &&
-		!isPendingTableOrUserData;
+		user?.config?.table?.[params?.id!]?.layout === 'grid';
+
+	React.useEffect(() => {
+		if (location?.state?.table && location?.state?.table?._id === params?.id) {
+			setTable(location.state.table);
+		}
+	}, [location?.state?.table, params?.id]);
+
+	React.useEffect(() => {
+		if (!location?.state?.table && params?.id) {
+			const find_table = table_list?.find((table) => table._id === params?.id);
+
+			if (!find_table) return;
+
+			setTable(find_table);
+		}
+	}, [location, location?.state?.table, params?.id, table_list]);
 
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-			<h2 className="text-3xl font-medium text-blue-600">
-				{table?.data?.title}
-			</h2>
+			<h2 className="text-3xl font-medium text-blue-600">{table?.title}</h2>
 
 			<Separator />
 
@@ -170,7 +169,7 @@ export function Tables(): React.ReactElement {
 					<Setting />
 				</section>
 
-				{table_status === 'success' && table?.meta?.total > 0 && (
+				{/* {table_status === 'success' && table?.meta?.total > 0 && (
 					<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
 						<span>Resultados por página: </span>
 						<Select
@@ -200,33 +199,39 @@ export function Tables(): React.ReactElement {
 							</SelectContent>
 						</Select>
 					</div>
-				)}
+				)} */}
 			</header>
 
-			{(isPendingTableOrUserData ||
-				update_table_layout_status === 'pending') && (
-				<Loading className="flex justify-center items-center h-screen flex-1" />
-			)}
+			{
+				// isPendingTableOrUserData ||
+				!table && update_table_layout_status === 'pending' && (
+					<Loading className="flex justify-center items-center h-screen flex-1" />
+				)
+			}
 
 			<section className="inline-flex space-x-6">
-				{!(update_table_layout_status === 'pending') &&
-					!isPendingTableOrUserData &&
-					filterActive && <Filter />}
+				{!(update_table_layout_status === 'pending') && filterActive && (
+					<Filter />
+				)}
 				{!(update_table_layout_status === 'pending') && isListLayout && (
 					<List
-						columns={table?.data?.columns}
-						rows={table?.data?.rows}
+						// columns={table?.data?.columns}
+						// rows={table?.data?.rows}
+						columns={table?.columns || []}
+						rows={[]}
 					/>
 				)}
 				{!(update_table_layout_status === 'pending') && isGridLayout && (
 					<Grid
-						columns={table?.data?.columns}
-						rows={table?.data?.rows}
+						// columns={table?.data?.columns}
+						// rows={table?.data?.rows}
+						columns={table?.columns || []}
+						rows={[]}
 					/>
 				)}
 			</section>
 
-			{table_status === 'success' && table?.meta?.total > 0 && (
+			{/* {table_status === 'success' && table?.meta?.total > 0 && (
 				<section className="inline-flex w-full justify-end">
 					<div className="inline-flex space-x-8 items-center">
 						<label className="inline-block max-w-32 w-full">
@@ -319,7 +324,7 @@ export function Tables(): React.ReactElement {
 						</Pagination>
 					</div>
 				</section>
-			)}
+			)} */}
 		</div>
 	);
 }

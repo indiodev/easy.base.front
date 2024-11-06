@@ -11,10 +11,9 @@ export default class TableService {
 	public async show({
 		id,
 		...query
-	}: {
-		id: string;
-		[key: string]: number | string | boolean;
-	}): Promise<MetaResponse<Table>> {
+	}: { id?: string } & Partial<Record<string, number | string>>): Promise<
+		MetaResponse<Table>
+	> {
 		const { data } = await API.get(`/tables/${id}`, {
 			params: query,
 		});
