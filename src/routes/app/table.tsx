@@ -8,13 +8,6 @@ const TablePage = React.lazy(async function () {
 	};
 });
 
-const NewTablePage = React.lazy(async function () {
-	const module = await import('@pages/app/tables/new');
-	return {
-		default: module.New,
-	};
-});
-
 const ViewRowPage = React.lazy(async function () {
 	const module = await import('@pages/app/tables/view');
 	return {
@@ -26,11 +19,6 @@ export function Router(): React.ReactElement {
 	return (
 		<Routes>
 			<Route path="/*">
-				<Route
-					path="new"
-					element={<NewTablePage />}
-				/>
-
 				<Route
 					path=":id"
 					element={<TablePage />}

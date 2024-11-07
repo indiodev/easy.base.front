@@ -37,6 +37,11 @@ const NewTable = React.forwardRef<
 	const navigate = useNavigate();
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
+		defaultValues: {
+			config: {
+				layout: 'list',
+			},
+		},
 	});
 
 	const { mutateAsync: create_table, status: create_table_status } =
@@ -59,6 +64,7 @@ const NewTable = React.forwardRef<
 		});
 
 	const onSubmit = form.handleSubmit((data) => {
+		console.log(data);
 		create_table(data);
 	});
 
