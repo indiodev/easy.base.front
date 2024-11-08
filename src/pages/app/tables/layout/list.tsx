@@ -111,12 +111,9 @@ export function List({ columns, rows }: Props): React.ReactElement {
 								<TableCell className="w-[100px]">{id}</TableCell>
 								{Object.entries(value).map(([key, val]) => {
 									const column = columns.find((col) => col.slug === key);
-									console.log(column);
 
 									if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
 										const [first, ...rest] = val as any[];
-
-										console.log(first, rest);
 
 										return (
 											<TableCell

@@ -2,13 +2,20 @@
 import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@components/ui/select';
 import { Separator } from '@components/ui/separator';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
 import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
-import { useTableListQuery } from '@query/table/list.query';
+import { useTableShowQuery } from '@query/table/show.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
 import {
 	Filter as FilterLucideIcon,
@@ -17,19 +24,23 @@ import {
 	Search,
 } from 'lucide-react';
 import React from 'react';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
+import { Pagination } from './pagination';
 import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
-	const location = useLocation();
 
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
+
+	const { data: table, status: table_status } = useTableShowQuery({
+		id: params?.id!,
+	});
 
 	// const [query, setQuery] = React.useState<
 	// 	{ id: string } & Partial<Record<string, number | string>>
@@ -43,14 +54,12 @@ export function Tables(): React.ReactElement {
 	// 	}),
 	// });
 
-	const {
-		data: table_list,
-		// status: table_list_status
-	} = useTableListQuery();
-
-	const [table, setTable] = React.useState<Partial<Table>>({});
+	// const [table, setTable] = React.useState<Partial<Table>>({});
 
 	const { data: user, status: user_status } = useUserProfileQuery();
+
+	const isPendingTableOrUserData =
+		table_status === 'pending' || user_status === 'pending';
 
 	const filterActive =
 		searchParams.has('filter') && searchParams.get('filter') === 'active';
@@ -72,13 +81,11 @@ export function Tables(): React.ReactElement {
 		},
 	});
 
-	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>(
-		table?.config?.layout ?? 'list',
-	);
+	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>('list');
 
 	const nonExistUserLayout =
 		params?.id &&
-		table?.config?.layout &&
+		table?.data?.config?.layout &&
 		user_status === 'success' &&
 		!user?.config?.table?.[params?.id!]?.layout;
 
@@ -89,7 +96,7 @@ export function Tables(): React.ReactElement {
 
 	React.useEffect(() => {
 		if (nonExistUserLayout) {
-			setViewLayout(table?.config?.layout!);
+			setViewLayout(table?.data?.config?.layout!);
 			return;
 		}
 
@@ -99,35 +106,11 @@ export function Tables(): React.ReactElement {
 		}
 	}, [existUserLayout, nonExistUserLayout, params, table, user, user_status]);
 
-	const isListLayout =
-		table?.config?.layout === 'list' ||
-		(user_status === 'success' &&
-			user?.config?.table?.[params?.id!]?.layout === 'list');
-
-	const isGridLayout =
-		table?.config?.layout === 'grid' ||
-		(user_status === 'success' &&
-			user?.config?.table?.[params?.id!]?.layout === 'grid');
-
-	React.useEffect(() => {
-		if (location?.state?.table && location?.state?.table?._id === params?.id) {
-			setTable(location.state.table);
-		}
-	}, [location?.state?.table, params?.id]);
-
-	React.useEffect(() => {
-		if (!location?.state?.table && params?.id) {
-			const find_table = table_list?.find((table) => table._id === params?.id);
-
-			if (!find_table) return;
-
-			setTable(find_table);
-		}
-	}, [location, location?.state?.table, params?.id, table_list]);
-
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-			<h2 className="text-3xl font-medium text-blue-600">{table?.title}</h2>
+			<h2 className="text-3xl font-medium text-blue-600">
+				{table?.data?.title}
+			</h2>
 
 			<Separator />
 
@@ -187,7 +170,7 @@ export function Tables(): React.ReactElement {
 					<Setting />
 				</section>
 
-				{/* {table_status === 'success' && table?.meta?.total > 0 && (
+				{table_status === 'success' && table?.meta?.total > 0 && (
 					<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
 						<span>Resultados por página: </span>
 						<Select
@@ -217,132 +200,37 @@ export function Tables(): React.ReactElement {
 							</SelectContent>
 						</Select>
 					</div>
-				)} */}
+				)}
 			</header>
 
-			{
-				// isPendingTableOrUserData ||
-				!table && update_table_layout_status === 'pending' && (
+			{isPendingTableOrUserData ||
+				(!table && update_table_layout_status === 'pending' && (
 					<Loading className="flex justify-center items-center h-screen flex-1" />
-				)
-			}
+				))}
 
 			<section className="inline-flex space-x-6">
 				{!(update_table_layout_status === 'pending') && filterActive && (
 					<Filter />
 				)}
-				{!(update_table_layout_status === 'pending') && isListLayout && (
-					<List
-						// columns={table?.data?.columns}
-						// rows={table?.data?.rows}
-						columns={table?.columns || []}
-						rows={table?.rows || []}
-					/>
-				)}
-				{!(update_table_layout_status === 'pending') && isGridLayout && (
-					<Grid
-						// columns={table?.data?.columns}
-						// rows={table?.data?.rows}
-						columns={table?.columns || []}
-						rows={table?.rows || []}
-					/>
-				)}
+
+				{!(update_table_layout_status === 'pending') &&
+					viewLayout === 'list' && (
+						<List
+							columns={table?.data?.columns || []}
+							rows={table?.data?.rows || []}
+						/>
+					)}
+
+				{!(update_table_layout_status === 'pending') &&
+					viewLayout === 'grid' && (
+						<Grid
+							columns={table?.data?.columns || []}
+							rows={table?.data?.rows || []}
+						/>
+					)}
 			</section>
 
-			{/* {table_status === 'success' && table?.meta?.total > 0 && (
-				<section className="inline-flex w-full justify-end">
-					<div className="inline-flex space-x-8 items-center">
-						<label className="inline-block max-w-32 w-full">
-							Página <strong>{table?.meta?.page}</strong> de{' '}
-							<strong>{table?.meta?.last_page}</strong>
-						</label>
-						<Pagination className="justify-end">
-							<PaginationContent>
-								<PaginationItem>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="border"
-										onClick={() => {
-											setSearchParams((state) => {
-												state.set('page', '1');
-												return state;
-											});
-
-											tanstack.refetchQueries({
-												queryKey: [QUERY.TABLE_SHOW, params.id],
-											});
-										}}
-									>
-										<ChevronsLeft />
-									</Button>
-								</PaginationItem>
-								<PaginationItem>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="border"
-										onClick={() => {
-											if (table?.meta?.page > 1) {
-												setSearchParams((state) => {
-													state.set('page', String(table?.meta?.page - 1));
-													return state;
-												});
-
-												tanstack.refetchQueries({
-													queryKey: [QUERY.TABLE_SHOW, params.id],
-												});
-											}
-										}}
-									>
-										<ChevronLeft />
-									</Button>
-								</PaginationItem>
-								<PaginationItem>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="border"
-										onClick={() => {
-											if (table?.meta?.page < table?.meta?.last_page) {
-												setSearchParams((state) => {
-													state.set('page', String(table?.meta?.page + 1));
-													return state;
-												});
-
-												tanstack.refetchQueries({
-													queryKey: [QUERY.TABLE_SHOW, params.id],
-												});
-											}
-										}}
-									>
-										<ChevronRight />
-									</Button>
-								</PaginationItem>
-								<PaginationItem>
-									<Button
-										variant="ghost"
-										size="icon"
-										className="border"
-										onClick={() => {
-											setSearchParams((state) => {
-												state.set('page', String(table?.meta?.last_page));
-												return state;
-											});
-
-											tanstack.refetchQueries({
-												queryKey: [QUERY.TABLE_SHOW, params.id],
-											});
-										}}
-									>
-										<ChevronsRight />
-									</Button>
-								</PaginationItem>
-							</PaginationContent>
-						</Pagination>
-					</div>
-				</section>
-			)} */}
+			<Pagination />
 		</div>
 	);
 }
