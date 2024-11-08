@@ -31,17 +31,17 @@ export function Tables(): React.ReactElement {
 		new URLSearchParams(location?.search),
 	);
 
-	const [query, setQuery] = React.useState<
-		{ id: string } & Partial<Record<string, number | string>>
-	>({
-		id: params?.id!,
-		...(searchParams.get('page') && {
-			page: Number(searchParams.get('page') || 1),
-		}),
-		...(searchParams.get('per_page') && {
-			per_page: Number(searchParams.get('per_page') || 10),
-		}),
-	});
+	// const [query, setQuery] = React.useState<
+	// 	{ id: string } & Partial<Record<string, number | string>>
+	// >({
+	// 	id: params?.id!,
+	// 	...(searchParams.get('page') && {
+	// 		page: Number(searchParams.get('page') || 1),
+	// 	}),
+	// 	...(searchParams.get('per_page') && {
+	// 		per_page: Number(searchParams.get('per_page') || 10),
+	// 	}),
+	// });
 
 	const {
 		data: table_list,
@@ -72,24 +72,42 @@ export function Tables(): React.ReactElement {
 		},
 	});
 
-	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>('list');
+	const [viewLayout, setViewLayout] = React.useState<'grid' | 'list'>(
+		table?.config?.layout ?? 'list',
+	);
+
+	const nonExistUserLayout =
+		params?.id &&
+		table?.config?.layout &&
+		user_status === 'success' &&
+		!user?.config?.table?.[params?.id!]?.layout;
+
+	const existUserLayout =
+		params?.id &&
+		user_status === 'success' &&
+		user?.config?.table?.[params?.id!]?.layout;
 
 	React.useEffect(() => {
-		if (user_status === 'success' && params.id && user?.config?.table) {
-			setViewLayout(user?.config.table[params.id]?.layout);
+		if (nonExistUserLayout) {
+			setViewLayout(table?.config?.layout!);
+			return;
 		}
-	}, [params, user, user_status]);
 
-	// const isPendingTableOrUserData =
-	// 	table_status === 'pending' || user_status === 'pending';
+		if (existUserLayout) {
+			setViewLayout(user?.config?.table?.[params?.id!]?.layout!);
+			return;
+		}
+	}, [existUserLayout, nonExistUserLayout, params, table, user, user_status]);
 
 	const isListLayout =
-		user_status === 'success' &&
-		user?.config?.table?.[params?.id!]?.layout === 'list';
+		table?.config?.layout === 'list' ||
+		(user_status === 'success' &&
+			user?.config?.table?.[params?.id!]?.layout === 'list');
 
 	const isGridLayout =
-		user_status === 'success' &&
-		user?.config?.table?.[params?.id!]?.layout === 'grid';
+		table?.config?.layout === 'grid' ||
+		(user_status === 'success' &&
+			user?.config?.table?.[params?.id!]?.layout === 'grid');
 
 	React.useEffect(() => {
 		if (location?.state?.table && location?.state?.table?._id === params?.id) {
@@ -218,7 +236,7 @@ export function Tables(): React.ReactElement {
 						// columns={table?.data?.columns}
 						// rows={table?.data?.rows}
 						columns={table?.columns || []}
-						rows={[]}
+						rows={table?.rows || []}
 					/>
 				)}
 				{!(update_table_layout_status === 'pending') && isGridLayout && (
@@ -226,7 +244,7 @@ export function Tables(): React.ReactElement {
 						// columns={table?.data?.columns}
 						// rows={table?.data?.rows}
 						columns={table?.columns || []}
-						rows={[]}
+						rows={table?.rows || []}
 					/>
 				)}
 			</section>

@@ -274,7 +274,7 @@ export function Sidebar() {
 					</SidebarGroup>
 				</SidebarContent>
 
-				<SidebarFooter className="bg-blue-600/70 p-0 rounded-md">
+				<SidebarFooter className="bg-blue-500 p-0 rounded-md">
 					<SidebarMenu>
 						{!(isMobile || !open) && (
 							<SidebarMenuItem>
@@ -315,15 +315,15 @@ export function Sidebar() {
 									</DropdownMenuTrigger>
 									<DropdownMenuContent
 										side="top"
-										className="w-[--radix-popper-anchor-width] bg-blue-600/70"
+										className="w-[--radix-popper-anchor-width] bg-blue-500"
 									>
 										<DropdownMenuItem asChild>
 											<NavLink
 												to="/app/profile"
 												className="space-x-1 group"
 											>
-												<User className="h-5 w-5 text-white group-hover:text-blue-600" />
-												<span className="text-lg text-white group-hover:text-blue-600">
+												<User className="h-5 w-5 text-white group-hover:text-blue-500" />
+												<span className="text-lg text-white group-hover:text-blue-500">
 													Perfil
 												</span>
 											</NavLink>
@@ -333,8 +333,8 @@ export function Sidebar() {
 												to="/app/users"
 												className="space-x-1 group"
 											>
-												<User className="h-5 w-5 text-white group-hover:text-blue-600" />
-												<span className="text-lg text-white group-hover:text-blue-600">
+												<User className="h-5 w-5 text-white group-hover:text-blue-500" />
+												<span className="text-lg text-white group-hover:text-blue-500">
 													Usuários
 												</span>
 											</NavLink>
@@ -344,8 +344,8 @@ export function Sidebar() {
 												to="/app/settings"
 												className="space-x-1 group"
 											>
-												<Settings className="h-5 w-5 text-white group-hover:text-blue-600" />
-												<span className="text-lg text-white group-hover:text-blue-600">
+												<Settings className="h-5 w-5 text-white group-hover:text-blue-500" />
+												<span className="text-lg text-white group-hover:text-blue-500">
 													Configurações
 												</span>
 											</NavLink>
@@ -359,7 +359,7 @@ export function Sidebar() {
 												}}
 											>
 												<LogOut className="h-5 w-5 text-white group-hover:text-blue-600" />
-												<span className="text-lg text-white group-hover:text-blue-600">
+												<span className="text-lg text-white group-hover:text-blue-500">
 													Sair
 												</span>
 											</SidebarMenuButton>

@@ -12,6 +12,9 @@ export const Schema = z.object({
 	// 		message: 'Descrição obrigatória',
 	// 	})
 	// 	.trim(),
+	config: z.object({
+		layout: z.enum(['grid', 'list']),
+	}),
 });
 
 export type Type = z.infer<typeof Schema>;

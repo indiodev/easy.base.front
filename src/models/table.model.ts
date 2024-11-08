@@ -6,7 +6,9 @@ export interface Table {
 	id: string;
 	title: string;
 	identifier: string;
-	config: object | null;
+	config?: {
+		layout?: 'grid' | 'list';
+	};
 	category: string | null;
 	data_collection: string;
 	status: string | null;
@@ -20,4 +22,5 @@ export interface Table {
 
 export type CreateTable = {
 	title: string;
+	config?: object;
 };
