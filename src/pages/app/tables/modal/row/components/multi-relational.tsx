@@ -12,14 +12,16 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export function MultiRelational({
+export function MultiRelationalField({
 	column,
+	defaultValue,
 }: {
 	column: Partial<Column>;
+	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
 
-	const [options, setOptions] = React.useState<Option[]>([]);
+	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
 
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({
@@ -38,6 +40,7 @@ export function MultiRelational({
 		<FormField
 			control={form.control}
 			name={column!.slug!}
+			defaultValue={options.flatMap((option) => option.value)}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column!.slug!];
 				return (
@@ -45,8 +48,6 @@ export function MultiRelational({
 						<FormLabel>{column.title}</FormLabel>
 						<FormControl>
 							<MultipleSelector
-								// {...field}
-								// maxSelected={1}
 								onChange={(options) => {
 									const values = options.flatMap((option) => option.value);
 									field.onChange(values);

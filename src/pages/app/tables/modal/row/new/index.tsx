@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
-import { Calendar } from '@components/ui/calendar';
 import {
 	Dialog,
 	DialogClose,
@@ -11,41 +10,23 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from '@components/ui/form';
-import { Input } from '@components/ui/input';
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from '@components/ui/popover';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@components/ui/select';
-import { Textarea } from '@components/ui/textarea';
+import { Form } from '@components/ui/form';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { useRowCreateMutation } from '@mutation/row/new.mutation';
 import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
-import { CalendarIcon, LoaderCircle } from 'lucide-react';
+import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { MultiRelational } from '../components/multi-relational';
-import { Relational } from '../components/relational';
+import { DateField } from '../components/date';
+import { DropdownField } from '../components/dropdown';
+import { LongTextField } from '../components/long-text';
+import { MultiRelationalField } from '../components/multi-relational';
+import { RelationalField } from '../components/relational';
+import { TextField } from '../components/text';
 
 const NewRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -145,137 +126,32 @@ const NewRow = React.forwardRef<
 							{columns.map((column) => {
 								if (column?.type === COLUMN_TYPE.DATE) {
 									return (
-										<FormField
+										<DateField
 											key={column._id}
-											control={form.control}
-											name={column.slug}
-											defaultValue={new Date()}
-											render={({ field }) => {
-												const hasError = !!form.formState.errors[column.slug];
-												return (
-													<FormItem className="flex flex-col w-full">
-														<FormLabel>{column.title}</FormLabel>
-														<Popover>
-															<PopoverTrigger asChild>
-																<FormControl>
-																	<Button
-																		variant={'outline'}
-																		className={cn(
-																			'w-full pl-3 text-left font-normal',
-																			!field.value && 'text-muted-foreground',
-																			hasError && 'border-red-500',
-																		)}
-																	>
-																		{field.value ? (
-																			format(field.value, 'PPP')
-																		) : (
-																			<span>Selecione uma data</span>
-																		)}
-																		<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-																	</Button>
-																</FormControl>
-															</PopoverTrigger>
-															<PopoverContent
-																className="w-auto p-0"
-																align="start"
-															>
-																<Calendar
-																	locale={ptBR}
-																	mode="single"
-																	selected={field.value}
-																	onSelect={field.onChange}
-																	disabled={(date) =>
-																		date > new Date() ||
-																		date < new Date('1900-01-01')
-																	}
-																	initialFocus
-																/>
-															</PopoverContent>
-														</Popover>
-
-														{/* <FormMessage /> */}
-													</FormItem>
-												);
-											}}
+											column={column}
 										/>
 									);
 								}
 
 								if (column?.type === COLUMN_TYPE.LONG_TEXT)
 									return (
-										<FormField
+										<LongTextField
 											key={column._id}
-											control={form.control}
-											name={column.slug}
-											render={({ field }) => {
-												const hasError = !!form.formState.errors[column.slug];
-												return (
-													<FormItem>
-														<FormLabel>{column.title}</FormLabel>
-														<FormControl>
-															<Textarea
-																placeholder={column.title}
-																className={cn(
-																	'focus-visible:ring-blue-300',
-																	hasError && 'border-red-500',
-																)}
-																{...field}
-															/>
-														</FormControl>
-
-														{/* <FormMessage /> */}
-													</FormItem>
-												);
-											}}
+											column={column}
 										/>
 									);
 
 								if (column?.type === COLUMN_TYPE.DROPDOWN)
 									return (
-										<FormField
+										<DropdownField
+											column={column}
 											key={column._id}
-											control={form.control}
-											name={column.slug}
-											render={({ field }) => {
-												const hasError = !!form.formState.errors[column.slug];
-												return (
-													<FormItem>
-														<FormLabel>{column.title}</FormLabel>
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<FormControl>
-																<SelectTrigger
-																	className={cn(hasError && 'border-red-500')}
-																>
-																	<SelectValue placeholder="Selecione uma opção" />
-																</SelectTrigger>
-															</FormControl>
-															<SelectContent>
-																{column.config?.options?.map(
-																	(option, index) => (
-																		<SelectItem
-																			key={index}
-																			value={option.name}
-																		>
-																			{option.name}
-																		</SelectItem>
-																	),
-																)}
-															</SelectContent>
-														</Select>
-
-														{/* <FormMessage /> */}
-													</FormItem>
-												);
-											}}
 										/>
 									);
 
 								if (column?.type === COLUMN_TYPE.RELATIONAL) {
 									return (
-										<Relational
+										<RelationalField
 											column={column}
 											key={column._id}
 										/>
@@ -284,7 +160,7 @@ const NewRow = React.forwardRef<
 
 								if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
 									return (
-										<MultiRelational
+										<MultiRelationalField
 											column={column}
 											key={column._id}
 										/>
@@ -292,28 +168,9 @@ const NewRow = React.forwardRef<
 								}
 
 								return (
-									<FormField
+									<TextField
 										key={column._id}
-										control={form.control}
-										name={column.slug}
-										render={({ field }) => {
-											const hasError = !!form.formState.errors[column.slug];
-											return (
-												<FormItem className="space-y-1">
-													<FormLabel>{column.title}</FormLabel>
-													<FormControl>
-														<Input
-															placeholder={column.title}
-															className={cn(
-																'focus-visible:ring-blue-300',
-																hasError && 'border-red-500',
-															)}
-															{...field}
-														/>
-													</FormControl>
-												</FormItem>
-											);
-										}}
+										column={column}
 									/>
 								);
 							})}

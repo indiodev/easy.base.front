@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
-import { Calendar } from '@components/ui/calendar';
 import {
 	Dialog,
 	DialogClose,
@@ -11,63 +9,46 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from '@components/ui/form';
-import { Input } from '@components/ui/input';
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from '@components/ui/popover';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@components/ui/select';
-import { Textarea } from '@components/ui/textarea';
+import { Form } from '@components/ui/form';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
+import { Column } from '@models/column.model';
 import { useRowUpdateMutation } from '@mutation/row/update.mutation';
-import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
-import { useRowShowQuery } from '@query/row/show.query';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
-import { CalendarIcon, LoaderCircle } from 'lucide-react';
+import { Option } from '@components/ui/multiple-selector';
+import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { MultiRelational } from '../components/multi-relational';
-import { Relational } from '../components/relational';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { DateField } from '../components/date';
+import { DropdownField } from '../components/dropdown';
+import { LongTextField } from '../components/long-text';
+import { MultiRelationalField } from '../components/multi-relational';
+import { RelationalField } from '../components/relational';
+import { TextField } from '../components/text';
 
 const EditRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
 >(({ ...props }, ref) => {
+	const location = useLocation();
+
+	const field_state = location?.state?.row as {
+		id: string;
+		data: {
+			path: string;
+			value: unknown;
+			column: Column;
+		}[];
+	};
+
 	const [open, setOpen] = React.useState(false);
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location.search),
 	);
 
 	const params = useParams();
-
-	const { data: row, status: row_status } = useRowShowQuery({
-		tableId: params?.id || '',
-		id: searchParams.get('row_id') || '',
-	});
-
-	const { data: columns, status: columns_status } =
-		useColumnFindManyByTableIdQuery({
-			tableId: params?.id || '',
-		});
 
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
@@ -78,12 +59,6 @@ const EditRow = React.forwardRef<
 				setOpen((state) => !state);
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_SHOW, params.id],
-				});
-				tanstack.refetchQueries({
-					queryKey: [QUERY.COLUMN_FIND_MANY_BY_TABLE_ID, params.id],
-				});
-				tanstack.refetchQueries({
-					queryKey: [QUERY.ROW_SHOW, searchParams?.get('row_id'), params.id],
 				});
 
 				form.reset();
@@ -154,216 +129,127 @@ const EditRow = React.forwardRef<
 					</DialogDescription>
 				</DialogHeader>
 
-				{row_status === 'pending' && (
-					<Loading className="flex justify-center items-center h-auto flex-1" />
-				)}
+				<Form {...form}>
+					<form
+						className={cn(
+							field_state?.data?.length > 5 && 'grid grid-cols-2 gap-4',
+							!(field_state?.data?.length > 5) && 'flex flex-col gap-4',
+						)}
+						onSubmit={onSubmit}
+					>
+						{field_state?.data?.map(({ column, value }) => {
+							if (column?.type === COLUMN_TYPE.RELATIONAL) {
+								const options = Array.from(value as object[])
+									.map((v) => {
+										const field = Object.entries(v).find(
+											([key]) =>
+												key !== '_id' &&
+												key !== 'createdAt' &&
+												key !== 'updatedAt',
+										);
 
-				{row_status === 'success' && columns_status === 'success' && (
-					<Form {...form}>
-						<form
-							className={cn(
-								columns?.length > 5 && 'grid grid-cols-2 gap-4',
-								!(columns?.length > 5) && 'flex flex-col gap-4',
-							)}
-							onSubmit={onSubmit}
-						>
-							{columns?.map((column) => {
-								if (column.type === COLUMN_TYPE.DATE) {
-									return (
-										<FormField
-											key={column._id}
-											control={form.control}
-											name={column.slug || ''}
-											defaultValue={new Date(row?.value[column.slug]!)}
-											render={({ field }) => {
-												const hasError = !!form.formState.errors[column.slug];
-												return (
-													<FormItem className="flex flex-col w-full">
-														<FormLabel>{column.title}</FormLabel>
-														<Popover>
-															<PopoverTrigger asChild>
-																<FormControl>
-																	<Button
-																		variant={'outline'}
-																		className={cn(
-																			'w-full pl-3 text-left font-normal',
-																			!field.value && 'text-muted-foreground',
-																			hasError && 'border-red-500',
-																		)}
-																	>
-																		{field.value ? (
-																			format(field.value, 'PPP')
-																		) : (
-																			<span>Selecione uma data</span>
-																		)}
-																		<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-																	</Button>
-																</FormControl>
-															</PopoverTrigger>
-															<PopoverContent
-																className="w-auto p-0"
-																align="start"
-															>
-																<Calendar
-																	locale={ptBR}
-																	mode="single"
-																	selected={field.value}
-																	onSelect={field.onChange}
-																	disabled={(date) =>
-																		date > new Date() ||
-																		date < new Date('1900-01-01')
-																	}
-																	initialFocus
-																/>
-															</PopoverContent>
-														</Popover>
-													</FormItem>
-												);
-											}}
-										/>
-									);
-								}
+										if (!field) return;
 
-								if (column.type === COLUMN_TYPE.LONG_TEXT)
-									return (
-										<FormField
-											key={column._id}
-											control={form.control}
-											name={column.slug || ''}
-											defaultValue={row?.value[column.slug] || ''}
-											render={({ field }) => {
-												const hasError = !!form.formState.errors[column.slug];
-												return (
-													<FormItem>
-														<FormLabel>{column.title}</FormLabel>
-														<FormControl>
-															<Textarea
-																placeholder={column.title}
-																className={cn(
-																	'focus-visible:ring-blue-300',
-																	hasError && 'border-red-500',
-																)}
-																{...field}
-															/>
-														</FormControl>
-													</FormItem>
-												);
-											}}
-										/>
-									);
-
-								if (column.type === COLUMN_TYPE.DROPDOWN)
-									return (
-										<FormField
-											key={column._id}
-											control={form.control}
-											name={column.slug || ''}
-											defaultValue={row?.value[column.slug] || ''}
-											render={({ field }) => {
-												const hasError = !!form.formState.errors[column.slug];
-												return (
-													<FormItem>
-														<FormLabel>{column.title}</FormLabel>
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<FormControl>
-																<SelectTrigger
-																	className={cn(hasError && 'border-red-500')}
-																>
-																	<SelectValue placeholder="Selecione uma opção" />
-																</SelectTrigger>
-															</FormControl>
-															<SelectContent>
-																{column.config?.options?.map(
-																	(option, index) => (
-																		<SelectItem
-																			key={index}
-																			value={option.name}
-																		>
-																			{option.name}
-																		</SelectItem>
-																	),
-																)}
-															</SelectContent>
-														</Select>
-													</FormItem>
-												);
-											}}
-										/>
-									);
-
-								if (column?.type === COLUMN_TYPE.RELATIONAL)
-									return (
-										<Relational
-											key={column._id}
-											column={column}
-										/>
-									);
-
-								if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL)
-									return (
-										<MultiRelational
-											key={column._id}
-											column={column}
-										/>
-									);
+										return { label: field[1], value: field[0] } as Option;
+									})
+									.filter((item) => item !== undefined);
 
 								return (
-									<FormField
+									<RelationalField
 										key={column._id}
-										control={form.control}
-										name={column.slug || ''}
-										defaultValue={row?.value[column.slug] || ''}
-										render={({ field }) => {
-											const hasError = !!form.formState.errors[column.slug];
-											return (
-												<FormItem className="space-y-1">
-													<FormLabel>{column.title}</FormLabel>
-													<FormControl>
-														<Input
-															placeholder={column.title}
-															className={cn(
-																'focus-visible:ring-blue-300',
-																hasError && 'border-red-500',
-															)}
-															{...field}
-														/>
-													</FormControl>
-												</FormItem>
-											);
-										}}
+										column={column}
+										defaultValue={options}
 									/>
 								);
-							})}
-							{formHasError && (
-								<div className="inline-flex">
-									<span className="text-sm text-red-500">
-										* os campos em vermelho são obrigatórios
-									</span>
-								</div>
-							)}
+							}
 
-							<div className="flex justify-end gap-4">
-								<DialogClose asChild>
-									<Button
-										className="bg-transparent shadow-none border border-red-200 text-red-500 hover:bg-red-50"
-										onClick={() => form.reset()}
-									>
-										Cancelar
-									</Button>
-								</DialogClose>
-								<Button className="bg-blue-500 text-neutral-50 hover:bg-blue-600">
-									{update_row_status === 'pending' && (
-										<LoaderCircle className="w-6 h-6 animate-spin" />
-									)}
-									{!(update_row_status === 'pending') && <span>Confirmar</span>}
-								</Button>
+							if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+								const options = Array.from(value as object[])
+									.map((v) => {
+										const field = Object.entries(v).find(
+											([key]) =>
+												key !== '_id' &&
+												key !== 'createdAt' &&
+												key !== 'updatedAt',
+										);
+
+										if (!field) return;
+
+										return { label: field[1], value: field[0] } as Option;
+									})
+									.filter((item) => item !== undefined);
+
+								return (
+									<MultiRelationalField
+										key={column._id}
+										column={column}
+										defaultValue={options}
+									/>
+								);
+							}
+
+							if (column.type === COLUMN_TYPE.DATE) {
+								return (
+									<DateField
+										key={column._id}
+										column={column}
+										defaultValue={value}
+									/>
+								);
+							}
+
+							if (column.type === COLUMN_TYPE.LONG_TEXT)
+								return (
+									<LongTextField
+										key={column._id}
+										column={column}
+										defaultValue={value}
+									/>
+								);
+
+							if (column.type === COLUMN_TYPE.DROPDOWN)
+								return (
+									<DropdownField
+										key={column._id}
+										column={column}
+									/>
+								);
+
+							return (
+								<TextField
+									key={column._id}
+									column={column}
+									defaultValue={value}
+								/>
+							);
+						})}
+
+						{formHasError && (
+							<div className="inline-flex">
+								<span className="text-sm text-red-500">
+									* os campos em vermelho são obrigatórios
+								</span>
 							</div>
-						</form>
-					</Form>
-				)}
+						)}
+
+						<div className="flex justify-end gap-4">
+							<DialogClose asChild>
+								<Button
+									className="bg-transparent shadow-none border border-red-200 text-red-500 hover:bg-red-50"
+									onClick={() => form.reset()}
+								>
+									Cancelar
+								</Button>
+							</DialogClose>
+							<Button className="bg-blue-500 text-neutral-50 hover:bg-blue-600">
+								{update_row_status === 'pending' && (
+									<LoaderCircle className="w-6 h-6 animate-spin" />
+								)}
+								{!(update_row_status === 'pending') && <span>Confirmar</span>}
+							</Button>
+						</div>
+					</form>
+				</Form>
 			</DialogContent>
 		</Dialog>
 	);
