@@ -121,7 +121,6 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 								<span>ID</span>:<span>{id}</span>
 							</div>
 							{Object.entries(value).map(([key, val]) => {
-								console.log(key, val, value);
 								const column = columns.find((col) => col.slug === key);
 								if (!column || !column?.config?.display) return null;
 

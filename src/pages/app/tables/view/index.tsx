@@ -7,7 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 export function View(): React.ReactElement {
 	const navigate = useNavigate();
-	// const location = useLocation();
 	const params = useParams();
 
 	const { data: row, status: row_status } = useRowShowQuery({
@@ -40,22 +39,31 @@ export function View(): React.ReactElement {
 					{Object.entries(row).map(([row_key, row_value], row_index) => {
 						if (row_key === 'value') {
 							const values = Object.entries(row_value);
+							// console.log(values);
 							return (
 								<div
 									className="grid grid-cols-2 gap-4"
 									key={`${row_key}-${row_index}`}
 								>
-									{values.map(([k, v]) => (
-										<div
-											key={k}
-											className="flex flex-col flex-1 bg-blue-400 p-3 rounded-lg"
-										>
-											<span className="font-semibold text-white uppercase">
-												{k}:
-											</span>
-											<span className="text-white">{v as React.ReactNode}</span>
-										</div>
-									))}
+									{values.map(([k, v]) => {
+										if (Array.isArray(v)) {
+											return null;
+										}
+
+										return (
+											<div
+												key={k}
+												className="flex flex-col flex-1 bg-blue-400 p-3 rounded-lg"
+											>
+												<span className="font-semibold text-white uppercase">
+													{k}:
+												</span>
+												<span className="text-white">
+													{v as React.ReactNode}
+												</span>
+											</div>
+										);
+									})}
 								</div>
 							);
 						}

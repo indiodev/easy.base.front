@@ -12,14 +12,16 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export function Relational({
+export function RelationalField({
 	column,
+	defaultValue,
 }: {
 	column: Partial<Column>;
+	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
 
-	const [options, setOptions] = React.useState<Option[]>([]);
+	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
 
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({

@@ -1,11 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Button } from '@components/ui/button';
 import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from '@components/ui/collapsible';
-import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -17,7 +12,6 @@ import {
 	SidebarContent,
 	SidebarFooter,
 	SidebarGroup,
-	SidebarGroupLabel,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuBadge,
@@ -26,28 +20,24 @@ import {
 	useSidebar,
 } from '@components/ui/sidebar';
 import { cn } from '@libs/utils';
-import { useTableListQuery } from '@query/table/list.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
 import { AuthStore } from '@store/auth.store';
 import {
-	ChevronDown,
 	ChevronsLeft,
 	ChevronsRight,
 	ChevronUp,
-	Database,
 	Home,
 	Inbox,
 	LayoutGrid,
 	LogOut,
-	Plus,
 	Settings,
-	Table,
 	User,
 	Users,
 } from 'lucide-react';
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Modal } from './modal';
+import { Modal } from '../modal';
+import { Tables } from './tables';
 
 export function Sidebar() {
 	const { toggleSidebar, open, isMobile } = useSidebar();
@@ -57,8 +47,6 @@ export function Sidebar() {
 	const newTableButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
 	const { data: user, status: user_status } = useUserProfileQuery();
-
-	const { data: table_list, status: table_list_status } = useTableListQuery();
 
 	return (
 		<React.Fragment>
@@ -118,64 +106,7 @@ export function Sidebar() {
 
 						<Separator className="mt-1 mb-1" />
 
-						<Collapsible
-							className="group/collapsible py-2"
-							defaultOpen
-						>
-							<SidebarGroupLabel
-								asChild
-								className="p-0 w-full px-2"
-							>
-								<CollapsibleTrigger>
-									<Database className="h-5 w-5" />
-									<span className="pl-1 text-lg text-neutral-600 font-normal">
-										Tabelas
-									</span>
-									<ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180 w-5 h-5" />
-								</CollapsibleTrigger>
-							</SidebarGroupLabel>
-							<CollapsibleContent>
-								<SidebarMenu>
-									<SidebarMenuItem>
-										<SidebarMenuButton
-											className="py-6"
-											onClick={() => newTableButtonRef?.current?.click()}
-										>
-											<Plus className="h-5 w-5 text-neutral-600" />
-											<span className="text-lg text-neutral-600">
-												Nova tabela
-											</span>
-										</SidebarMenuButton>
-									</SidebarMenuItem>
-									{table_list_status === 'success' &&
-										table_list.map((table) => (
-											<SidebarMenuItem key={table._id}>
-												<SidebarMenuButton
-													className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-													asChild
-													isActive={location.pathname.includes(
-														`/app/tables/${table._id}`,
-													)}
-												>
-													<NavLink
-														to={{
-															pathname: '/app/tables/'.concat(table._id),
-														}}
-														state={{
-															table: table,
-														}}
-													>
-														<Table className="h-5 w-5 text-neutral-600" />
-														<span className="text-lg text-neutral-600">
-															{table.title}
-														</span>
-													</NavLink>
-												</SidebarMenuButton>
-											</SidebarMenuItem>
-										))}
-								</SidebarMenu>
-							</CollapsibleContent>
-						</Collapsible>
+						<Tables onClick={() => newTableButtonRef?.current?.click()} />
 
 						<Separator className="mt-1 mb-1" />
 

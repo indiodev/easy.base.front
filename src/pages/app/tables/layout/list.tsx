@@ -111,12 +111,9 @@ export function List({ columns, rows }: Props): React.ReactElement {
 								<TableCell className="w-[100px]">{id}</TableCell>
 								{Object.entries(value).map(([key, val]) => {
 									const column = columns.find((col) => col.slug === key);
-									console.log(column);
 
 									if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
 										const [first, ...rest] = val as any[];
-
-										console.log(first, rest);
 
 										return (
 											<TableCell
@@ -167,10 +164,30 @@ export function List({ columns, rows }: Props): React.ReactElement {
 											<DropdownMenuItem
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
-													setSearchParams((state) => {
-														state.set('row_id', id);
-														return state;
-													});
+													navigate(
+														{
+															pathname: location.pathname,
+														},
+														{
+															state: {
+																row: {
+																	id,
+																	data: Object.entries(value).map(
+																		([key, value]) => {
+																			const column = columns.find(
+																				(col) => col.slug === key,
+																			);
+																			return {
+																				path: key,
+																				value,
+																				column,
+																			};
+																		},
+																	),
+																},
+															},
+														},
+													);
 													editRowButtonRef?.current?.click();
 												}}
 											>

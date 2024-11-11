@@ -64,7 +64,6 @@ const NewTable = React.forwardRef<
 		});
 
 	const onSubmit = form.handleSubmit((data) => {
-		console.log(data);
 		create_table(data);
 	});
 

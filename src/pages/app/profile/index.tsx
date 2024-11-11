@@ -33,7 +33,7 @@ export function Profile(): React.ReactElement {
 			{user_status === 'success' && (
 				<Form {...form}>
 					<form
-						onSubmit={form.handleSubmit((data) => console.log(data))}
+						onSubmit={form.handleSubmit((data) => console.info(data))}
 						className="w-2/3 space-y-6"
 					>
 						<FormField
