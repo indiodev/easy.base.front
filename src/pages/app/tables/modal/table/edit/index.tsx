@@ -13,17 +13,20 @@ import { Button } from '@components/ui/button';
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 } from '@components/ui/form';
 import { Input } from '@components/ui/input';
+import { Switch } from '@components/ui/switch';
 import { Textarea } from '@components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
-import { useTableCreateMutation } from '@mutation/table/new.mutation';
+import { Table } from '@models/table.model';
+import { useTableUpdateMutation } from '@mutation/table/update.mutation';
 import { LoaderCircle, PencilLine } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -39,42 +42,62 @@ const EditTable = React.forwardRef<
 	const location = useLocation();
 	const navigate = useNavigate();
 
+	const table_state = location?.state?.table as Partial<Table>;
+
 	const [fileImage, setFileImage] = React.useState<string | undefined>();
 
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
 
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
+		defaultValues: {
+			title: table_state?.title || '',
+			description: table_state?.description || '',
+			// logo: table_state?.logo || '',
+		},
 	});
 
-	const { mutateAsync: create_table, status: create_table_status } =
-		useTableCreateMutation({
+	const { mutateAsync: update_table, status: update_table_status } =
+		useTableUpdateMutation({
 			onError(error) {
 				console.error(error);
 			},
 			onSuccess(data) {
-				form.reset({
-					title: '',
-				});
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_LIST],
 				});
-				navigate({
-					pathname: `${location.pathname?.replace('/new', '')}/${data._id}`,
-				});
+				navigate(
+					{ pathname: location.pathname },
+					{
+						state: {
+							...location.state,
+							table: data,
+						},
+					},
+				);
+				setOpen((state) => !state);
 			},
 		});
 
-	const onSubmit = form.handleSubmit((data) => {
-		create_table(data);
+	const onSubmit = form.handleSubmit(({ logo, ...data }) => {
+		console.log({
+			logo,
+		});
+
+		update_table({
+			_id: table_state?._id,
+			...data,
+		});
 	});
+
+	console.log(location?.state?.table);
 
 	return (
 		<Dialog
 			modal
 			open={open}
 			onOpenChange={(o) => {
-				// form.reset();
+				form.reset();
 				setOpen(o);
 			}}
 		>
@@ -152,6 +175,7 @@ const EditTable = React.forwardRef<
 						<FormField
 							control={form.control}
 							name="title"
+							defaultValue={table_state?.title || ''}
 							render={({ field }) => {
 								const hasError = !!form.formState.errors.title;
 								return (
@@ -176,6 +200,7 @@ const EditTable = React.forwardRef<
 						<FormField
 							control={form.control}
 							name="description"
+							defaultValue={table_state?.description || ''}
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Descrição</FormLabel>
@@ -192,12 +217,47 @@ const EditTable = React.forwardRef<
 							)}
 						/>
 
+						<FormField
+							control={form.control}
+							name="config.layout"
+							// defaultValue={!!(table_state?.config?.layout === 'grid')}
+							render={({ field }) => (
+								<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+									<div className="space-y-0.5">
+										<FormLabel>Layout padrão da tabela</FormLabel>
+										<FormDescription>
+											Defina um layout padrão para a tabela
+										</FormDescription>
+									</div>
+									<FormControl>
+										<div className="inline-flex space-x-2">
+											<span className="text-sm">Lista</span>
+											<Switch
+												defaultChecked={
+													!!(table_state?.config?.layout === 'grid')
+												}
+												onCheckedChange={(value) => {
+													// if (!value) {
+													// 	form.setValue('config.layout', 'list');
+													// } else form.setValue('config.layout', 'grid');
+
+													field.onChange(value);
+												}}
+												aria-readonly
+											/>
+											<span className="text-sm">Grid</span>
+										</div>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+
 						<div className="inline-flex justify-end w-full gap-4 pt-4">
 							<Button className="bg-blue-700 hover:bg-blue-600 border border-transparent py-2 px-3 rounded-lg text-neutral-50 max-w-40 w-full">
-								{create_table_status === 'pending' && (
+								{update_table_status === 'pending' && (
 									<LoaderCircle className="w-6 h-6 animate-spin" />
 								)}
-								{!(create_table_status === 'pending') && <span>Criar</span>}
+								{!(update_table_status === 'pending') && <span>Atualizar</span>}
 							</Button>
 						</div>
 					</form>

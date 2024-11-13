@@ -164,28 +164,32 @@ export function List({ columns, rows }: Props): React.ReactElement {
 											<DropdownMenuItem
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
+													const state = {
+														...location?.state,
+														row: {
+															...location?.state?.row,
+															id,
+															data: Object.entries(value).map(
+																([key, value]) => {
+																	const column = columns.find(
+																		(col) => col.slug === key,
+																	);
+																	return {
+																		path: key,
+																		value,
+																		column,
+																	};
+																},
+															),
+														},
+													};
+
 													navigate(
 														{
 															pathname: location.pathname,
 														},
 														{
-															state: {
-																row: {
-																	id,
-																	data: Object.entries(value).map(
-																		([key, value]) => {
-																			const column = columns.find(
-																				(col) => col.slug === key,
-																			);
-																			return {
-																				path: key,
-																				value,
-																				column,
-																			};
-																		},
-																	),
-																},
-															},
+															state,
 														},
 													);
 													editRowButtonRef?.current?.click();

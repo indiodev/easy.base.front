@@ -38,6 +38,7 @@ const NewTable = React.forwardRef<
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
 		defaultValues: {
+			description: '',
 			config: {
 				layout: 'list',
 			},

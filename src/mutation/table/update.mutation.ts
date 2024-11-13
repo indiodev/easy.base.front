@@ -6,7 +6,7 @@ import { Table } from '@models/table.model';
 import { Service } from '@services/index';
 
 async function mutator(payload: Partial<Table>): Promise<Table> {
-	return Service.table.create(payload);
+	return Service.table.update(payload);
 }
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 	onError: (error: Error | AxiosError) => void;
 }
 
-export function useTableCreateMutation({
+export function useTableUpdateMutation({
 	onSuccess,
 	onError,
 }: Props): UseMutationResult<Table, Error | AxiosError, Partial<Table>> {

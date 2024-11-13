@@ -13,6 +13,7 @@ import {
 import { tanstack } from '@libs/tanstack';
 import { QUERY } from '@models/base.model';
 import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
+import { useTableShowQuery } from '@query/table/show.query';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import {
 	ArrowDownUp,
@@ -25,7 +26,12 @@ import {
 	Trash,
 } from 'lucide-react';
 import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from 'react-router-dom';
 import { Modal } from './modal';
 
 export const Setting = React.forwardRef<
@@ -33,6 +39,8 @@ export const Setting = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof DropdownMenuTrigger>
 >(({ ...props }, ref) => {
 	const params = useParams();
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	const editFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const newFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -50,6 +58,10 @@ export const Setting = React.forwardRef<
 		// status: columns_status
 	} = useColumnFindManyByTableIdQuery({
 		tableId: params?.id || '',
+	});
+
+	const { data: table } = useTableShowQuery({
+		id: params?.id,
 	});
 
 	return (
@@ -112,7 +124,26 @@ export const Setting = React.forwardRef<
 
 									<DropdownMenuItem
 										className="inline-flex space-x-1 w-full"
-										onClick={() => editTableButtonRef?.current?.click()}
+										onClick={() => {
+											navigate(
+												{
+													pathname: location.pathname,
+												},
+												{
+													state: {
+														...location.state,
+														table: {
+															title: table?.data?.title,
+															description: table?.data?.description,
+															logo: table?.data?.logo,
+															_id: table?.data?._id,
+															config: table?.data?.config,
+														},
+													},
+												},
+											);
+											editTableButtonRef?.current?.click();
+										}}
 									>
 										<Pencil className="w-4 h-4" />
 										<span>Editar</span>
