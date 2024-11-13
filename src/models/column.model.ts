@@ -18,6 +18,7 @@ export interface Column {
 			collection: string;
 			path: string;
 			slug: string;
+			visible?: string;
 		};
 	};
 	status: string | null;
