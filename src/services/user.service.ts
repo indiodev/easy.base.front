@@ -16,3 +16,4 @@ export default class UserService {
 		await API.patch('/users/table-layout', payload);
 	}
 }
+//
