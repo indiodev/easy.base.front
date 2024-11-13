@@ -5,6 +5,8 @@ export interface Table {
 	_id: string;
 	id: string;
 	title: string;
+	description?: string;
+	logo?: string;
 	identifier: string;
 	config?: {
 		layout?: 'grid' | 'list';
@@ -19,8 +21,3 @@ export interface Table {
 	columns: Column[];
 	rows: Row[];
 }
-
-export type CreateTable = {
-	title: string;
-	config?: object;
-};

@@ -34,88 +34,88 @@ export function Pagination() {
 					<strong>{table?.meta?.last_page}</strong>
 				</label>
 				<PaginationContent className="justify-end">
-					<PaginationContent>
-						<PaginationItem>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="border"
-								onClick={() => {
+					{/* <PaginationContent> */}
+					<PaginationItem>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border"
+							onClick={() => {
+								setSearchParams((state) => {
+									state.set('page', '1');
+									return state;
+								});
+
+								tanstack.refetchQueries({
+									queryKey: [QUERY.TABLE_SHOW, params.id],
+								});
+							}}
+						>
+							<ChevronsLeft />
+						</Button>
+					</PaginationItem>
+					<PaginationItem>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border"
+							onClick={() => {
+								if (table?.meta?.page > 1) {
 									setSearchParams((state) => {
-										state.set('page', '1');
+										state.set('page', String(table?.meta?.page - 1));
 										return state;
 									});
 
 									tanstack.refetchQueries({
 										queryKey: [QUERY.TABLE_SHOW, params.id],
 									});
-								}}
-							>
-								<ChevronsLeft />
-							</Button>
-						</PaginationItem>
-						<PaginationItem>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="border"
-								onClick={() => {
-									if (table?.meta?.page > 1) {
-										setSearchParams((state) => {
-											state.set('page', String(table?.meta?.page - 1));
-											return state;
-										});
-
-										tanstack.refetchQueries({
-											queryKey: [QUERY.TABLE_SHOW, params.id],
-										});
-									}
-								}}
-							>
-								<ChevronLeft />
-							</Button>
-						</PaginationItem>
-						<PaginationItem>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="border"
-								onClick={() => {
-									if (table?.meta?.page < table?.meta?.last_page) {
-										setSearchParams((state) => {
-											state.set('page', String(table?.meta?.page + 1));
-											return state;
-										});
-
-										tanstack.refetchQueries({
-											queryKey: [QUERY.TABLE_SHOW, params.id],
-										});
-									}
-								}}
-							>
-								<ChevronRight />
-							</Button>
-						</PaginationItem>
-						<PaginationItem>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="border"
-								onClick={() => {
+								}
+							}}
+						>
+							<ChevronLeft />
+						</Button>
+					</PaginationItem>
+					<PaginationItem>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border"
+							onClick={() => {
+								if (table?.meta?.page < table?.meta?.last_page) {
 									setSearchParams((state) => {
-										state.set('page', String(table?.meta?.last_page));
+										state.set('page', String(table?.meta?.page + 1));
 										return state;
 									});
 
 									tanstack.refetchQueries({
 										queryKey: [QUERY.TABLE_SHOW, params.id],
 									});
-								}}
-							>
-								<ChevronsRight />
-							</Button>
-						</PaginationItem>
-					</PaginationContent>
+								}
+							}}
+						>
+							<ChevronRight />
+						</Button>
+					</PaginationItem>
+					<PaginationItem>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border"
+							onClick={() => {
+								setSearchParams((state) => {
+									state.set('page', String(table?.meta?.last_page));
+									return state;
+								});
+
+								tanstack.refetchQueries({
+									queryKey: [QUERY.TABLE_SHOW, params.id],
+								});
+							}}
+						>
+							<ChevronsRight />
+						</Button>
+					</PaginationItem>
+					{/* </PaginationContent> */}
 				</PaginationContent>
 			</div>
 		</section>

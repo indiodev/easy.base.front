@@ -64,9 +64,9 @@ const Tables = React.forwardRef<
 										to={{
 											pathname: '/app/tables/'.concat(table._id),
 										}}
-										// state={{
-										//   table: table,
-										// }}
+										state={{
+											table: table,
+										}}
 									>
 										<Table className="h-5 w-5 text-neutral-600" />
 										<span className="text-lg text-neutral-600">

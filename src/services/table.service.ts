@@ -1,6 +1,6 @@
 import { API } from '@libs/api';
 import { MetaResponse } from '@models/base.model';
-import { CreateTable, Table } from '@models/table.model';
+import { Table } from '@models/table.model';
 
 export default class TableService {
 	public async list(): Promise<Table[]> {
@@ -20,8 +20,13 @@ export default class TableService {
 		return data;
 	}
 
-	public async create(payload: CreateTable): Promise<Table> {
+	public async create(payload: Partial<Table>): Promise<Table> {
 		const { data } = await API.post('/tables', payload);
+		return data;
+	}
+
+	public async update({ _id, ...payload }: Partial<Table>): Promise<Table> {
+		const { data } = await API.put(`/tables/${_id}`, payload);
 		return data;
 	}
 }

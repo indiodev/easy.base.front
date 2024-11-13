@@ -7,11 +7,12 @@ export const Schema = z.object({
 		})
 		.min(1, { message: 'Título obrigatório' })
 		.trim(),
-	// description: z
-	// 	.string({
-	// 		message: 'Descrição obrigatória',
-	// 	})
-	// 	.trim(),
+	description: z
+		.string({
+			message: 'Descrição obrigatória',
+		})
+		.trim(),
+	// logo: z.instanceof(File, { message: 'Campo obrigatório' }),
 	config: z.object({
 		layout: z.enum(['grid', 'list']),
 	}),

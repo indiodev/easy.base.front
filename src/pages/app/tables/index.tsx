@@ -54,7 +54,7 @@ export function Tables(): React.ReactElement {
 	// 	}),
 	// });
 
-	// const [table, setTable] = React.useState<Partial<Table>>({});
+	console.log({ table });
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
@@ -230,7 +230,8 @@ export function Tables(): React.ReactElement {
 					)}
 			</section>
 
-			<Pagination />
+			{table_status === 'success' &&
+				table?.meta?.total > table?.meta?.per_page && <Pagination />}
 		</div>
 	);
 }
