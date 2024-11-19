@@ -10,6 +10,7 @@ const config = z.object({
 	required: z.boolean().default(false),
 	display: z.boolean().default(false),
 	filter: z.boolean().default(false),
+	multiple: z.boolean().default(false),
 	default: z.string().optional(),
 	relation: z
 		.object({
