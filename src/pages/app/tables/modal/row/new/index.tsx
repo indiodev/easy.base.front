@@ -79,7 +79,7 @@ const NewRow = React.forwardRef<
 		create_row({ data: payload, id: params?.id! });
 	});
 
-	const formHasError = Object.keys(form.formState.errors).length > 0;
+	// const formHasError = Object.keys(form.formState.errors).length > 0;
 
 	return (
 		<Dialog
@@ -174,13 +174,13 @@ const NewRow = React.forwardRef<
 									/>
 								);
 							})}
-							{formHasError && (
+							{/* {formHasError && (
 								<div className="inline-flex">
 									<span className="text-sm text-red-500">
 										* os campos em vermelho são obrigatórios
 									</span>
 								</div>
-							)}
+							)} */}
 
 							<div className="flex justify-end gap-4">
 								<DialogClose asChild>

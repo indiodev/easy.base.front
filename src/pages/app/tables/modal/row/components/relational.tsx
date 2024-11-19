@@ -3,6 +3,7 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
+	FormMessage,
 } from '@components/ui/form';
 import MultipleSelector, { Option } from '@components/ui/multiple-selector';
 import { ROW_FIND_MANY_DEBOUNCE } from '@debounces/row/find-many.debounce';
@@ -76,7 +77,7 @@ export function RelationalField({
 								// {...field}
 							/>
 						</FormControl>
-						{/* <FormMessage /> */}
+						<FormMessage className="text-right" />
 					</FormItem>
 				);
 			}}
