@@ -63,50 +63,50 @@ export const COLUMN_TEXT_SHORT_FORMAT_LIST = [
 export const COLUMN_DATE_FORMAT_LIST = [
 	{
 		label: 'DD/MM/AAAA',
-		type: COLUMN_FORMAT['DD/MM/AAAA'],
+		type: COLUMN_FORMAT['DD_MM_YYYY'],
 	},
 	{
 		label: 'MM/DD/AAAA',
-		type: COLUMN_FORMAT['MM/DD/AAAA'],
+		type: COLUMN_FORMAT['MM_DD_YYYY'],
 	},
 	{
 		label: 'AAAA/MM/DD',
-		type: COLUMN_FORMAT['AAAA/MM/DD'],
+		type: COLUMN_FORMAT['YYYY_MM_DD'],
 	},
 	{
 		label: 'DD/MM/AAAA hh:mm:ss',
-		type: COLUMN_FORMAT['DD-MM-AAAA hh:mm:ss'],
+		type: COLUMN_FORMAT['DD_MM_YYYY_HH_MM_SS'],
 	},
 	{
 		label: 'MM/DD/AAAA hh:mm:ss',
-		type: COLUMN_FORMAT['MM/DD/AAAA hh:mm:ss'],
+		type: COLUMN_FORMAT['MM_DD_YYYY_HH_MM_SS'],
 	},
 	{
 		label: 'AAAA/MM/DD hh:mm:ss',
-		type: COLUMN_FORMAT['AAAA/MM/DD hh:mm:ss'],
+		type: COLUMN_FORMAT['YYYY_MM_DD_HH_MM_SS'],
 	},
 	{
 		label: 'DD-MM-AAAA',
-		type: COLUMN_FORMAT['DD-MM-AAAA'],
+		type: COLUMN_FORMAT['DD_MM_YYYY_DASH'],
 	},
 	{
 		label: 'MM-DD-AAAA',
-		type: COLUMN_FORMAT['MM-DD-AAAA'],
+		type: COLUMN_FORMAT['MM_DD_YYYY_DASH'],
 	},
 	{
 		label: 'AAAA-MM-DD',
-		type: COLUMN_FORMAT['AAAA-MM-DD'],
+		type: COLUMN_FORMAT['YYYY_MM_DD_DASH'],
 	},
 	{
 		label: 'DD-MM-AAAA hh:mm:ss',
-		type: COLUMN_FORMAT['DD-MM-AAAA hh:mm:ss'],
+		type: COLUMN_FORMAT['DD_MM_YYYY_HH_MM_SS_DASH'],
 	},
 	{
 		label: 'MM-DD-AAAA hh:mm:ss',
-		type: COLUMN_FORMAT['MM-DD-AAAA hh:mm:ss'],
+		type: COLUMN_FORMAT['MM_DD_YYYY_HH_MM_SS_DASH'],
 	},
 	{
 		label: 'AAAA-MM-DD hh:mm:ss',
-		type: COLUMN_FORMAT['AAAA-MM-DD hh:mm:ss'],
+		type: COLUMN_FORMAT['YYYY_MM_DD_HH_MM_SS_DASH'],
 	},
 ];

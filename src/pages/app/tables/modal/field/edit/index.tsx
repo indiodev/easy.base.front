@@ -291,7 +291,7 @@ const EditField = React.forwardRef<
 								<FormField
 									control={form.control}
 									defaultValue={
-										column?.config?.format || COLUMN_FORMAT['AAAA-MM-DD']
+										column?.config?.format || COLUMN_FORMAT['DD_MM_YYYY']
 									}
 									name="config.format"
 									render={({ field }) => (
