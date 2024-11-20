@@ -20,19 +20,21 @@ import { useFormContext } from 'react-hook-form';
 
 export function DateField({
 	column,
-	defaultValue,
+	// defaultValue,
 }: {
 	column: Partial<Column>;
 	defaultValue?: unknown;
 }) {
 	const form = useFormContext();
 
+	console.log(column);
+
 	return (
 		<FormField
 			key={column._id}
 			control={form.control}
 			name={column.slug || ''}
-			defaultValue={new Date((defaultValue as Date) || '')}
+			// defaultValue={defaultValue || ''}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column.slug!];
 				return (
@@ -45,12 +47,15 @@ export function DateField({
 										variant={'outline'}
 										className={cn(
 											'w-full pl-3 text-left font-normal',
-											!field.value && 'text-muted-foreground',
+											!field?.value && 'text-muted-foreground',
 											hasError && 'border-red-500',
 										)}
 									>
-										{field.value ? (
-											format(field.value, 'PPP')
+										{field?.value ? (
+											format(
+												field?.value,
+												column?.config?.format || 'dd/MM/yyyy',
+											)
 										) : (
 											<span>Selecione uma data</span>
 										)}

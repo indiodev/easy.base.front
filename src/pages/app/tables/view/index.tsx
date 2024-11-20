@@ -39,7 +39,6 @@ export function View(): React.ReactElement {
 					{Object.entries(row).map(([row_key, row_value], row_index) => {
 						if (row_key === 'value') {
 							const values = Object.entries(row_value);
-							// console.log(values);
 							return (
 								<div
 									className="grid grid-cols-2 gap-4"

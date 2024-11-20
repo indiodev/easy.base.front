@@ -90,7 +90,7 @@ const EditRow = React.forwardRef<
 		update_row({
 			data: payload,
 			tableId: params?.id!,
-			id: searchParams.get('row_id')!,
+			id: field_state.id,
 		});
 	});
 

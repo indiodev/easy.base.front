@@ -26,6 +26,7 @@ import {
 import React from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { Filter } from './filter';
+import { List } from './layout/list';
 import { Pagination } from './pagination';
 import { Setting } from './setting';
 
@@ -51,8 +52,6 @@ export function Tables(): React.ReactElement {
 	// 		per_page: Number(searchParams.get('per_page') || 10),
 	// 	}),
 	// });
-
-	console.log({ table });
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
@@ -211,13 +210,13 @@ export function Tables(): React.ReactElement {
 					<Filter />
 				)}
 
-				{/* {!(update_table_layout_status === 'pending') &&
+				{!(update_table_layout_status === 'pending') &&
 					viewLayout === 'list' && (
 						<List
 							columns={table?.data?.columns || []}
 							rows={table?.data?.rows || []}
 						/>
-					)} */}
+					)}
 
 				{/* {!(update_table_layout_status === 'pending') &&
 					viewLayout === 'grid' && (

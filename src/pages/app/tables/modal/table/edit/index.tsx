@@ -90,8 +90,6 @@ const EditTable = React.forwardRef<
 		});
 	});
 
-	console.log(location?.state?.table);
-
 	return (
 		<Dialog
 			modal
