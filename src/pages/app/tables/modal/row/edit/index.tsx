@@ -84,7 +84,11 @@ const EditRow = React.forwardRef<
 		const payload = new FormData();
 
 		for (const [key, value] of entries) {
-			payload.append(key, value);
+			const isArray = Array.isArray(value);
+
+			if (isArray) for (const v of value) payload.append(`${key}[]`, v);
+
+			if (!isArray) payload.append(key, value);
 		}
 
 		update_row({

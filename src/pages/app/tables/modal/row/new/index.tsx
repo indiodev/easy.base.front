@@ -57,6 +57,7 @@ const NewRow = React.forwardRef<
 	const form = useForm();
 
 	const onSubmit = form.handleSubmit((data) => {
+		console.log({ data });
 		const entries = Object.entries(data);
 		const existEmpty = entries.some(([, value]) => !value || value === '');
 
@@ -73,13 +74,15 @@ const NewRow = React.forwardRef<
 		const payload = new FormData();
 
 		for (const [key, value] of entries) {
-			payload.append(key, value);
+			const isArray = Array.isArray(value);
+
+			if (isArray) for (const v of value) payload.append(`${key}[]`, v);
+
+			if (!isArray) payload.append(key, value);
 		}
 
 		create_row({ data: payload, id: params?.id! });
 	});
-
-	// const formHasError = Object.keys(form.formState.errors).length > 0;
 
 	return (
 		<Dialog
@@ -205,7 +208,5 @@ const NewRow = React.forwardRef<
 		</Dialog>
 	);
 });
-
-NewRow.displayName = 'NewRow';
 
 export { NewRow };

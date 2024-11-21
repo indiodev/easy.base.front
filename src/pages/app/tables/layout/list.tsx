@@ -111,9 +111,6 @@ export function List({ columns, rows }: Props): React.ReactElement {
 							<TableRow key={id}>
 								<TableCell className="w-[100px]">{id}</TableCell>
 								{columns.map((col, index) => {
-									console.log('col', col);
-									console.log('value', value);
-
 									const KEY = col.slug
 										?.concat('-')
 										.concat(String(index))
@@ -145,7 +142,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.MULTI_RELATIONAL) {
-										console.log('MULTI_RELATIONAL', value[col.slug]);
+										// console.log('MULTI_RELATIONAL', value[col.slug]);
 										const [first, ...rest] = value[col.slug];
 										const slug_relation = col.config.relation!.slug;
 										return (
@@ -166,12 +163,12 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.DROPDOWN) {
-										console.log('DROPDOWN', value[col.slug]);
+										// console.log('DROPDOWN', value[col.slug]);
 										return <TableCell key={KEY}>{value[col.slug]}</TableCell>;
 									}
 
 									if (col.type === COLUMN_TYPE.DATE) {
-										console.log('DATE', col, value[col.slug]);
+										// console.log('DATE', col, value[col.slug]);
 
 										return (
 											<TableCell key={KEY}>
