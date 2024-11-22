@@ -15,7 +15,7 @@ import { QUERY } from '@models/base.model';
 import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
 import { useTableShowQuery } from '@query/table/show.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
-import { QueryStore } from '@store/query.store';
+import { useQueryStore } from '@store/query.store';
 import {
 	Filter as FilterLucideIcon,
 	LayoutDashboard,
@@ -31,7 +31,7 @@ import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
-	const { query, merge } = QueryStore();
+	const { query, merge } = useQueryStore();
 
 	console.info('query', query);
 
@@ -156,7 +156,7 @@ export function Tables(): React.ReactElement {
 					<span>Resultados por página: </span>
 					<Select
 						disabled={table_status !== 'success'}
-						defaultValue={table?.meta?.per_page?.toString() ?? '10'}
+						defaultValue={query?.per_page ?? '10'}
 						onValueChange={(value) => {
 							merge({ per_page: Number(value), page: 1 });
 						}}

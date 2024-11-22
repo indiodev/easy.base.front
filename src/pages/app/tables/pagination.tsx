@@ -2,7 +2,7 @@ import { Button } from '@components/ui/button';
 import { PaginationContent, PaginationItem } from '@components/ui/pagination';
 import { MetaResponse } from '@models/base.model';
 import { Table } from '@models/table.model';
-import { QueryStore } from '@store/query.store';
+import { useQueryStore } from '@store/query.store';
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -16,15 +16,17 @@ interface Props {
 }
 
 export function Pagination({ meta, isLoading }: Props) {
-	const { query, merge } = QueryStore();
+	const { query, merge } = useQueryStore();
 
 	return (
 		<section className="inline-flex w-full justify-end">
 			<div className="inline-flex space-x-8 items-center">
-				<label className="inline-block max-w-48 w-full">
-					Página <strong>{query?.page}</strong>
-					de <strong>{meta?.last_page || query?.page}</strong>
-				</label>
+				{meta && (
+					<label className="inline-block max-w-48 w-full">
+						Página <strong>{query?.page}</strong>
+						de <strong>{meta?.last_page || query?.page}</strong>
+					</label>
+				)}
 				<PaginationContent className="justify-end">
 					<PaginationItem>
 						<Button

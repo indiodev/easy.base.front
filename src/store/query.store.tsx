@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { create } from 'zustand';
 
 type QueryStoreProps = {
@@ -17,17 +18,18 @@ export const QueryStore = create<QueryStoreProps>((set) => ({
 	},
 }));
 
-// export function useQueryStore() {
-// 	const store = QueryStore();
-// 	const location = useLocation();
-// 	const [search, setSearch] = useSearchParams(
-// 		new URLSearchParams(location.search),
-// 	);
-// 	function merge(query?: Record<string, any>): void {
-// 		store.merge({ ...Object.fromEntries(search), ...query });
+// eslint-disable-next-line react-refresh/only-export-components
+export function useQueryStore() {
+	const store = QueryStore();
+	const location = useLocation();
+	const [search, setSearch] = useSearchParams(
+		new URLSearchParams(location.search),
+	);
+	function merge(query?: Record<string, any>): void {
+		const mergedQuery = { ...Object.fromEntries(search), ...query };
+		store.merge(mergedQuery);
+		setSearch(new URLSearchParams(mergedQuery));
+	}
 
-// 		setSearch(store.query);
-// 	}
-
-// 	return { query: store.query, merge };
-// }
+	return { query: store.query, merge };
+}
