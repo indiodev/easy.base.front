@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import { Input } from '@components/ui/input';
 import {
@@ -17,6 +15,7 @@ import { QUERY } from '@models/base.model';
 import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
 import { useTableShowQuery } from '@query/table/show.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
+import { QueryStore } from '@store/query.store';
 import {
 	Filter as FilterLucideIcon,
 	LayoutDashboard,
@@ -24,7 +23,7 @@ import {
 	Search,
 } from 'lucide-react';
 import React from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { List } from './layout/list';
 import { Pagination } from './pagination';
@@ -32,46 +31,28 @@ import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
+	const { query, merge } = QueryStore();
 
-	const [searchParams, setSearchParams] = useSearchParams(
-		new URLSearchParams(location?.search),
-	);
+	console.info('query', query);
 
 	const { data: table, status: table_status } = useTableShowQuery({
-		id: params?.id!,
+		id: params.id!,
+		...query,
 	});
-
-	// const [query, setQuery] = React.useState<
-	// 	{ id: string } & Partial<Record<string, number | string>>
-	// >({
-	// 	id: params?.id!,
-	// 	...(searchParams.get('page') && {
-	// 		page: Number(searchParams.get('page') || 1),
-	// 	}),
-	// 	...(searchParams.get('per_page') && {
-	// 		per_page: Number(searchParams.get('per_page') || 10),
-	// 	}),
-	// });
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
-	const isPendingTableOrUserData =
-		table_status === 'pending' || user_status === 'pending';
-
-	const filterActive =
-		searchParams.has('filter') && searchParams.get('filter') === 'active';
-
 	const {
 		mutateAsync: update_table_layout,
-		status: update_table_layout_status,
+		// status: update_table_layout_status,
 	} = useUserTableLayoutMutation({
 		onSuccess() {
 			tanstack.refetchQueries({
 				queryKey: [QUERY.USER_PROFILE],
 			});
-			tanstack.refetchQueries({
-				queryKey: [QUERY.TABLE_SHOW, params.id],
-			});
+			// tanstack.refetchQueries({
+			// 	queryKey: [QUERY.TABLE_SHOW, table?.params.id],
+			// });
 		},
 		onError(error) {
 			console.error(error);
@@ -84,21 +65,27 @@ export function Tables(): React.ReactElement {
 		params?.id &&
 		table?.data?.config?.layout &&
 		user_status === 'success' &&
-		!user?.config?.table?.[params?.id!]?.layout;
+		!user?.config?.table?.[params!.id!]?.layout;
 
 	const existUserLayout =
 		params?.id &&
 		user_status === 'success' &&
-		user?.config?.table?.[params?.id!]?.layout;
+		user?.config?.table?.[params!.id!]?.layout;
+
+	// const isPendingTableOrUserData =
+	// 	table?.status === 'pending' || user_status === 'pending';
+
+	// const paginationVisible =
+	// 	table?.status === 'success' && table?.meta?.total > table?.meta?.per_page;
 
 	React.useEffect(() => {
 		if (nonExistUserLayout) {
-			setViewLayout(table?.data?.config?.layout!);
+			setViewLayout(table?.data?.config?.layout || 'list');
 			return;
 		}
 
 		if (existUserLayout) {
-			setViewLayout(user?.config?.table?.[params?.id!]?.layout!);
+			setViewLayout(user?.config?.table?.[params!.id!]?.layout || 'list');
 			return;
 		}
 	}, [existUserLayout, nonExistUserLayout, params, table, user, user_status]);
@@ -127,19 +114,17 @@ export function Tables(): React.ReactElement {
 					<Button
 						className={cn(
 							'bg-transparent shadow-none text-blue-600 hover:bg-blue-50 border border-blue-200 inline-flex gap-1',
-							filterActive && 'bg-blue-600 text-white hover:bg-blue-600',
+							query.filter === 'active' &&
+								'bg-blue-600 text-white hover:bg-blue-600',
 						)}
 						onClick={() => {
-							if (filterActive) {
-								searchParams.set('filter', 'inactive');
-								setSearchParams(searchParams);
-								return;
+							if (query.filter === 'active') {
+								merge({ filter: 'inactive' });
 							}
 
-							setSearchParams((state) => {
-								state.set('filter', 'active');
-								return state;
-							});
+							if (query.filter === 'inactive') {
+								merge({ filter: 'active' });
+							}
 						}}
 					>
 						<FilterLucideIcon className="w-5 h-5" />
@@ -151,7 +136,7 @@ export function Tables(): React.ReactElement {
 						onClick={() => {
 							update_table_layout({
 								layout: viewLayout === 'list' ? 'grid' : 'list',
-								tableId: params.id,
+								tableId: params?.id,
 							});
 						}}
 					>
@@ -167,56 +152,40 @@ export function Tables(): React.ReactElement {
 					<Setting />
 				</section>
 
-				{table_status === 'success' && table?.meta?.total > 0 && (
-					<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
-						<span>Resultados por página: </span>
-						<Select
-							defaultValue={searchParams.get('per_page') || '10'}
-							onValueChange={(value) => {
-								setSearchParams((state) => {
-									state.set('page', '1');
-									state.set('per_page', value);
-									return state;
-								});
-								tanstack.fetchQuery({
-									queryKey: [QUERY.TABLE_SHOW, params.id],
-								});
-							}}
-						>
-							<SelectTrigger className="w-[180px]">
-								<SelectValue placeholder="Selecione uma opção" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectGroup>
-									<SelectItem value="10">10</SelectItem>
-									<SelectItem value="20">20</SelectItem>
-									<SelectItem value="30">30</SelectItem>
-									<SelectItem value="40">40</SelectItem>
-									<SelectItem value="50">50</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-					</div>
-				)}
+				<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
+					<span>Resultados por página: </span>
+					<Select
+						disabled={table_status !== 'success'}
+						defaultValue={table?.meta?.per_page?.toString() ?? '10'}
+						onValueChange={(value) => {
+							merge({ per_page: Number(value), page: 1 });
+						}}
+					>
+						<SelectTrigger className="w-[180px]">
+							<SelectValue placeholder="Selecione uma opção" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectGroup>
+								<SelectItem value="10">10</SelectItem>
+								<SelectItem value="20">20</SelectItem>
+								<SelectItem value="30">30</SelectItem>
+								<SelectItem value="40">40</SelectItem>
+								<SelectItem value="50">50</SelectItem>
+							</SelectGroup>
+						</SelectContent>
+					</Select>
+				</div>
 			</header>
 
-			{isPendingTableOrUserData ||
-				(!table && update_table_layout_status === 'pending' && (
-					<Loading className="flex justify-center items-center h-screen flex-1" />
-				))}
-
 			<section className="inline-flex space-x-6">
-				{!(update_table_layout_status === 'pending') && filterActive && (
-					<Filter />
-				)}
+				{query.filter === 'active' && <Filter />}
 
-				{!(update_table_layout_status === 'pending') &&
-					viewLayout === 'list' && (
-						<List
-							columns={table?.data?.columns || []}
-							rows={table?.data?.rows || []}
-						/>
-					)}
+				{table_status === 'success' && viewLayout === 'list' && (
+					<List
+						columns={table?.data?.columns || []}
+						rows={table?.data?.rows || []}
+					/>
+				)}
 
 				{/* {!(update_table_layout_status === 'pending') &&
 					viewLayout === 'grid' && (
@@ -227,8 +196,10 @@ export function Tables(): React.ReactElement {
 					)} */}
 			</section>
 
-			{table_status === 'success' &&
-				table?.meta?.total > table?.meta?.per_page && <Pagination />}
+			<Pagination
+				meta={table?.meta}
+				isLoading={table_status === 'pending'}
+			/>
 		</div>
 	);
 }

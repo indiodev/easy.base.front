@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Button } from '@components/ui/button';
 import {
 	DropdownMenu,
@@ -61,7 +62,7 @@ export const Setting = React.forwardRef<
 	});
 
 	const { data: table } = useTableShowQuery({
-		id: params?.id,
+		id: params?.id!,
 	});
 
 	return (

@@ -1,3 +1,4 @@
+import { Button } from '@components/ui/button';
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -13,12 +14,14 @@ import { cn } from '@libs/utils';
 import { useTableListQuery } from '@query/table/list.query';
 import { ChevronDown, Database, Plus, Table } from 'lucide-react';
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Tables = React.forwardRef<
 	React.ElementRef<typeof SidebarMenuButton>,
 	React.ComponentPropsWithoutRef<typeof SidebarMenuButton>
 >(({ className, ...props }, ref) => {
+	const navigate = useNavigate();
+
 	const { data: table_list, status: table_list_status } = useTableListQuery();
 
 	return (
@@ -54,25 +57,28 @@ const Tables = React.forwardRef<
 						table_list.map((table) => (
 							<SidebarMenuItem key={table._id}>
 								<SidebarMenuButton
-									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+									className="py-6 justify-start shadow-none border bg-primary-foreground [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
 									asChild
 									isActive={location.pathname.includes(
 										`/app/tables/${table._id}`,
 									)}
 								>
-									<NavLink
-										to={{
-											pathname: '/app/tables/'.concat(table._id),
+									<Button
+										onClick={() => {
+											navigate(`/app/tables/${table._id}`, {
+												state: {
+													table: table,
+												},
+												replace: true,
+											});
 										}}
-										state={{
-											table: table,
-										}}
+										className="font-normal"
 									>
 										<Table className="h-5 w-5 text-neutral-600" />
 										<span className="text-lg text-neutral-600">
 											{table.title}
 										</span>
-									</NavLink>
+									</Button>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						))}

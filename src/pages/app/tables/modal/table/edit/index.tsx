@@ -80,7 +80,7 @@ const EditTable = React.forwardRef<
 		});
 
 	const onSubmit = form.handleSubmit(({ logo, ...data }) => {
-		console.log({
+		console.info({
 			logo,
 		});
 

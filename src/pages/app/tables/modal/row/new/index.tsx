@@ -57,7 +57,6 @@ const NewRow = React.forwardRef<
 	const form = useForm();
 
 	const onSubmit = form.handleSubmit((data) => {
-		console.log({ data });
 		const entries = Object.entries(data);
 		const existEmpty = entries.some(([, value]) => !value || value === '');
 

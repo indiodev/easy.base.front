@@ -28,6 +28,7 @@ export function Router(): React.ReactElement {
 		if (auth.token) {
 			navigate(pathnameWithQuery);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

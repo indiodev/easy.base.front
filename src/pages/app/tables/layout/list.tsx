@@ -66,6 +66,8 @@ export function List({ columns, rows }: Props): React.ReactElement {
 			<Root>
 				<TableHeader>
 					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
+						<TableHead></TableHead>
+
 						<TableHead>ID</TableHead>
 
 						{columns.map(
@@ -106,9 +108,12 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{normalizedRow.map(({ value, id }) => {
+					{normalizedRow.map(({ value, id }, index) => {
 						return (
 							<TableRow key={id}>
+								<TableCell className="w-[20px] border-r text-center font-bold">
+									{index + 1}
+								</TableCell>
 								<TableCell className="w-[100px]">{id}</TableCell>
 								{columns.map((col, index) => {
 									const KEY = col.slug

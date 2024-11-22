@@ -1,54 +1,39 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Button } from '@components/ui/button';
 import { PaginationContent, PaginationItem } from '@components/ui/pagination';
-import { tanstack } from '@libs/tanstack';
-import { QUERY } from '@models/base.model';
-import { useTableShowQuery } from '@query/table/show.query';
+import { MetaResponse } from '@models/base.model';
+import { Table } from '@models/table.model';
+import { QueryStore } from '@store/query.store';
 import {
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
 	ChevronsRight,
 } from 'lucide-react';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 
-export function Pagination() {
-	const params = useParams();
-	const location = useLocation();
+interface Props {
+	meta?: MetaResponse<Table>['meta'];
+	isLoading?: boolean;
+}
 
-	const [, setSearchParams] = useSearchParams(
-		new URLSearchParams(location.search),
-	);
-
-	const { data: table, status: table_status } = useTableShowQuery({
-		id: params?.id!,
-	});
-
-	if (table_status !== 'success') return null;
+export function Pagination({ meta, isLoading }: Props) {
+	const { query, merge } = QueryStore();
 
 	return (
 		<section className="inline-flex w-full justify-end">
 			<div className="inline-flex space-x-8 items-center">
-				<label className="inline-block max-w-32 w-full">
-					Página <strong>{table?.meta?.page}</strong> de{' '}
-					<strong>{table?.meta?.last_page}</strong>
+				<label className="inline-block max-w-48 w-full">
+					Página <strong>{query?.page}</strong>
+					de <strong>{meta?.last_page || query?.page}</strong>
 				</label>
 				<PaginationContent className="justify-end">
-					{/* <PaginationContent> */}
 					<PaginationItem>
 						<Button
 							variant="ghost"
 							size="icon"
 							className="border"
+							disabled={isLoading || query?.page === 1}
 							onClick={() => {
-								setSearchParams((state) => {
-									state.set('page', '1');
-									return state;
-								});
-
-								tanstack.refetchQueries({
-									queryKey: [QUERY.TABLE_SHOW, params.id],
-								});
+								merge({ page: 1 });
 							}}
 						>
 							<ChevronsLeft />
@@ -59,17 +44,9 @@ export function Pagination() {
 							variant="ghost"
 							size="icon"
 							className="border"
+							disabled={isLoading || query?.page === 1}
 							onClick={() => {
-								if (table?.meta?.page > 1) {
-									setSearchParams((state) => {
-										state.set('page', String(table?.meta?.page - 1));
-										return state;
-									});
-
-									tanstack.refetchQueries({
-										queryKey: [QUERY.TABLE_SHOW, params.id],
-									});
-								}
+								merge({ page: Number(query?.page) - 1 });
 							}}
 						>
 							<ChevronLeft />
@@ -80,17 +57,9 @@ export function Pagination() {
 							variant="ghost"
 							size="icon"
 							className="border"
+							disabled={isLoading || query?.page === meta?.last_page}
 							onClick={() => {
-								if (table?.meta?.page < table?.meta?.last_page) {
-									setSearchParams((state) => {
-										state.set('page', String(table?.meta?.page + 1));
-										return state;
-									});
-
-									tanstack.refetchQueries({
-										queryKey: [QUERY.TABLE_SHOW, params.id],
-									});
-								}
+								merge({ page: Number(query?.page) + 1 });
 							}}
 						>
 							<ChevronRight />
@@ -101,21 +70,14 @@ export function Pagination() {
 							variant="ghost"
 							size="icon"
 							className="border"
+							disabled={isLoading || query?.page === meta?.last_page}
 							onClick={() => {
-								setSearchParams((state) => {
-									state.set('page', String(table?.meta?.last_page));
-									return state;
-								});
-
-								tanstack.refetchQueries({
-									queryKey: [QUERY.TABLE_SHOW, params.id],
-								});
+								merge({ page: Number(meta?.last_page) });
 							}}
 						>
 							<ChevronsRight />
 						</Button>
 					</PaginationItem>
-					{/* </PaginationContent> */}
 				</PaginationContent>
 			</div>
 		</section>

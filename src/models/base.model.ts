@@ -1,3 +1,5 @@
+export type QueryParams = Record<string, string | number>;
+
 export enum STORE {
 	AUTH_STORE = 'AUTH_STORE',
 }

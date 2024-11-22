@@ -27,8 +27,6 @@ export function DateField({
 }) {
 	const form = useFormContext();
 
-	console.log(column);
-
 	return (
 		<FormField
 			key={column._id}
