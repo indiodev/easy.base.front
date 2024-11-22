@@ -12,6 +12,7 @@ import {
 } from '@components/ui/sidebar';
 import { cn } from '@libs/utils';
 import { useTableListQuery } from '@query/table/list.query';
+import { INITIAL_QUERY_STATE, QueryStore } from '@store/query.store';
 import { ChevronDown, Database, Plus, Table } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,6 +22,7 @@ const Tables = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof SidebarMenuButton>
 >(({ className, ...props }, ref) => {
 	const navigate = useNavigate();
+	const query = QueryStore();
 
 	const { data: table_list, status: table_list_status } = useTableListQuery();
 
@@ -65,12 +67,20 @@ const Tables = React.forwardRef<
 								>
 									<Button
 										onClick={() => {
-											navigate(`/app/tables/${table._id}`, {
-												state: {
-													table: table,
+											navigate(
+												{
+													pathname: `/app/tables/${table._id}`,
+													search: 'page=1&per_page=10&filter=inactive',
 												},
-												replace: true,
-											});
+												{
+													state: {
+														table: table,
+													},
+													replace: true,
+												},
+											);
+
+											query.merge(INITIAL_QUERY_STATE);
 										}}
 										className="font-normal"
 									>

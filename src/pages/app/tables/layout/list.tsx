@@ -140,14 +140,13 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												className="space-x-2"
 											>
 												<Badge variant="outline">
-													{value[col.slug]?.[slug_relation]}
+													{value[col.slug]?.[slug_relation] ?? 'N/A'}
 												</Badge>
 											</TableCell>
 										);
 									}
 
 									if (col.type === COLUMN_TYPE.MULTI_RELATIONAL) {
-										// console.log('MULTI_RELATIONAL', value[col.slug]);
 										const [first, ...rest] = value[col.slug];
 										const slug_relation = col.config.relation!.slug;
 										return (
@@ -156,7 +155,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												className="space-x-2"
 											>
 												<Badge variant="outline">
-													{first?.[slug_relation] ?? 'N/A'}
+													{first?.[slug_relation] || 'N/A'}
 												</Badge>
 												{rest?.length > 0 && (
 													<Badge variant="outline">

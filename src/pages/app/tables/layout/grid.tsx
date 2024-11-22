@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Badge } from '@components/ui/badge';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,8 +8,10 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
+import { COLUMN_TYPE } from '@models/base.model';
 import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
+import { format } from 'date-fns';
 import { Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
@@ -62,7 +65,7 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 					return (
 						<div
 							key={id}
-							className="flex flex-col space-y-1 bg-blue-200/50 p-4 rounded-lg shadow-md w-full"
+							className="flex flex-col space-y-2 bg-blue-200/50 p-4 rounded-lg shadow-md w-full"
 						>
 							<div className="inline-flex items-center justify-end">
 								<DropdownMenu modal={false}>
@@ -117,28 +120,111 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</div>
-							<div className="space-x-2 pt-2">
-								<span>ID</span>:<span>{id}</span>
-							</div>
-							{Object.entries(value).map(([key, val]) => {
-								const column = columns.find((col) => col.slug === key);
-								if (!column || !column?.config?.display) return null;
 
-								return (
-									<div
-										className="space-x-2"
-										key={key}
-									>
-										<span>{column.title}</span>:
-										<span>
-											{typeof val == 'object' && !Array.isArray(val)
-												? Object.values(val as any)
-												: Array.isArray(val)
-													? val.map((x) => Object.values(x)[1])
-													: (val as any)}
-										</span>
-									</div>
-								);
+							{columns.map((col, index) => {
+								const KEY = col.slug
+									?.concat('-')
+									.concat(String(index))
+									.concat('-')
+									.concat(id);
+
+								if (!(col.slug in value))
+									return (
+										<div
+											key={KEY}
+											className="space-x-1"
+										>
+											<strong>{col.title}:</strong>
+											N/A
+										</div>
+									);
+
+								if (col.type === COLUMN_TYPE.RELATIONAL) {
+									const slug_relation = col.config.relation!.slug;
+									return (
+										<div
+											key={KEY}
+											className="flex flex-col"
+										>
+											<strong>{col.title}:</strong>
+											<Badge variant="secondary">
+												{value[col.slug]?.[slug_relation] ?? 'N/A'}
+											</Badge>
+										</div>
+									);
+								}
+
+								if (col.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+									// console.log('MULTI_RELATIONAL', value[col.slug]);
+									const [first, ...rest] = value[col.slug];
+									const slug_relation = col.config.relation!.slug;
+									return (
+										<div
+											key={KEY}
+											className="flex flex-col"
+										>
+											<strong>{col.title}:</strong>
+											<div className="space-x-2">
+												<Badge variant="secondary">
+													{first?.[slug_relation] ?? 'N/A'}
+												</Badge>
+												{rest?.length > 0 && (
+													<Badge variant="secondary">
+														+{rest?.length} {col?.title}
+													</Badge>
+												)}
+											</div>
+										</div>
+									);
+								}
+
+								if (col.type === COLUMN_TYPE.DROPDOWN) {
+									// console.log('DROPDOWN', value[col.slug]);
+									return <div key={KEY}>{value[col.slug]}</div>;
+								}
+
+								if (col.type === COLUMN_TYPE.DATE) {
+									// console.log('DATE', col, value[col.slug]);
+
+									return (
+										<div
+											key={KEY}
+											className="inline-flex space-x-2"
+										>
+											<strong>{col.title}:</strong>
+											<span className="text-md">
+												{format(
+													new Date(value[col.slug]),
+													col?.config?.format || 'dd/MM/yyyy',
+												)}
+											</span>
+										</div>
+									);
+								}
+
+								if (col.type === COLUMN_TYPE.LONG_TEXT) {
+									return (
+										<div
+											key={KEY}
+											className="flex flex-col"
+										>
+											<strong>{col.title}:</strong>
+											<span>{value[col.slug]}</span>
+										</div>
+									);
+								}
+
+								if (col.type === COLUMN_TYPE.SHORT_TEXT) {
+									return (
+										<div
+											key={KEY}
+											className="flex flex-col"
+										>
+											<strong>{col.title}:</strong>
+											<span>{value[col.slug]}</span>
+										</div>
+									);
+								}
 							})}
 						</div>
 					);

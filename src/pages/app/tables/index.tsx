@@ -25,15 +25,17 @@ import {
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Filter } from './filter';
+import { Grid } from './layout/grid';
 import { List } from './layout/list';
 import { Pagination } from './pagination';
 import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
-	const { query, merge } = useQueryStore();
-
-	console.info('query', query);
+	const {
+		query: { filter, ...query },
+		merge,
+	} = useQueryStore();
 
 	const { data: table, status: table_status } = useTableShowQuery({
 		id: params.id!,
@@ -114,15 +116,14 @@ export function Tables(): React.ReactElement {
 					<Button
 						className={cn(
 							'bg-transparent shadow-none text-blue-600 hover:bg-blue-50 border border-blue-200 inline-flex gap-1',
-							query.filter === 'active' &&
-								'bg-blue-600 text-white hover:bg-blue-600',
+							filter === 'active' && 'bg-blue-600 text-white hover:bg-blue-600',
 						)}
 						onClick={() => {
-							if (query.filter === 'active') {
+							if (filter === 'active') {
 								merge({ filter: 'inactive' });
 							}
 
-							if (query.filter === 'inactive') {
+							if (filter === 'inactive') {
 								merge({ filter: 'active' });
 							}
 						}}
@@ -156,7 +157,7 @@ export function Tables(): React.ReactElement {
 					<span>Resultados por página: </span>
 					<Select
 						disabled={table_status !== 'success'}
-						defaultValue={query?.per_page ?? '10'}
+						defaultValue={query?.per_page || '10'}
 						onValueChange={(value) => {
 							merge({ per_page: Number(value), page: 1 });
 						}}
@@ -178,10 +179,17 @@ export function Tables(): React.ReactElement {
 			</header>
 
 			<section className="inline-flex space-x-6">
-				{query.filter === 'active' && <Filter />}
+				{filter === 'active' && <Filter />}
 
 				{table_status === 'success' && viewLayout === 'list' && (
 					<List
+						columns={table?.data?.columns || []}
+						rows={table?.data?.rows || []}
+					/>
+				)}
+
+				{table_status === 'success' && viewLayout === 'grid' && (
+					<Grid
 						columns={table?.data?.columns || []}
 						rows={table?.data?.rows || []}
 					/>
