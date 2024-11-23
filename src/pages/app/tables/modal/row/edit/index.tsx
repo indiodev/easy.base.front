@@ -21,12 +21,12 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { DateField } from '../components/date';
-import { DropdownField } from '../components/dropdown';
-import { LongTextField } from '../components/long-text';
-import { MultiRelationalField } from '../components/multi-relational';
-import { RelationalField } from '../components/relational';
-import { TextField } from '../components/text';
+import { DateField } from '../../../../../../components/global/date';
+import { DropdownField } from '../../../../../../components/global/dropdown';
+import { LongTextField } from '../../../../../../components/global/long-text';
+import { MultiRelationalField } from '../../../../../../components/global/multi-relational';
+import { RelationalField } from '../../../../../../components/global/relational';
+import { TextField } from '../../../../../../components/global/text';
 
 const EditRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,

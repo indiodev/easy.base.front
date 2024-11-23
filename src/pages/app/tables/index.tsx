@@ -9,13 +9,13 @@ import {
 	SelectValue,
 } from '@components/ui/select';
 import { Separator } from '@components/ui/separator';
+import { useQueryStore } from '@hooks/use-query';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
 import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
 import { useTableShowQuery } from '@query/table/show.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
-import { useQueryStore } from '@store/query.store';
 import {
 	Filter as FilterLucideIcon,
 	LayoutDashboard,
@@ -23,7 +23,7 @@ import {
 	Search,
 } from 'lucide-react';
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
@@ -32,6 +32,9 @@ import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
+	const location = useLocation();
+	const navigate = useNavigate();
+
 	const {
 		query: { filter, ...query },
 		merge,
@@ -73,12 +76,6 @@ export function Tables(): React.ReactElement {
 		params?.id &&
 		user_status === 'success' &&
 		user?.config?.table?.[params!.id!]?.layout;
-
-	// const isPendingTableOrUserData =
-	// 	table?.status === 'pending' || user_status === 'pending';
-
-	// const paginationVisible =
-	// 	table?.status === 'success' && table?.meta?.total > table?.meta?.per_page;
 
 	React.useEffect(() => {
 		if (nonExistUserLayout) {
@@ -126,6 +123,22 @@ export function Tables(): React.ReactElement {
 							if (filter === 'inactive') {
 								merge({ filter: 'active' });
 							}
+
+							const state = {
+								...location.state,
+								table: { ...table?.data, rows: [] },
+							};
+
+							navigate(
+								{
+									pathname: location.pathname,
+									search: location.search,
+								},
+								{
+									replace: true,
+									state,
+								},
+							);
 						}}
 					>
 						<FilterLucideIcon className="w-5 h-5" />
@@ -194,14 +207,6 @@ export function Tables(): React.ReactElement {
 						rows={table?.data?.rows || []}
 					/>
 				)}
-
-				{/* {!(update_table_layout_status === 'pending') &&
-					viewLayout === 'grid' && (
-						<Grid
-							columns={table?.data?.columns || []}
-							rows={table?.data?.rows || []}
-						/>
-					)} */}
 			</section>
 
 			<Pagination

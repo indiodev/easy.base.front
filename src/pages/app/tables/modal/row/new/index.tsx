@@ -21,12 +21,11 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { DateField } from '../components/date';
-import { DropdownField } from '../components/dropdown';
-import { LongTextField } from '../components/long-text';
-import { MultiRelationalField } from '../components/multi-relational';
-import { RelationalField } from '../components/relational';
-import { TextField } from '../components/text';
+import { DateField } from '../../../../../../components/global/date';
+import { DropdownField } from '../../../../../../components/global/dropdown';
+import { LongTextField } from '../../../../../../components/global/long-text';
+import { MultiRelationalField } from '../../../../../../components/global/multi-relational';
+import { RelationalField } from '../../../../../../components/global/relational';
 
 const NewRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -126,31 +125,6 @@ const NewRow = React.forwardRef<
 							onSubmit={onSubmit}
 						>
 							{columns.map((column) => {
-								if (column?.type === COLUMN_TYPE.DATE) {
-									return (
-										<DateField
-											key={column._id}
-											column={column}
-										/>
-									);
-								}
-
-								if (column?.type === COLUMN_TYPE.LONG_TEXT)
-									return (
-										<LongTextField
-											key={column._id}
-											column={column}
-										/>
-									);
-
-								if (column?.type === COLUMN_TYPE.DROPDOWN)
-									return (
-										<DropdownField
-											column={column}
-											key={column._id}
-										/>
-									);
-
 								if (column?.type === COLUMN_TYPE.RELATIONAL) {
 									return (
 										<RelationalField
@@ -169,12 +143,38 @@ const NewRow = React.forwardRef<
 									);
 								}
 
-								return (
-									<TextField
-										key={column._id}
-										column={column}
-									/>
-								);
+								if (column?.type === COLUMN_TYPE.DATE) {
+									return (
+										<DateField
+											key={column._id}
+											column={column}
+										/>
+									);
+								}
+
+								if (column?.type === COLUMN_TYPE.DROPDOWN)
+									return (
+										<DropdownField
+											column={column}
+											key={column._id}
+										/>
+									);
+
+								if (column?.type === COLUMN_TYPE.LONG_TEXT)
+									return (
+										<LongTextField
+											key={column._id}
+											column={column}
+										/>
+									);
+
+								if (column?.type === COLUMN_TYPE.SHORT_TEXT)
+									return (
+										<LongTextField
+											key={column._id}
+											column={column}
+										/>
+									);
 							})}
 							{/* {formHasError && (
 								<div className="inline-flex">

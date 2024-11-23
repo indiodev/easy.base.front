@@ -1,8 +1,8 @@
 import { Button } from '@components/ui/button';
 import { PaginationContent, PaginationItem } from '@components/ui/pagination';
+import { useQueryStore } from '@hooks/use-query';
 import { MetaResponse } from '@models/base.model';
 import { Table } from '@models/table.model';
-import { useQueryStore } from '@store/query.store';
 import {
 	ChevronLeft,
 	ChevronRight,

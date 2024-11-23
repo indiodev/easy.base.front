@@ -17,13 +17,14 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
+import { useQueryStore } from '@hooks/use-query';
 import { COLUMN_TYPE } from '@models/base.model';
 import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
 import { format } from 'date-fns';
 import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
 	columns: Column[];
@@ -52,9 +53,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	const [searchParams, setSearchParams] = useSearchParams(
-		new URLSearchParams(location?.search),
-	);
+	const { query, merge } = useQueryStore();
 
 	const normalizedRow = rows.map(normalizeRows);
 
@@ -66,7 +65,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 			<Root>
 				<TableHeader>
 					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
-						<TableHead></TableHead>
+						{/* <TableHead></TableHead> */}
 
 						<TableHead>ID</TableHead>
 
@@ -79,21 +78,14 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												onClick={() => {
 													const order_slug = 'order-'.concat(col.slug);
 													const has_order_desc_slug =
-														searchParams.has(order_slug) &&
-														searchParams.get(order_slug) === 'desc';
+														query?.[order_slug] === '-1';
 
 													if (has_order_desc_slug) {
-														setSearchParams((state) => {
-															state.set(order_slug, 'asc');
-															return state;
-														});
+														merge({ [order_slug]: '1' });
 														return;
 													}
 
-													setSearchParams((state) => {
-														state.set(order_slug, 'desc');
-														return state;
-													});
+													merge({ [order_slug]: '-1' });
 												}}
 												className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300"
 											>
@@ -108,12 +100,12 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{normalizedRow.map(({ value, id }, index) => {
+					{normalizedRow.map(({ value, id }) => {
 						return (
 							<TableRow key={id}>
-								<TableCell className="w-[20px] border-r text-center font-bold">
+								{/* <TableCell className="w-[20px] border-r text-center font-bold">
 									{index + 1}
-								</TableCell>
+								</TableCell> */}
 								<TableCell className="w-[100px]">{id}</TableCell>
 								{columns.map((col, index) => {
 									const KEY = col.slug
@@ -167,13 +159,10 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.DROPDOWN) {
-										// console.log('DROPDOWN', value[col.slug]);
 										return <TableCell key={KEY}>{value[col.slug]}</TableCell>;
 									}
 
 									if (col.type === COLUMN_TYPE.DATE) {
-										// console.log('DATE', col, value[col.slug]);
-
 										return (
 											<TableCell key={KEY}>
 												{format(
@@ -260,10 +249,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 											<DropdownMenuItem
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
-													setSearchParams((state) => {
-														state.set('row_id', id);
-														return state;
-													});
+													merge({ row_id: id });
 													removeRowButtonRef?.current?.click();
 												}}
 											>

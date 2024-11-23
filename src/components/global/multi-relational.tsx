@@ -13,21 +13,22 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-export function RelationalField({
+export function MultiRelationalField({
 	column,
-	defaultValue,
+	// defaultValue,
 }: {
 	column: Partial<Column>;
 	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
 
-	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
+	// const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
+	const [options, setOptions] = React.useState<Option[]>([]);
 
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({
 			collection: column.config!.relation!.collection!,
-			columnId: column.config!.relation!.path!,
+			columnId: column.config!.relation!.path,
 		});
 
 		setOptions(response);
@@ -41,6 +42,7 @@ export function RelationalField({
 		<FormField
 			control={form.control}
 			name={column!.slug!}
+			defaultValue={options.flatMap((option) => option.value)}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column!.slug!];
 				return (
@@ -49,10 +51,9 @@ export function RelationalField({
 						<FormControl>
 							<MultipleSelector
 								onChange={(options) => {
-									const [option] = options;
-									field.onChange(option.value);
+									const values = options.flatMap((option) => option.value);
+									field.onChange(values);
 								}}
-								maxSelected={1}
 								onSearch={async () => {
 									return await ROW_FIND_MANY_DEBOUNCE({
 										collection: column.config!.relation!.collection!,
@@ -74,7 +75,6 @@ export function RelationalField({
 									</p>
 								}
 								className={cn(hasError && 'border-red-500')}
-								// {...field}
 							/>
 						</FormControl>
 						<FormMessage className="text-right" />

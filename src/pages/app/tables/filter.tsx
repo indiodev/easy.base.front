@@ -1,46 +1,45 @@
+import { DateField } from '@components/global/date';
+import { DropdownField } from '@components/global/dropdown';
+import { LongTextField } from '@components/global/long-text';
+import { MultiRelationalField } from '@components/global/multi-relational';
+import { RelationalField } from '@components/global/relational';
 import { Button } from '@components/ui/button';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from '@components/ui/form';
-import { Input } from '@components/ui/input';
-import { tanstack } from '@libs/tanstack';
-import { QUERY } from '@models/base.model';
-import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
-import { Search } from 'lucide-react';
+import { Form } from '@components/ui/form';
+import { useQueryStore } from '@hooks/use-query';
+import { COLUMN_TYPE } from '@models/base.model';
+import { Column } from '@models/column.model';
 import { useForm } from 'react-hook-form';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export function Filter() {
-	const params = useParams();
+	const location = useLocation();
+	const query = useQueryStore();
 
-	const [searchParams, setSearchParams] = useSearchParams(
-		new URLSearchParams(location.search),
-	);
+	const columns = location?.state?.table?.columns as Column[];
 
-	const { data: columns, status: columns_status } =
-		useColumnFindManyByTableIdQuery({
-			tableId: params?.id || '',
-		});
+	// const { data: columns, status: columns_status } =
+	// 	useColumnFindManyByTableIdQuery({
+	// 		tableId: params?.id || '',
+	// 	});
 
 	const form = useForm();
 
 	const onSubmit = form.handleSubmit((data) => {
-		const payload = Object.entries(data).filter(([, value]) => value !== '');
+		const payload = Object.entries(data).reduce(
+			(acc, [key, value]) => {
+				if (value) {
+					if (Array.isArray(value) && value.length > 0)
+						acc[key] = value.join(',');
+					else acc[key] = value;
+				}
+				return acc;
+			},
+			{} as { [key: string]: string },
+		);
 
-		for (const [key, value] of payload) {
-			setSearchParams((state) => {
-				state.set(key, value);
-				return state;
-			});
-		}
+		query.merge(payload);
 
-		tanstack.refetchQueries({
-			queryKey: [QUERY.TABLE_SHOW, params.id],
-		});
+		console.log(payload);
 	});
 
 	return (
@@ -51,48 +50,60 @@ export function Filter() {
 					className="flex flex-col space-y-3 h-auto"
 					onSubmit={onSubmit}
 				>
-					{columns_status === 'success' &&
-						columns?.map(
-							(col) =>
-								col?.config?.filter && (
-									<FormField
-										key={col.slug}
-										control={form.control}
-										name={col.slug}
-										defaultValue={searchParams.get(col.slug) || ''}
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>{col.title}</FormLabel>
-												<FormControl>
-													<div className="inline-flex items-center relative max-w-96 w-full">
-														<Search
-															className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-blue-600"
-															strokeWidth={1.5}
-														/>
-														<Input
-															className="pl-9 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"
-															onChange={(event) => {
-																if (event.target.value === '') {
-																	setSearchParams((state) => {
-																		state.delete(col?.slug);
-																		return state;
-																	});
+					{columns?.map((column) => {
+						if (!column?.config?.filter) return null;
 
-																	tanstack.refetchQueries({
-																		queryKey: [QUERY.TABLE_SHOW, params.id],
-																	});
-																}
+						if (column?.type === COLUMN_TYPE.RELATIONAL) {
+							return (
+								<RelationalField
+									column={column}
+									key={column._id}
+								/>
+							);
+						}
 
-																field.onChange(event.target.value);
-															}}
-														/>
-													</div>
-												</FormControl>
-											</FormItem>
-										)}
-									/>
-								),
-						)}
+						if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+							return (
+								<MultiRelationalField
+									column={column}
+									key={column._id}
+								/>
+							);
+						}
+
+						if (column?.type === COLUMN_TYPE.DATE) {
+							return (
+								<DateField
+									key={column._id}
+									column={column}
+								/>
+							);
+						}
+
+						if (column?.type === COLUMN_TYPE.DROPDOWN)
+							return (
+								<DropdownField
+									column={column}
+									key={column._id}
+								/>
+							);
+
+						if (column?.type === COLUMN_TYPE.LONG_TEXT)
+							return (
+								<LongTextField
+									key={column._id}
+									column={column}
+								/>
+							);
+
+						if (column?.type === COLUMN_TYPE.SHORT_TEXT)
+							return (
+								<LongTextField
+									key={column._id}
+									column={column}
+								/>
+							);
+					})}
 
 					<Button className="bg-blue-600 hover:bg-blue-500">Pesquisar</Button>
 				</form>

@@ -28,8 +28,6 @@ export function Router(): React.ReactElement {
 
 	const pathnameWithQuery = location.pathname.concat(location.search);
 
-	console.log('searchEntries', searchEntries);
-
 	React.useEffect(() => {
 		if (auth.token) {
 			navigate(pathnameWithQuery);

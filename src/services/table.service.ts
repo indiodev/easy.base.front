@@ -14,7 +14,6 @@ export default class TableService {
 	}: { id?: string } & Partial<Record<string, number | string>>): Promise<
 		MetaResponse<Table>
 	> {
-		console.info('service', query);
 		const { data } = await API.get(`/tables/${id}`, {
 			params: {
 				...query,

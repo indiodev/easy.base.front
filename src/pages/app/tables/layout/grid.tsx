@@ -155,7 +155,6 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 								}
 
 								if (col.type === COLUMN_TYPE.MULTI_RELATIONAL) {
-									// console.log('MULTI_RELATIONAL', value[col.slug]);
 									const [first, ...rest] = value[col.slug];
 									const slug_relation = col.config.relation!.slug;
 									return (
@@ -179,13 +178,10 @@ export function Grid({ columns, rows }: Props): React.ReactElement {
 								}
 
 								if (col.type === COLUMN_TYPE.DROPDOWN) {
-									// console.log('DROPDOWN', value[col.slug]);
 									return <div key={KEY}>{value[col.slug]}</div>;
 								}
 
 								if (col.type === COLUMN_TYPE.DATE) {
-									// console.log('DATE', col, value[col.slug]);
-
 									return (
 										<div
 											key={KEY}
