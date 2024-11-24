@@ -20,7 +20,7 @@ import { useFormContext } from 'react-hook-form';
 
 export function DateField({
 	column,
-	// defaultValue,
+	defaultValue,
 }: {
 	column: Partial<Column>;
 	defaultValue?: unknown;
@@ -32,7 +32,7 @@ export function DateField({
 			key={column._id}
 			control={form.control}
 			name={column.slug || ''}
-			// defaultValue={defaultValue || ''}
+			defaultValue={defaultValue || ''}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column.slug!];
 				return (

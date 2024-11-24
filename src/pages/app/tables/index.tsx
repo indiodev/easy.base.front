@@ -40,6 +40,8 @@ export function Tables(): React.ReactElement {
 		merge,
 	} = useQueryStore();
 
+	delete query.row_id;
+
 	const { data: table, status: table_status } = useTableShowQuery({
 		id: params.id!,
 		...query,

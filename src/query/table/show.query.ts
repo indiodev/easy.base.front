@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { UseQueryResult } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
@@ -13,6 +14,8 @@ async function fetcher(query: QueryParams): Promise<MetaResponse<Table>> {
 
 export function useTableShowQuery({
 	id,
+	row_id,
+	filter,
 	...query
 }: QueryParams): UseQueryResult<MetaResponse<Table>, Error | AxiosError> {
 	return useQuery({
@@ -20,6 +23,4 @@ export function useTableShowQuery({
 		queryFn: () => fetcher({ ...query, id }),
 		enabled: !!id,
 	});
-
-	// return { ...result, data };
 }

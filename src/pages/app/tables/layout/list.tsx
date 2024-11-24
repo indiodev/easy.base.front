@@ -24,7 +24,7 @@ import { Row } from '@models/row.model';
 import { format } from 'date-fns';
 import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
 	columns: Column[];
@@ -52,6 +52,9 @@ function normalizeRows(props: Row) {
 export function List({ columns, rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const [, setSearchParams] = useSearchParams(
+		new URLSearchParams(location?.search),
+	);
 
 	const { query, merge } = useQueryStore();
 
@@ -65,8 +68,6 @@ export function List({ columns, rows }: Props): React.ReactElement {
 			<Root>
 				<TableHeader>
 					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
-						{/* <TableHead></TableHead> */}
-
 						<TableHead>ID</TableHead>
 
 						{columns.map(
@@ -103,9 +104,6 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					{normalizedRow.map(({ value, id }) => {
 						return (
 							<TableRow key={id}>
-								{/* <TableCell className="w-[20px] border-r text-center font-bold">
-									{index + 1}
-								</TableCell> */}
 								<TableCell className="w-[100px]">{id}</TableCell>
 								{columns.map((col, index) => {
 									const KEY = col.slug
@@ -211,34 +209,10 @@ export function List({ columns, rows }: Props): React.ReactElement {
 											<DropdownMenuItem
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
-													const state = {
-														...location?.state,
-														row: {
-															...location?.state?.row,
-															id,
-															data: Object.entries(value).map(
-																([key, value]) => {
-																	const column = columns.find(
-																		(col) => col.slug === key,
-																	);
-																	return {
-																		path: key,
-																		value,
-																		column,
-																	};
-																},
-															),
-														},
-													};
-
-													navigate(
-														{
-															pathname: location.pathname,
-														},
-														{
-															state,
-														},
-													);
+													setSearchParams((state) => {
+														state.set('row_id', id);
+														return state;
+													});
 													editRowButtonRef?.current?.click();
 												}}
 											>
@@ -249,7 +223,10 @@ export function List({ columns, rows }: Props): React.ReactElement {
 											<DropdownMenuItem
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
-													merge({ row_id: id });
+													setSearchParams((state) => {
+														state.set('row_id', id);
+														return state;
+													});
 													removeRowButtonRef?.current?.click();
 												}}
 											>

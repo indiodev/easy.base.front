@@ -1,4 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+import { DateField } from '@components/global/date';
+import { DropdownField } from '@components/global/dropdown';
+import { LongTextField } from '@components/global/long-text';
+import { MultiRelationalField } from '@components/global/multi-relational';
+import { RelationalField } from '@components/global/relational';
 import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
 import {
@@ -21,11 +26,6 @@ import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { DateField } from '../../../../../../components/global/date';
-import { DropdownField } from '../../../../../../components/global/dropdown';
-import { LongTextField } from '../../../../../../components/global/long-text';
-import { MultiRelationalField } from '../../../../../../components/global/multi-relational';
-import { RelationalField } from '../../../../../../components/global/relational';
 
 const NewRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
@@ -176,13 +176,6 @@ const NewRow = React.forwardRef<
 										/>
 									);
 							})}
-							{/* {formHasError && (
-								<div className="inline-flex">
-									<span className="text-sm text-red-500">
-										* os campos em vermelho são obrigatórios
-									</span>
-								</div>
-							)} */}
 
 							<div className="flex justify-end gap-4">
 								<DialogClose asChild>

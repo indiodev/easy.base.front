@@ -15,15 +15,14 @@ import { useFormContext } from 'react-hook-form';
 
 export function MultiRelationalField({
 	column,
-	// defaultValue,
+	defaultValue,
 }: {
 	column: Partial<Column>;
 	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
 
-	// const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
-	const [options, setOptions] = React.useState<Option[]>([]);
+	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
 
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({
@@ -42,7 +41,7 @@ export function MultiRelationalField({
 		<FormField
 			control={form.control}
 			name={column!.slug!}
-			defaultValue={options.flatMap((option) => option.value)}
+			defaultValue={defaultValue}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column!.slug!];
 				return (
@@ -61,6 +60,8 @@ export function MultiRelationalField({
 									});
 								}}
 								defaultOptions={options}
+								value={defaultValue}
+								options={options}
 								triggerSearchOnFocus
 								placeholder={'Selecione '.concat(column.title!)}
 								loadingIndicator={

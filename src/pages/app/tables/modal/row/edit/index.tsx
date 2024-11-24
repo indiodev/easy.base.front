@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Button } from '@components/ui/button';
 import {
@@ -11,44 +12,49 @@ import {
 } from '@components/ui/dialog';
 import { Form } from '@components/ui/form';
 import { tanstack } from '@libs/tanstack';
-import { cn } from '@libs/utils';
-import { COLUMN_TYPE, QUERY } from '@models/base.model';
-import { Column } from '@models/column.model';
+import { COLUMN_TYPE, MetaResponse, QUERY } from '@models/base.model';
 import { useRowUpdateMutation } from '@mutation/row/update.mutation';
 
-import { Option } from '@components/ui/multiple-selector';
+import { DateField } from '@components/global/date';
+import { DropdownField } from '@components/global/dropdown';
+import { LongTextField } from '@components/global/long-text';
+import { MultiRelationalField } from '@components/global/multi-relational';
+import { RelationalField } from '@components/global/relational';
+import { TextField } from '@components/global/text';
+import { cn } from '@libs/utils';
+import { Table } from '@models/table.model';
+import { QueryStore } from '@store/query.store';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
-import { DateField } from '../../../../../../components/global/date';
-import { DropdownField } from '../../../../../../components/global/dropdown';
-import { LongTextField } from '../../../../../../components/global/long-text';
-import { MultiRelationalField } from '../../../../../../components/global/multi-relational';
-import { RelationalField } from '../../../../../../components/global/relational';
-import { TextField } from '../../../../../../components/global/text';
 
 const EditRow = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
 >(({ ...props }, ref) => {
 	const location = useLocation();
+	const params = useParams();
+	const { query } = QueryStore();
+	delete query?.filter;
 
-	const field_state = location?.state?.row as {
-		id: string;
-		data: {
-			path: string;
-			value: unknown;
-			column: Column;
-		}[];
-	};
-
-	const [open, setOpen] = React.useState(false);
 	const [searchParams, setSearchParams] = useSearchParams(
-		new URLSearchParams(location.search),
+		new URLSearchParams(location?.search),
 	);
 
-	const params = useParams();
+	const row_id = searchParams.get('row_id');
+
+	const table = tanstack.getQueryData<MetaResponse<Table>>([
+		QUERY.TABLE_SHOW,
+		params.id,
+		query,
+	])?.data;
+
+	const row = table?.rows?.find((row) => row._id === row_id)?.value;
+
+	const hasMoreThanFiveColumns = (table?.columns?.length ?? 0) > 5;
+
+	const [open, setOpen] = React.useState(false);
 
 	const { mutateAsync: update_row, status: update_row_status } =
 		useRowUpdateMutation({
@@ -68,16 +74,17 @@ const EditRow = React.forwardRef<
 	const form = useForm();
 
 	const onSubmit = form.handleSubmit((data) => {
-		const entries = Object.entries(data);
-		const existEmpty = entries.some(([, value]) => !value || value === '');
-
-		for (const [key, value] of entries) {
-			if (!value) {
-				form.setError(key, {
-					message: 'Este campo é obrigatório',
+		for (const column of table?.columns ?? []) {
+			if (column.config?.required && !data[column.slug]) {
+				form.setError(column.slug, {
+					// message: 'Este campo é obrigatório',
+					message: column?.title.concat(' é obrigatório'),
 				});
 			}
 		}
+
+		const entries = Object.entries(data);
+		const existEmpty = entries.some(([, value]) => !value || value === '');
 
 		if (existEmpty) return;
 
@@ -94,11 +101,9 @@ const EditRow = React.forwardRef<
 		update_row({
 			data: payload,
 			tableId: params?.id!,
-			id: field_state.id,
+			id: row_id!,
 		});
 	});
-
-	const formHasError = Object.keys(form.formState.errors).length > 0;
 
 	return (
 		<Dialog
@@ -136,58 +141,49 @@ const EditRow = React.forwardRef<
 				<Form {...form}>
 					<form
 						className={cn(
-							field_state?.data?.length > 5 && 'grid grid-cols-2 gap-4',
-							!(field_state?.data?.length > 5) && 'flex flex-col gap-4',
+							hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
+							!hasMoreThanFiveColumns && 'flex flex-col gap-4',
 						)}
 						onSubmit={onSubmit}
 					>
-						{field_state?.data?.map(({ column, value }) => {
+						{table?.columns?.map((column) => {
+							// console.log(row, column);
+							// if (row && !(column.slug in row)) return null;
+
+							let defaultValue = row?.[column.slug!];
+
 							if (column?.type === COLUMN_TYPE.RELATIONAL) {
-								const options = Array.from(value as object[])
-									.map((v) => {
-										const field = Object.entries(v).find(
-											([key]) =>
-												key !== '_id' &&
-												key !== 'createdAt' &&
-												key !== 'updatedAt',
-										);
-
-										if (!field) return;
-
-										return { label: field[1], value: field[0] } as Option;
-									})
-									.filter((item) => item !== undefined);
+								if (!defaultValue) defaultValue = [];
+								else
+									defaultValue = [
+										{
+											label: defaultValue[column.config?.relation?.slug!],
+											value: defaultValue._id,
+										},
+									];
 
 								return (
 									<RelationalField
 										key={column._id}
 										column={column}
-										defaultValue={options}
+										defaultValue={defaultValue}
 									/>
 								);
 							}
 
 							if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
-								const options = Array.from(value as object[])
-									.map((v) => {
-										const field = Object.entries(v).find(
-											([key]) =>
-												key !== '_id' &&
-												key !== 'createdAt' &&
-												key !== 'updatedAt',
-										);
-
-										if (!field) return;
-
-										return { label: field[1], value: field[0] } as Option;
-									})
-									.filter((item) => item !== undefined);
+								if (!defaultValue) defaultValue = [];
+								else
+									defaultValue = Array.from(defaultValue).map((c: any) => ({
+										label: c?.[column.config?.relation?.slug!],
+										value: c?._id,
+									}));
 
 								return (
 									<MultiRelationalField
 										key={column._id}
 										column={column}
-										defaultValue={options}
+										defaultValue={defaultValue}
 									/>
 								);
 							}
@@ -197,7 +193,7 @@ const EditRow = React.forwardRef<
 									<DateField
 										key={column._id}
 										column={column}
-										defaultValue={value}
+										defaultValue={defaultValue}
 									/>
 								);
 							}
@@ -207,7 +203,7 @@ const EditRow = React.forwardRef<
 									<LongTextField
 										key={column._id}
 										column={column}
-										defaultValue={value}
+										defaultValue={defaultValue}
 									/>
 								);
 
@@ -223,18 +219,10 @@ const EditRow = React.forwardRef<
 								<TextField
 									key={column._id}
 									column={column}
-									defaultValue={value}
+									defaultValue={row?.[column.slug!]}
 								/>
 							);
 						})}
-
-						{formHasError && (
-							<div className="inline-flex">
-								<span className="text-sm text-red-500">
-									* os campos em vermelho são obrigatórios
-								</span>
-							</div>
-						)}
 
 						<div className="flex justify-end gap-4">
 							<DialogClose asChild>
@@ -258,7 +246,5 @@ const EditRow = React.forwardRef<
 		</Dialog>
 	);
 });
-
-EditRow.displayName = 'EditRow';
 
 export { EditRow };

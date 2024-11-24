@@ -15,15 +15,14 @@ import { useFormContext } from 'react-hook-form';
 
 export function RelationalField({
 	column,
-	// defaultValue,
+	defaultValue,
 }: {
 	column: Partial<Column>;
 	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
 
-	// const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
-	const [options, setOptions] = React.useState<Option[]>([]);
+	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
 
 	const getOptions = React.useCallback(async () => {
 		const response = await ROW_FIND_MANY_DEBOUNCE({
@@ -42,6 +41,7 @@ export function RelationalField({
 		<FormField
 			control={form.control}
 			name={column!.slug!}
+			defaultValue={defaultValue}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column!.slug!];
 				return (
@@ -60,6 +60,8 @@ export function RelationalField({
 										columnId: column.config!.relation!.path!,
 									});
 								}}
+								value={defaultValue}
+								options={options}
 								defaultOptions={options}
 								triggerSearchOnFocus
 								placeholder={'Selecione '.concat(column.title!)}
