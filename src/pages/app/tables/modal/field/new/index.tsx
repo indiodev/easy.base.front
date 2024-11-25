@@ -35,8 +35,8 @@ import { Separator } from '@components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { tanstack } from '@libs/tanstack';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
+import { Table } from '@models/table.model';
 import { useColumnCreateMutation } from '@mutation/column/new.mutation';
-import { useTableListQuery } from '@query/table/list.query';
 import { LoaderCircle, Plus, Trash } from 'lucide-react';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -54,7 +54,12 @@ const NewField = React.forwardRef<
 		resolver: zodResolver(Schema),
 	});
 
-	const { data: table_list, status: table_list_status } = useTableListQuery();
+	const tables = tanstack.getQueryData<Table[]>([QUERY.TABLE_LIST]);
+
+	const collection = tables?.find(
+		(table) =>
+			table.data_collection === form.watch('config.relation.collection'),
+	);
 
 	const { append, fields, remove } = useFieldArray({
 		control: form.control,
@@ -352,20 +357,16 @@ const NewField = React.forwardRef<
 													</SelectTrigger>
 												</FormControl>
 												<SelectContent>
-													{table_list_status === 'success'
-														? table_list
-																.filter((table) => table._id !== params.id)
-																.map((table, index) => (
-																	<SelectItem
-																		key={index}
-																		value={table.data_collection}
-																	>
-																		{table.title}
-																	</SelectItem>
-																))
-														: table_list_status === 'pending'
-															? `Carregando`
-															: `Indisponivel`}
+													{tables
+														?.filter((table) => table._id !== params.id)
+														?.map((table) => (
+															<SelectItem
+																key={table._id}
+																value={table.data_collection}
+															>
+																{table.title}
+															</SelectItem>
+														))}
 												</SelectContent>
 											</Select>
 
@@ -381,13 +382,7 @@ const NewField = React.forwardRef<
 											<FormLabel>Coluna exibida</FormLabel>
 											<Select
 												onValueChange={(value) => {
-													const table = table_list?.find(
-														(t) =>
-															t.data_collection ===
-															form.watch('config.relation.collection'),
-													);
-
-													const column = table?.columns.find(
+													const column = collection?.columns.find(
 														(c) => c._id === value,
 													);
 
@@ -406,22 +401,14 @@ const NewField = React.forwardRef<
 												</FormControl>
 												<SelectContent>
 													{form.watch('config.relation.collection') &&
-													table_list
-														? table_list
-																.find(
-																	(table) =>
-																		table.data_collection ===
-																		form.watch('config.relation.collection'),
-																)
-																?.columns.map((column) => (
-																	<SelectItem
-																		key={column._id}
-																		value={column._id}
-																	>
-																		{column.title}
-																	</SelectItem>
-																))
-														: `Indisponivel`}
+														collection?.columns.map((column) => (
+															<SelectItem
+																key={column._id}
+																value={column._id}
+															>
+																{column.title}
+															</SelectItem>
+														))}
 												</SelectContent>
 											</Select>
 

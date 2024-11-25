@@ -30,7 +30,7 @@ import { useTableUpdateMutation } from '@mutation/table/update.mutation';
 import { LoaderCircle, PencilLine } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
 
 const EditTable = React.forwardRef<
@@ -38,11 +38,14 @@ const EditTable = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
 >(({ ...props }, ref) => {
 	const [open, setOpen] = React.useState(false);
+	const params = useParams();
 
 	const location = useLocation();
 	const navigate = useNavigate();
 
-	const table_state = location?.state?.table as Partial<Table>;
+	const table = tanstack
+		.getQueryData<Table[]>([QUERY.TABLE_LIST])
+		?.find((table) => table._id === params.id);
 
 	const [fileImage, setFileImage] = React.useState<string | undefined>();
 
@@ -51,8 +54,8 @@ const EditTable = React.forwardRef<
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
 		defaultValues: {
-			title: table_state?.title || '',
-			description: table_state?.description || '',
+			title: table?.title || '',
+			description: table?.description || '',
 			// logo: table_state?.logo || '',
 		},
 	});
@@ -85,7 +88,8 @@ const EditTable = React.forwardRef<
 		});
 
 		update_table({
-			_id: table_state?._id,
+			_id: table?._id,
+			...table,
 			...data,
 		});
 	});
@@ -173,7 +177,7 @@ const EditTable = React.forwardRef<
 						<FormField
 							control={form.control}
 							name="title"
-							defaultValue={table_state?.title || ''}
+							defaultValue={table?.title ?? ''}
 							render={({ field }) => {
 								const hasError = !!form.formState.errors.title;
 								return (
@@ -181,6 +185,7 @@ const EditTable = React.forwardRef<
 										<FormLabel>Nome</FormLabel>
 										<FormControl>
 											<Input
+												defaultValue={table?.title ?? ''}
 												placeholder="Insira o nome da tabela"
 												className={cn(
 													'focus-visible:ring-blue-300 focus-visible:ring-0',
@@ -198,12 +203,13 @@ const EditTable = React.forwardRef<
 						<FormField
 							control={form.control}
 							name="description"
-							defaultValue={table_state?.description || ''}
+							defaultValue={table?.description || ''}
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Descrição</FormLabel>
 									<FormControl>
 										<Textarea
+											defaultValue={table?.description || ''}
 											placeholder="Uma descrição aqui"
 											// className="resize-none"
 											{...field}
@@ -231,9 +237,7 @@ const EditTable = React.forwardRef<
 										<div className="inline-flex space-x-2">
 											<span className="text-sm">Lista</span>
 											<Switch
-												defaultChecked={
-													!!(table_state?.config?.layout === 'grid')
-												}
+												defaultChecked={!!(table?.config?.layout === 'grid')}
 												onCheckedChange={(value) => {
 													// if (!value) {
 													// 	form.setValue('config.layout', 'list');

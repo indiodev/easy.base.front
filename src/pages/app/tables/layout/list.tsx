@@ -18,47 +18,37 @@ import {
 	TableRow,
 } from '@components/ui/table';
 import { useQueryStore } from '@hooks/use-query';
-import { COLUMN_TYPE } from '@models/base.model';
-import { Column } from '@models/column.model';
+import { tanstack } from '@libs/tanstack';
+import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { Row } from '@models/row.model';
+import { Table } from '@models/table.model';
 import { format } from 'date-fns';
 import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
-	columns: Column[];
-	rows: Row[];
+	rows: Row['value'][];
 }
 
-function normalizeRows(props: Row) {
-	const row = { ...props } as any;
-
-	const id = row._id;
-	delete row?.value?._id;
-	delete row?.value?.createdAt;
-	delete row?.value?.created_at;
-	delete row?.value?.updatedAt;
-	delete row?.value?.__v;
-
-	const normalized = {
-		value: row.value,
-		id,
-	};
-
-	return normalized;
-}
-
-export function List({ columns, rows }: Props): React.ReactElement {
+export function List({ rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const params = useParams();
 	const [, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
 
-	const { query, merge } = useQueryStore();
+	const columns = tanstack
+		.getQueryData<Table[]>([QUERY.TABLE_LIST])
+		?.find((t) => t._id === params.id)?.columns;
 
-	const normalizedRow = rows.map(normalizeRows);
+	const { query, merge } = useQueryStore();
 
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
@@ -70,7 +60,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
 						<TableHead>ID</TableHead>
 
-						{columns.map(
+						{columns?.map(
 							(col) =>
 								col?.config?.display && (
 									<TableHead key={col._id}>
@@ -101,18 +91,18 @@ export function List({ columns, rows }: Props): React.ReactElement {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{normalizedRow.map(({ value, id }) => {
+					{rows.map((row) => {
 						return (
-							<TableRow key={id}>
-								<TableCell className="w-[100px]">{id}</TableCell>
-								{columns.map((col, index) => {
+							<TableRow key={row._id}>
+								<TableCell className="w-[100px]">{row._id}</TableCell>
+								{columns?.map((col, index) => {
 									const KEY = col.slug
 										?.concat('-')
 										.concat(String(index))
 										.concat('-')
-										.concat(id);
+										.concat(row._id);
 
-									if (!(col.slug in value))
+									if (!(col.slug in row))
 										return (
 											<TableCell
 												key={KEY}
@@ -130,14 +120,14 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												className="space-x-2"
 											>
 												<Badge variant="outline">
-													{value[col.slug]?.[slug_relation] ?? 'N/A'}
+													{row[col.slug]?.[slug_relation] ?? 'N/A'}
 												</Badge>
 											</TableCell>
 										);
 									}
 
 									if (col.type === COLUMN_TYPE.MULTI_RELATIONAL) {
-										const [first, ...rest] = value[col.slug];
+										const [first, ...rest] = row[col.slug];
 										const slug_relation = col.config.relation!.slug;
 										return (
 											<TableCell
@@ -157,14 +147,14 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.DROPDOWN) {
-										return <TableCell key={KEY}>{value[col.slug]}</TableCell>;
+										return <TableCell key={KEY}>{row[col.slug]}</TableCell>;
 									}
 
 									if (col.type === COLUMN_TYPE.DATE) {
 										return (
 											<TableCell key={KEY}>
 												{format(
-													new Date(value[col.slug]),
+													new Date(row[col.slug]),
 													col?.config?.format || 'dd/MM/yyyy',
 												)}
 											</TableCell>
@@ -172,11 +162,11 @@ export function List({ columns, rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.LONG_TEXT) {
-										return <TableCell key={KEY}>{value[col.slug]}</TableCell>;
+										return <TableCell key={KEY}>{row[col.slug]}</TableCell>;
 									}
 
 									if (col.type === COLUMN_TYPE.SHORT_TEXT) {
-										return <TableCell key={KEY}>{value[col.slug]}</TableCell>;
+										return <TableCell key={KEY}>{row[col.slug]}</TableCell>;
 									}
 								})}
 
@@ -198,7 +188,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 													navigate({
 														pathname: location.pathname
 															.concat('/view/')
-															.concat(id),
+															.concat(row._id),
 													});
 												}}
 											>
@@ -210,7 +200,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
 													setSearchParams((state) => {
-														state.set('row_id', id);
+														state.set('row_id', row._id);
 														return state;
 													});
 													editRowButtonRef?.current?.click();
@@ -224,7 +214,7 @@ export function List({ columns, rows }: Props): React.ReactElement {
 												className="inline-flex space-x-1 w-full"
 												onClick={() => {
 													setSearchParams((state) => {
-														state.set('row_id', id);
+														state.set('row_id', row._id);
 														return state;
 													});
 													removeRowButtonRef?.current?.click();

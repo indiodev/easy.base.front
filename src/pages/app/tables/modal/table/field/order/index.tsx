@@ -8,7 +8,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { useColumnFindManyByTableIdQuery } from '@query/column/find-many-by-table-id';
+import { tanstack } from '@libs/tanstack';
+import { QUERY } from '@models/base.model';
+import { Column } from '@models/column.model';
+import { Table } from '@models/table.model';
 import { Reorder, useDragControls } from 'framer-motion';
 
 import { GripVertical } from 'lucide-react';
@@ -22,20 +25,13 @@ const TableFieldOrder = React.forwardRef<
 	const [open, setOpen] = React.useState(false);
 	const params = useParams();
 
-	const [columns, setColumns] = React.useState<
-		{ _id: string; title: string }[]
-	>([]);
-
-	const { data: column_list, status: column_list_status } =
-		useColumnFindManyByTableIdQuery({
-			tableId: params?.id || '',
-		});
-
-	React.useEffect(() => {
-		if (column_list_status === 'success') {
-			setColumns(column_list.map(({ _id, title }) => ({ _id, title })));
-		}
-	}, [column_list, column_list_status]);
+	const [columns, setColumns] = React.useState<Column[]>(() => {
+		return (
+			tanstack
+				.getQueryData<Table[]>([QUERY.TABLE_LIST])
+				?.find((table) => table._id === params.id)?.columns ?? []
+		);
+	});
 
 	const control = useDragControls();
 

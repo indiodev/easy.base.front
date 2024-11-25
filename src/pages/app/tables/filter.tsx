@@ -6,21 +6,19 @@ import { RelationalField } from '@components/global/relational';
 import { Button } from '@components/ui/button';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
-import { COLUMN_TYPE } from '@models/base.model';
-import { Column } from '@models/column.model';
+import { tanstack } from '@libs/tanstack';
+import { COLUMN_TYPE, QUERY } from '@models/base.model';
+import { Table } from '@models/table.model';
 import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 export function Filter() {
-	const location = useLocation();
+	const params = useParams();
 	const query = useQueryStore();
 
-	const columns = location?.state?.table?.columns as Column[];
-
-	// const { data: columns, status: columns_status } =
-	// 	useColumnFindManyByTableIdQuery({
-	// 		tableId: params?.id || '',
-	// 	});
+	const columns = tanstack
+		.getQueryData<Table[]>([QUERY.TABLE_LIST])
+		?.find((t) => t._id === params.id)?.columns;
 
 	const form = useForm();
 

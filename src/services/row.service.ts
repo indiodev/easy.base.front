@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API } from '@libs/api';
+import { MetaResponse, QueryParams } from '@models/base.model';
 import { Row } from '@models/row.model';
 
 export default class RowService {
@@ -40,6 +42,18 @@ export default class RowService {
 		const { data } = await API.get(
 			`/tables/${payload.tableId}/row/${payload.id}`,
 		);
+		return data;
+	}
+
+	public async paginate({
+		id,
+		...query
+	}: QueryParams): Promise<MetaResponse<Row['value'][]>> {
+		const { data } = await API.get(`/tables/${id}/row/paginate`, {
+			params: {
+				...query,
+			},
+		});
 		return data;
 	}
 

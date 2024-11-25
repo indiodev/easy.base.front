@@ -13,8 +13,9 @@ import { useQueryStore } from '@hooks/use-query';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
+import { Table } from '@models/table.model';
 import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
-import { useTableShowQuery } from '@query/table/show.query';
+import { useRowPaginateQuery } from '@query/row/paginate.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
 import {
 	Filter as FilterLucideIcon,
@@ -39,13 +40,17 @@ export function Tables(): React.ReactElement {
 		query: { filter, ...query },
 		merge,
 	} = useQueryStore();
-
 	delete query.row_id;
 
-	const { data: table, status: table_status } = useTableShowQuery({
-		id: params.id!,
-		...query,
-	});
+	const table = tanstack
+		.getQueryData<Table[]>([QUERY.TABLE_LIST])
+		?.find((t) => t._id === params.id);
+
+	const { data: row_paginate, status: row_paginate_status } =
+		useRowPaginateQuery({
+			id: params.id!,
+			...query,
+		});
 
 	const { data: user, status: user_status } = useUserProfileQuery();
 
@@ -57,9 +62,9 @@ export function Tables(): React.ReactElement {
 			tanstack.refetchQueries({
 				queryKey: [QUERY.USER_PROFILE],
 			});
-			// tanstack.refetchQueries({
-			// 	queryKey: [QUERY.TABLE_SHOW, table?.params.id],
-			// });
+			tanstack.refetchQueries({
+				queryKey: [QUERY.ROW_PAGINATE, params.id!, query],
+			});
 		},
 		onError(error) {
 			console.error(error);
@@ -70,7 +75,7 @@ export function Tables(): React.ReactElement {
 
 	const nonExistUserLayout =
 		params?.id &&
-		table?.data?.config?.layout &&
+		table?.config?.layout &&
 		user_status === 'success' &&
 		!user?.config?.table?.[params!.id!]?.layout;
 
@@ -81,7 +86,7 @@ export function Tables(): React.ReactElement {
 
 	React.useEffect(() => {
 		if (nonExistUserLayout) {
-			setViewLayout(table?.data?.config?.layout || 'list');
+			setViewLayout(table?.config?.layout || 'list');
 			return;
 		}
 
@@ -93,9 +98,7 @@ export function Tables(): React.ReactElement {
 
 	return (
 		<div className="flex-1 w-full border border-blue-100 bg-blue-50/50 p-10 rounded-lg shadow-md flex flex-col gap-6">
-			<h2 className="text-3xl font-medium text-blue-600">
-				{table?.data?.title}
-			</h2>
+			<h2 className="text-3xl font-medium text-blue-600">{table?.title}</h2>
 
 			<Separator />
 
@@ -128,7 +131,7 @@ export function Tables(): React.ReactElement {
 
 							const state = {
 								...location.state,
-								table: { ...table?.data, rows: [] },
+								table: { ...table, rows: [] },
 							};
 
 							navigate(
@@ -171,7 +174,7 @@ export function Tables(): React.ReactElement {
 				<div className="flex-1 inline-flex space-x-2 items-center w-full justify-end">
 					<span>Resultados por página: </span>
 					<Select
-						disabled={table_status !== 'success'}
+						disabled={row_paginate_status !== 'success'}
 						defaultValue={query?.per_page || '10'}
 						onValueChange={(value) => {
 							merge({ per_page: Number(value), page: 1 });
@@ -196,24 +199,18 @@ export function Tables(): React.ReactElement {
 			<section className="inline-flex space-x-6">
 				{filter === 'active' && <Filter />}
 
-				{table_status === 'success' && viewLayout === 'list' && (
-					<List
-						columns={table?.data?.columns || []}
-						rows={table?.data?.rows || []}
-					/>
+				{row_paginate_status === 'success' && viewLayout === 'list' && (
+					<List rows={row_paginate?.data || []} />
 				)}
 
-				{table_status === 'success' && viewLayout === 'grid' && (
-					<Grid
-						columns={table?.data?.columns || []}
-						rows={table?.data?.rows || []}
-					/>
+				{row_paginate_status === 'success' && viewLayout === 'grid' && (
+					<Grid rows={row_paginate?.data || []} />
 				)}
 			</section>
 
 			<Pagination
-				meta={table?.meta}
-				isLoading={table_status === 'pending'}
+				meta={row_paginate?.meta}
+				isLoading={row_paginate_status === 'pending'}
 			/>
 		</div>
 	);

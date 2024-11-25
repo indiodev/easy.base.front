@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { API } from '@libs/api';
 import { MetaResponse } from '@models/base.model';
 import { Table } from '@models/table.model';
@@ -11,9 +12,7 @@ export default class TableService {
 	public async show({
 		id,
 		...query
-	}: { id?: string } & Partial<Record<string, number | string>>): Promise<
-		MetaResponse<Table>
-	> {
+	}: Record<string, any>): Promise<MetaResponse<Table>> {
 		const { data } = await API.get(`/tables/${id}`, {
 			params: {
 				...query,

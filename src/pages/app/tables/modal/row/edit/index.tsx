@@ -22,6 +22,7 @@ import { MultiRelationalField } from '@components/global/multi-relational';
 import { RelationalField } from '@components/global/relational';
 import { TextField } from '@components/global/text';
 import { cn } from '@libs/utils';
+import { Row } from '@models/row.model';
 import { Table } from '@models/table.model';
 import { QueryStore } from '@store/query.store';
 import { LoaderCircle } from 'lucide-react';
@@ -44,15 +45,19 @@ const EditRow = React.forwardRef<
 
 	const row_id = searchParams.get('row_id');
 
-	const table = tanstack.getQueryData<MetaResponse<Table>>([
-		QUERY.TABLE_SHOW,
+	const rows = tanstack.getQueryData<MetaResponse<Row['value'][]>>([
+		QUERY.ROW_PAGINATE,
 		params.id,
 		query,
 	])?.data;
 
-	const row = table?.rows?.find((row) => row._id === row_id)?.value;
+	const columns = tanstack
+		.getQueryData<Table[]>([QUERY.TABLE_LIST])
+		?.find((table) => table._id === params.id)?.columns;
 
-	const hasMoreThanFiveColumns = (table?.columns?.length ?? 0) > 5;
+	const row = rows?.find((row) => row._id === row_id);
+
+	const hasMoreThanFiveColumns = (columns?.length ?? 0) > 5;
 
 	const [open, setOpen] = React.useState(false);
 
@@ -74,7 +79,7 @@ const EditRow = React.forwardRef<
 	const form = useForm();
 
 	const onSubmit = form.handleSubmit((data) => {
-		for (const column of table?.columns ?? []) {
+		for (const column of columns ?? []) {
 			if (column.config?.required && !data[column.slug]) {
 				form.setError(column.slug, {
 					// message: 'Este campo é obrigatório',
@@ -146,10 +151,7 @@ const EditRow = React.forwardRef<
 						)}
 						onSubmit={onSubmit}
 					>
-						{table?.columns?.map((column) => {
-							// console.log(row, column);
-							// if (row && !(column.slug in row)) return null;
-
+						{columns?.map((column) => {
 							let defaultValue = row?.[column.slug!];
 
 							if (column?.type === COLUMN_TYPE.RELATIONAL) {
