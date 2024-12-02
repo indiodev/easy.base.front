@@ -1,8 +1,9 @@
-import { DateField } from '@components/global/date';
 import { DropdownField } from '@components/global/dropdown';
+import { FilterDateField } from '@components/global/filter-date';
 import { LongTextField } from '@components/global/long-text';
 import { MultiRelationalField } from '@components/global/multi-relational';
 import { RelationalField } from '@components/global/relational';
+import { ShortTextField } from '@components/global/short-text';
 import { Button } from '@components/ui/button';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
@@ -14,7 +15,7 @@ import { useParams } from 'react-router-dom';
 
 export function Filter() {
 	const params = useParams();
-	const query = useQueryStore();
+	const { merge } = useQueryStore();
 
 	const columns = tanstack
 		.getQueryData<Table[]>([QUERY.TABLE_LIST])
@@ -35,9 +36,7 @@ export function Filter() {
 			{} as { [key: string]: string },
 		);
 
-		query.merge(payload);
-
-		console.log(payload);
+		merge(payload);
 	});
 
 	return (
@@ -71,7 +70,7 @@ export function Filter() {
 
 						if (column?.type === COLUMN_TYPE.DATE) {
 							return (
-								<DateField
+								<FilterDateField
 									key={column._id}
 									column={column}
 								/>
@@ -96,7 +95,7 @@ export function Filter() {
 
 						if (column?.type === COLUMN_TYPE.SHORT_TEXT)
 							return (
-								<LongTextField
+								<ShortTextField
 									key={column._id}
 									column={column}
 								/>

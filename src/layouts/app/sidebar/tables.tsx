@@ -22,7 +22,7 @@ const Tables = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof SidebarMenuButton>
 >(({ className, ...props }, ref) => {
 	const navigate = useNavigate();
-	const query = QueryStore();
+	const { merge } = QueryStore();
 
 	const { data: table_list, status: table_list_status } = useTableListQuery();
 
@@ -80,7 +80,7 @@ const Tables = React.forwardRef<
 												},
 											);
 
-											query.merge(INITIAL_QUERY_STATE);
+											merge(INITIAL_QUERY_STATE);
 										}}
 										className="font-normal"
 									>

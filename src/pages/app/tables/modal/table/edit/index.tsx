@@ -30,7 +30,7 @@ import { useTableUpdateMutation } from '@mutation/table/update.mutation';
 import { LoaderCircle, PencilLine } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
 
 const EditTable = React.forwardRef<
@@ -39,9 +39,6 @@ const EditTable = React.forwardRef<
 >(({ ...props }, ref) => {
 	const [open, setOpen] = React.useState(false);
 	const params = useParams();
-
-	const location = useLocation();
-	const navigate = useNavigate();
 
 	const table = tanstack
 		.getQueryData<Table[]>([QUERY.TABLE_LIST])
@@ -53,11 +50,6 @@ const EditTable = React.forwardRef<
 
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
-		defaultValues: {
-			title: table?.title || '',
-			description: table?.description || '',
-			// logo: table_state?.logo || '',
-		},
 	});
 
 	const { mutateAsync: update_table, status: update_table_status } =
@@ -69,16 +61,10 @@ const EditTable = React.forwardRef<
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_LIST],
 				});
-				navigate(
-					{ pathname: location.pathname },
-					{
-						state: {
-							...location.state,
-							table: data,
-						},
-					},
-				);
+
 				setOpen((state) => !state);
+				form.reset();
+				console.info({ data });
 			},
 		});
 
@@ -99,8 +85,8 @@ const EditTable = React.forwardRef<
 			modal
 			open={open}
 			onOpenChange={(o) => {
-				form.reset();
 				setOpen(o);
+				form.reset();
 			}}
 		>
 			<DialogTrigger

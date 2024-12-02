@@ -20,11 +20,11 @@ import { DropdownField } from '@components/global/dropdown';
 import { LongTextField } from '@components/global/long-text';
 import { MultiRelationalField } from '@components/global/multi-relational';
 import { RelationalField } from '@components/global/relational';
-import { TextField } from '@components/global/text';
+import { ShortTextField } from '@components/global/short-text';
+import { useQueryStore } from '@hooks/use-query';
 import { cn } from '@libs/utils';
 import { Row } from '@models/row.model';
 import { Table } from '@models/table.model';
-import { QueryStore } from '@store/query.store';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -36,8 +36,7 @@ const EditRow = React.forwardRef<
 >(({ ...props }, ref) => {
 	const location = useLocation();
 	const params = useParams();
-	const { query } = QueryStore();
-	delete query?.filter;
+	const { query } = useQueryStore();
 
 	const [searchParams, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
@@ -71,6 +70,13 @@ const EditRow = React.forwardRef<
 				tanstack.refetchQueries({
 					queryKey: [QUERY.TABLE_SHOW, params.id],
 				});
+
+				if (searchParams.has('row_id')) {
+					setSearchParams((state) => {
+						state.delete('row_id');
+						return state;
+					});
+				}
 
 				form.reset();
 			},
@@ -218,7 +224,7 @@ const EditRow = React.forwardRef<
 								);
 
 							return (
-								<TextField
+								<ShortTextField
 									key={column._id}
 									column={column}
 									defaultValue={row?.[column.slug!]}

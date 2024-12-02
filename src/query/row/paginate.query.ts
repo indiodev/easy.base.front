@@ -16,8 +16,6 @@ async function fetcher(
 
 export function useRowPaginateQuery({
 	id,
-	row_id,
-	filter,
 	...query
 }: QueryParams): UseQueryResult<
 	MetaResponse<Row['value'][]>,

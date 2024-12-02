@@ -24,7 +24,7 @@ import {
 	Search,
 } from 'lucide-react';
 import React from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Filter } from './filter';
 import { Grid } from './layout/grid';
 import { List } from './layout/list';
@@ -33,14 +33,8 @@ import { Setting } from './setting';
 
 export function Tables(): React.ReactElement {
 	const params = useParams();
-	const location = useLocation();
-	const navigate = useNavigate();
 
-	const {
-		query: { filter, ...query },
-		merge,
-	} = useQueryStore();
-	delete query.row_id;
+	const { query, merge, filter } = useQueryStore();
 
 	const table = tanstack
 		.getQueryData<Table[]>([QUERY.TABLE_LIST])
@@ -128,22 +122,6 @@ export function Tables(): React.ReactElement {
 							if (filter === 'inactive') {
 								merge({ filter: 'active' });
 							}
-
-							const state = {
-								...location.state,
-								table: { ...table, rows: [] },
-							};
-
-							navigate(
-								{
-									pathname: location.pathname,
-									search: location.search,
-								},
-								{
-									replace: true,
-									state,
-								},
-							);
 						}}
 					>
 						<FilterLucideIcon className="w-5 h-5" />

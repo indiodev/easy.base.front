@@ -2,7 +2,13 @@
 import { QueryStore } from '@store/query.store';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-export function useQueryStore() {
+interface QueryState {
+	filter: 'active' | 'inactive';
+	query: Record<string, any>;
+	merge(query?: Record<string, any>): void;
+}
+
+export function useQueryStore(): QueryState {
 	const store = QueryStore();
 	const location = useLocation();
 	const [search, setSearch] = useSearchParams(
@@ -14,5 +20,8 @@ export function useQueryStore() {
 		setSearch(new URLSearchParams(mergedQuery));
 	}
 
-	return { query: store.query, merge };
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const { filter, row_id, ...query } = store.query;
+
+	return { filter, query, merge };
 }

@@ -82,20 +82,14 @@ const EditField = React.forwardRef<
 		useColumnUpdateMutation({
 			onSuccess() {
 				setOpen((state) => !state);
-				tanstack.refetchQueries({
-					queryKey: [QUERY.TABLE_SHOW, params.id],
-				});
-				tanstack.refetchQueries({
-					queryKey: [QUERY.COLUMN_FIND_MANY_BY_TABLE_ID, params.id],
-				});
-				tanstack.refetchQueries({
-					queryKey: [
-						QUERY.COLUMN_SHOW,
-						searchParams?.get('field_id'),
-						params.id,
-					],
-				});
+				// tanstack.refetchQueries({
+				// 	queryKey: [QUERY.TABLE_LIST],
+				// });
+
 				form.reset();
+				// REVER UMA FORMA MELHOR PARA QUE
+				// SE LISTE A NOVA COLUNA NA TABELA
+				location.reload();
 			},
 			onError(error) {
 				console.error(error);

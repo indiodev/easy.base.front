@@ -69,16 +69,15 @@ const NewField = React.forwardRef<
 	const { mutateAsync: create_column, status: create_column_status } =
 		useColumnCreateMutation({
 			onSuccess() {
-				tanstack.refetchQueries({
-					queryKey: [QUERY.TABLE_SHOW, params.id],
-				});
-
-				tanstack.refetchQueries({
-					queryKey: [QUERY.COLUMN_FIND_MANY_BY_TABLE_ID, params.id],
-				});
+				// tanstack.refetchQueries({
+				// 	queryKey: [QUERY.TABLE_LIST],
+				// });
 
 				form.reset();
 				setOpen((state) => !state);
+				// REVER UMA FORMA MELHOR PARA QUE
+				// SE LISTE A NOVA COLUNA NA TABELA
+				location.reload();
 			},
 			onError(error) {
 				console.error(error);

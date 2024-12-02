@@ -4,7 +4,7 @@ import { DropdownField } from '@components/global/dropdown';
 import { LongTextField } from '@components/global/long-text';
 import { MultiRelationalField } from '@components/global/multi-relational';
 import { RelationalField } from '@components/global/relational';
-import { TextField } from '@components/global/text';
+import { ShortTextField } from '@components/global/short-text';
 import { Button } from '@components/ui/button';
 import {
 	Dialog,
@@ -35,7 +35,6 @@ const NewRow = React.forwardRef<
 	const [open, setOpen] = React.useState(false);
 	const params = useParams();
 	const { query } = useQueryStore();
-	delete query.filter;
 
 	const columns = tanstack
 		.getQueryData<Table[]>([QUERY.TABLE_LIST])
@@ -52,7 +51,7 @@ const NewRow = React.forwardRef<
 				tanstack.refetchQueries({
 					queryKey: [QUERY.ROW_PAGINATE, params?.id!, query],
 				});
-				console.info(data);
+				console.info({ data });
 				setOpen(false);
 			},
 		});
@@ -165,7 +164,7 @@ const NewRow = React.forwardRef<
 
 							if (column?.type === COLUMN_TYPE.SHORT_TEXT)
 								return (
-									<TextField
+									<ShortTextField
 										key={column._id}
 										column={column}
 									/>

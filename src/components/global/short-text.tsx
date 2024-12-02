@@ -10,7 +10,7 @@ import { cn } from '@libs/utils';
 import { Column } from '@models/column.model';
 import { useFormContext } from 'react-hook-form';
 
-export function TextField({
+export function ShortTextField({
 	column,
 	defaultValue,
 }: {
