@@ -1,3 +1,4 @@
+import { OrderColumn } from '@components/global/order-column';
 import { Button } from '@components/ui/button';
 import {
 	Dialog,
@@ -12,9 +13,8 @@ import { tanstack } from '@libs/tanstack';
 import { QUERY } from '@models/base.model';
 import { Column } from '@models/column.model';
 import { Table } from '@models/table.model';
-import { Reorder, useDragControls } from 'framer-motion';
+import { AnimatePresence, Reorder } from 'framer-motion';
 
-import { GripVertical } from 'lucide-react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -33,8 +33,6 @@ const TableFieldOrder = React.forwardRef<
 		);
 	});
 
-	const control = useDragControls();
-
 	return (
 		<Dialog
 			modal
@@ -48,7 +46,7 @@ const TableFieldOrder = React.forwardRef<
 				ref={ref}
 				{...props}
 			/>
-			<DialogContent className="py-4 px-6">
+			<DialogContent className="py-4 px-6 ">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
 						Ordenar campos da tabela
@@ -58,28 +56,21 @@ const TableFieldOrder = React.forwardRef<
 					</DialogDescription>
 				</DialogHeader>
 
-				<section className=" space-y-5">
+				<section className=" space-y-5 ">
 					<Reorder.Group
 						axis="y"
-						values={columns}
 						onReorder={setColumns}
-						className="flex flex-col space-y-1"
+						values={columns}
+						className="flex flex-col space-y-1 select-none"
 					>
-						{columns.map((column) => (
-							<Reorder.Item
-								key={column._id}
-								dragListener={false}
-								value={column}
-								className="inline-flex justify-between px-4 py-2 w-full bg-blue-500 rounded-lg text-white font-semibold"
-								dragControls={control}
-							>
-								<span>{column.title}</span>
-								<GripVertical
-									className="cursor-move"
-									onPointerDown={(event) => control.start(event)}
+						<AnimatePresence initial={false}>
+							{columns.map((column) => (
+								<OrderColumn
+									column={column}
+									key={column._id}
 								/>
-							</Reorder.Item>
-						))}
+							))}
+						</AnimatePresence>
 					</Reorder.Group>
 
 					<div className="inline-flex justify-end w-full">

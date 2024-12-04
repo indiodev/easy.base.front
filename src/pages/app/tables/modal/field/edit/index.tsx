@@ -36,7 +36,6 @@ import { Separator } from '@components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { tanstack } from '@libs/tanstack';
 import { COLUMN_FORMAT, COLUMN_TYPE, QUERY } from '@models/base.model';
-import { Column } from '@models/column.model';
 import { Table } from '@models/table.model';
 import { useColumnUpdateMutation } from '@mutation/column/update.mutation';
 import { LoaderCircle, Plus, Trash } from 'lucide-react';
@@ -108,23 +107,23 @@ const EditField = React.forwardRef<
 		});
 	});
 
-	const setConfig = React.useCallback(
-		(config: Column['config']) => {
-			form.setValue('config.options', config.options);
-			form.setValue('config.default', config.default);
-			form.setValue('config.display', Boolean(config.display));
-			form.setValue('config.filter', Boolean(config.filter));
-			form.setValue('config.required', Boolean(config.required));
-			form.setValue('config.format', config.format);
-		},
-		[form],
-	);
+	// const setConfig = React.useCallback(
+	// 	(config: Column['config']) => {
+	// 		form.setValue('config.options', config.options);
+	// 		form.setValue('config.default', config.default);
+	// 		form.setValue('config.display', Boolean(config.display));
+	// 		form.setValue('config.filter', Boolean(config.filter));
+	// 		form.setValue('config.required', Boolean(config.required));
+	// 		form.setValue('config.format', config.format);
+	// 	},
+	// 	[form],
+	// );
 
-	React.useEffect(() => {
-		if (column) {
-			setConfig(column.config);
-		}
-	}, [column, setConfig]);
+	// React.useEffect(() => {
+	// 	if (column) {
+	// 		setConfig(column.config);
+	// 	}
+	// }, [column, setConfig]);
 
 	return (
 		<Dialog
@@ -468,7 +467,7 @@ const EditField = React.forwardRef<
 							<FormField
 								control={form.control}
 								name="config.filter"
-								defaultValue={form.watch('config.filter')}
+								defaultValue={Boolean(column?.config?.filter)}
 								render={({ field }) => (
 									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 										<div className="space-y-0.5">
@@ -527,7 +526,7 @@ const EditField = React.forwardRef<
 							<FormField
 								control={form.control}
 								name="config.required"
-								defaultValue={form.watch('config.required')}
+								defaultValue={Boolean(column?.config?.required)}
 								render={({ field }) => (
 									<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 										<div className="space-y-0.5">

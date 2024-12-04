@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { TableOrderColumn } from '@components/global/table-order-column';
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import {
@@ -23,6 +24,7 @@ import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { Row } from '@models/row.model';
 import { Table } from '@models/table.model';
 import { format } from 'date-fns';
+import { AnimatePresence, Reorder } from 'framer-motion';
 import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
 import {
@@ -44,9 +46,13 @@ export function List({ rows }: Props): React.ReactElement {
 		new URLSearchParams(location?.search),
 	);
 
-	const columns = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((t) => t._id === params.id)?.columns;
+	const [columns, setColumns] = React.useState(() => {
+		return (
+			tanstack
+				.getQueryData<Table[]>([QUERY.TABLE_LIST])
+				?.find((t) => t._id === params.id)?.columns ?? []
+		);
+	});
 
 	const { query, merge } = useQueryStore();
 
@@ -57,44 +63,56 @@ export function List({ rows }: Props): React.ReactElement {
 		<React.Fragment>
 			<Root>
 				<TableHeader>
-					<TableRow className="bg-blue-100/30 hover:bg-blue-100/30">
-						<TableHead>ID</TableHead>
+					<Reorder.Group
+						as="tr"
+						axis="x"
+						onReorder={setColumns}
+						values={columns}
+						className="bg-blue-100/30 hover:bg-blue-100/30"
+					>
+						<TableHead className="w-[100px]">ID</TableHead>
 
-						{columns?.map(
-							(col) =>
-								col?.config?.display && (
-									<TableHead key={col._id}>
-										<div className="inline-flex items-center gap-1">
-											<Button
-												onClick={() => {
-													const order_slug = 'order-'.concat(col.slug);
-													const has_order_desc_slug =
-														query?.[order_slug] === '-1';
+						<AnimatePresence initial={false}>
+							{columns?.map(
+								(col) =>
+									col?.config?.display && (
+										<TableOrderColumn
+											key={col._id}
+											column={col}
+										>
+											<div className="inline-flex items-center space-x-1">
+												<Button
+													onClick={() => {
+														const order_slug = 'order-'.concat(col.slug);
+														const has_order_desc_slug =
+															query?.[order_slug] === '-1';
 
-													if (has_order_desc_slug) {
-														merge({ [order_slug]: '1' });
-														return;
-													}
+														if (has_order_desc_slug) {
+															merge({ [order_slug]: '1' });
+															return;
+														}
 
-													merge({ [order_slug]: '-1' });
-												}}
-												className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300"
-											>
-												<ChevronsLeftRight className="w-4 h-4 rotate-90" />
-											</Button>
-											<span>{col.title}</span>
-										</div>
-									</TableHead>
-								),
-						)}
-						<TableHead></TableHead>
-					</TableRow>
+														merge({ [order_slug]: '-1' });
+													}}
+													className="p-0 bg-transparent shadow-none text-gray-600 hover:bg-transparent border border-transparent hover:border-gray-300"
+												>
+													<ChevronsLeftRight className="w-4 h-4 rotate-90" />
+												</Button>
+												<span>{col.title}</span>
+											</div>
+										</TableOrderColumn>
+									),
+							)}
+							<TableHead className="w-[80px]"></TableHead>
+						</AnimatePresence>
+					</Reorder.Group>
 				</TableHeader>
 				<TableBody>
 					{rows.map((row) => {
 						return (
 							<TableRow key={row._id}>
 								<TableCell className="w-[100px]">{row._id}</TableCell>
+
 								{columns?.map((col, index) => {
 									const KEY = col.slug
 										?.concat('-')
@@ -103,22 +121,12 @@ export function List({ rows }: Props): React.ReactElement {
 										.concat(row._id);
 
 									if (!(col.slug in row))
-										return (
-											<TableCell
-												key={KEY}
-												className="space-x-2"
-											>
-												N/A
-											</TableCell>
-										);
+										return <TableCell key={KEY}>N/A</TableCell>;
 
 									if (col.type === COLUMN_TYPE.RELATIONAL) {
 										const slug_relation = col.config.relation!.slug;
 										return (
-											<TableCell
-												key={KEY}
-												className="space-x-2"
-											>
+											<TableCell key={KEY}>
 												<Badge variant="outline">
 													{row[col.slug]?.[slug_relation] ?? 'N/A'}
 												</Badge>
@@ -130,10 +138,7 @@ export function List({ rows }: Props): React.ReactElement {
 										const [first, ...rest] = row[col.slug];
 										const slug_relation = col.config.relation!.slug;
 										return (
-											<TableCell
-												key={KEY}
-												className="space-x-2"
-											>
+											<TableCell key={KEY}>
 												<Badge variant="outline">
 													{first?.[slug_relation] || 'N/A'}
 												</Badge>
