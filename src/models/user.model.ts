@@ -17,8 +17,12 @@ export interface User {
 
 //name, email,
 
-export interface UserTableUpdate {
+export interface UserUpdateTable {
 	// id: string;
 	tableId: string;
 	layout: 'grid' | 'list';
+	column_order?: {
+		root?: string[];
+		form?: string[];
+	};
 }

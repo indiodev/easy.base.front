@@ -14,7 +14,7 @@ import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
 import { Table } from '@models/table.model';
-import { useUserTableLayoutMutation } from '@mutation/user/table-layout.mutation';
+import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
 import { useRowPaginateQuery } from '@query/row/paginate.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
 import {
@@ -49,9 +49,9 @@ export function Tables(): React.ReactElement {
 	const { data: user, status: user_status } = useUserProfileQuery();
 
 	const {
-		mutateAsync: update_table_layout,
+		mutateAsync: update_table,
 		// status: update_table_layout_status,
-	} = useUserTableLayoutMutation({
+	} = useUserUpdateTableMutation({
 		onSuccess() {
 			tanstack.refetchQueries({
 				queryKey: [QUERY.USER_PROFILE],
@@ -131,7 +131,7 @@ export function Tables(): React.ReactElement {
 					<Button
 						className="bg-transparent hover:bg-transparent border shadow-none"
 						onClick={() => {
-							update_table_layout({
+							update_table({
 								layout: viewLayout === 'list' ? 'grid' : 'list',
 								tableId: params?.id,
 							});

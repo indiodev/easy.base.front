@@ -2,11 +2,11 @@ import type { UseMutationResult } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
-import { UserTableUpdate } from '@models/user.model';
+import { UserUpdateTable } from '@models/user.model';
 import { Service } from '@services/index';
 
-async function mutator(payload: Partial<UserTableUpdate>): Promise<void> {
-	await Service.user.tableLayout(payload);
+async function mutator(payload: Partial<UserUpdateTable>): Promise<void> {
+	await Service.user.updateTable(payload);
 }
 
 interface Props {
@@ -14,13 +14,13 @@ interface Props {
 	onError: (error: Error | AxiosError) => void;
 }
 
-export function useUserTableLayoutMutation({
+export function useUserUpdateTableMutation({
 	onSuccess,
 	onError,
 }: Props): UseMutationResult<
 	void,
 	Error | AxiosError,
-	Partial<UserTableUpdate>
+	Partial<UserUpdateTable>
 > {
 	return useMutation({
 		mutationFn: mutator,

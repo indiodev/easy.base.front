@@ -8,19 +8,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import { tanstack } from '@libs/tanstack';
-import { COLUMN_TYPE, QUERY } from '@models/base.model';
+import { useTableColumns } from '@hooks/use-table-columns';
+import { COLUMN_TYPE } from '@models/base.model';
 import { Row } from '@models/row.model';
-import { Table } from '@models/table.model';
 import { format } from 'date-fns';
 import { Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
-import {
-	useLocation,
-	useNavigate,
-	useParams,
-	useSearchParams,
-} from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
 	rows: Row['value'][];
@@ -29,19 +23,16 @@ interface Props {
 export function Grid({ rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const params = useParams();
 
 	const [, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
 
-	const columns = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((t) => t._id === params.id)?.columns;
-
 	const editFieldButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
+
+	const { columns } = useTableColumns();
 
 	return (
 		<main className="flex-1 w-full flex flex-col  rounded-md gap-4">

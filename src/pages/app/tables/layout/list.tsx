@@ -19,10 +19,11 @@ import {
 	TableRow,
 } from '@components/ui/table';
 import { useQueryStore } from '@hooks/use-query';
+import { useTableColumns } from '@hooks/use-table-columns';
 import { tanstack } from '@libs/tanstack';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { Row } from '@models/row.model';
-import { Table } from '@models/table.model';
+import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
 import { format } from 'date-fns';
 import { AnimatePresence, Reorder } from 'framer-motion';
 import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
@@ -39,25 +40,33 @@ interface Props {
 }
 
 export function List({ rows }: Props): React.ReactElement {
+	const params = useParams();
 	const navigate = useNavigate();
 	const location = useLocation();
-	const params = useParams();
 	const [, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
 	);
-
-	const [columns, setColumns] = React.useState(() => {
-		return (
-			tanstack
-				.getQueryData<Table[]>([QUERY.TABLE_LIST])
-				?.find((t) => t._id === params.id)?.columns ?? []
-		);
-	});
 
 	const { query, merge } = useQueryStore();
 
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
+
+	const { columns, setColumns } = useTableColumns();
+
+	const { mutateAsync: update_table } = useUserUpdateTableMutation({
+		onSuccess() {
+			tanstack.refetchQueries({
+				queryKey: [QUERY.USER_PROFILE],
+			});
+			// tanstack.refetchQueries({
+			// 	queryKey: [QUERY.ROW_PAGINATE, params.id!, query],
+			// });
+		},
+		onError(error) {
+			console.error(error);
+		},
+	});
 
 	return (
 		<React.Fragment>
@@ -66,7 +75,15 @@ export function List({ rows }: Props): React.ReactElement {
 					<Reorder.Group
 						as="tr"
 						axis="x"
-						onReorder={setColumns}
+						onReorder={(order) => {
+							setColumns(order);
+							update_table({
+								column_order: {
+									root: order.map((item) => item._id),
+								},
+								tableId: params.id!,
+							});
+						}}
 						values={columns}
 						className="bg-blue-100/30 hover:bg-blue-100/30"
 					>

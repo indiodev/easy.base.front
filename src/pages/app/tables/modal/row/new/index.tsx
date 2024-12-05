@@ -17,10 +17,10 @@ import {
 } from '@components/ui/dialog';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
+import { useTableColumns } from '@hooks/use-table-columns';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
 import { useRowCreateMutation } from '@mutation/row/new.mutation';
 
 import { LoaderCircle } from 'lucide-react';
@@ -36,11 +36,7 @@ const NewRow = React.forwardRef<
 	const params = useParams();
 	const { query } = useQueryStore();
 
-	const columns = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((table) => table._id === params.id)?.columns;
-
-	const hasMoreThanFiveColumns = (columns?.length ?? 0) > 5;
+	const { columns, hasMoreThanFiveColumns } = useTableColumns();
 
 	const { mutateAsync: create_row, status: create_row_status } =
 		useRowCreateMutation({

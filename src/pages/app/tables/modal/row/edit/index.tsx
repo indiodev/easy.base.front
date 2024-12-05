@@ -22,9 +22,9 @@ import { MultiRelationalField } from '@components/global/multi-relational';
 import { RelationalField } from '@components/global/relational';
 import { ShortTextField } from '@components/global/short-text';
 import { useQueryStore } from '@hooks/use-query';
+import { useTableColumns } from '@hooks/use-table-columns';
 import { cn } from '@libs/utils';
 import { Row } from '@models/row.model';
-import { Table } from '@models/table.model';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -50,13 +50,9 @@ const EditRow = React.forwardRef<
 		query,
 	])?.data;
 
-	const columns = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((table) => table._id === params.id)?.columns;
+	const { columns, hasMoreThanFiveColumns } = useTableColumns();
 
 	const row = rows?.find((row) => row._id === row_id);
-
-	const hasMoreThanFiveColumns = (columns?.length ?? 0) > 5;
 
 	const [open, setOpen] = React.useState(false);
 

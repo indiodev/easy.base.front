@@ -1,5 +1,5 @@
 import { API } from '@libs/api';
-import { User, UserTableUpdate } from '@models/user.model';
+import { User, UserUpdateTable } from '@models/user.model';
 
 export default class UserService {
 	public async profile(): Promise<User> {
@@ -12,8 +12,8 @@ export default class UserService {
 		return data;
 	}
 
-	public async tableLayout(payload: Partial<UserTableUpdate>): Promise<void> {
-		await API.patch('/users/table-layout', payload);
+	public async updateTable(payload: Partial<UserUpdateTable>): Promise<void> {
+		await API.patch('/users/table', payload);
 	}
 }
 //

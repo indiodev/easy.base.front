@@ -7,19 +7,12 @@ import { ShortTextField } from '@components/global/short-text';
 import { Button } from '@components/ui/button';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
-import { tanstack } from '@libs/tanstack';
-import { COLUMN_TYPE, QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
+import { useTableColumns } from '@hooks/use-table-columns';
+import { COLUMN_TYPE } from '@models/base.model';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 export function Filter() {
-	const params = useParams();
 	const { merge } = useQueryStore();
-
-	const columns = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((t) => t._id === params.id)?.columns;
 
 	const form = useForm();
 
@@ -38,6 +31,8 @@ export function Filter() {
 
 		merge(payload);
 	});
+
+	const { columns } = useTableColumns();
 
 	return (
 		<Form {...form}>

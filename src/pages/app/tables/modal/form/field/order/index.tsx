@@ -2,18 +2,18 @@ import { OrderColumn } from '@components/global/order-column';
 import { Button } from '@components/ui/button';
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
+import { useTableColumns } from '@hooks/use-table-columns';
 import { tanstack } from '@libs/tanstack';
 import { QUERY } from '@models/base.model';
-import { Column } from '@models/column.model';
-import { Table } from '@models/table.model';
+import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
 import { AnimatePresence, Reorder } from 'framer-motion';
+import { LoaderCircle } from 'lucide-react';
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -22,16 +22,26 @@ const FormFieldOrder = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
 >(({ ...props }, ref) => {
-	const [open, setOpen] = React.useState(false);
 	const params = useParams();
+	const [open, setOpen] = React.useState(false);
 
-	const [columns, setColumns] = React.useState<Column[]>(() => {
-		return (
-			tanstack
-				.getQueryData<Table[]>([QUERY.TABLE_LIST])
-				?.find((table) => table._id === params.id)?.columns ?? []
-		);
-	});
+	const { columns, setColumns } = useTableColumns();
+
+	const { mutateAsync: update_table, status: update_table_status } =
+		useUserUpdateTableMutation({
+			onSuccess() {
+				tanstack.refetchQueries({
+					queryKey: [QUERY.USER_PROFILE],
+				});
+				setOpen(false);
+				// tanstack.refetchQueries({
+				// 	queryKey: [QUERY.ROW_PAGINATE, params.id!, query],
+				// });
+			},
+			onError(error) {
+				console.error(error);
+			},
+		});
 
 	return (
 		<Dialog
@@ -57,7 +67,18 @@ const FormFieldOrder = React.forwardRef<
 					</DialogDescription>
 				</DialogHeader>
 
-				<section className=" space-y-5">
+				<form
+					className=" space-y-5"
+					onSubmit={(event) => {
+						event.preventDefault();
+						update_table({
+							column_order: {
+								form: columns?.map((item) => item._id),
+							},
+							tableId: params.id!,
+						});
+					}}
+				>
 					<Reorder.Group
 						axis="y"
 						onReorder={setColumns}
@@ -74,13 +95,14 @@ const FormFieldOrder = React.forwardRef<
 						</AnimatePresence>
 					</Reorder.Group>
 					<div className="inline-flex justify-end w-full">
-						<DialogClose asChild>
-							<Button className="bg-blue-500 hover:bg-blue-500 text-white">
-								Salvar
-							</Button>
-						</DialogClose>
+						<Button className="bg-blue-500 text-neutral-50 hover:bg-blue-600">
+							{update_table_status === 'pending' && (
+								<LoaderCircle className="w-6 h-6 animate-spin" />
+							)}
+							{!(update_table_status === 'pending') && <span>Confirmar</span>}
+						</Button>
 					</div>
-				</section>
+				</form>
 			</DialogContent>
 		</Dialog>
 	);
