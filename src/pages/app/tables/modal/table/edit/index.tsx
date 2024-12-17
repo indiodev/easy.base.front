@@ -8,6 +8,7 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 
+import { AdministratorField } from '@components/global/administrator';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Button } from '@components/ui/button';
 import {
@@ -17,8 +18,16 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
+	FormMessage,
 } from '@components/ui/form';
 import { Input } from '@components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@components/ui/select';
 import { Switch } from '@components/ui/switch';
 import { Textarea } from '@components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -71,6 +80,7 @@ const EditTable = React.forwardRef<
 	const onSubmit = form.handleSubmit(({ logo, ...data }) => {
 		console.info({
 			logo,
+			...data,
 		});
 
 		update_table({
@@ -94,7 +104,7 @@ const EditTable = React.forwardRef<
 				ref={ref}
 				{...props}
 			/>
-			<DialogContent className="py-4 px-6">
+			<DialogContent className="py-4 px-6 border border-red-800 max-w-3xl w-full">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
 						Editar tabela
@@ -239,6 +249,79 @@ const EditTable = React.forwardRef<
 								</FormItem>
 							)}
 						/>
+
+						<FormField
+							control={form.control}
+							name="config.visibility"
+							defaultValue={table?.config?.visibility ?? 'PUBLIC'}
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Tipo</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl>
+											<SelectTrigger className="focus:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
+												<SelectValue
+													placeholder="Selecione um tipo para a coluna"
+													className="placeholder:text-gray-100"
+												/>
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value={'PUBLIC'}>Publico</SelectItem>
+											<SelectItem value={'FOR_LOGGED_IN'}>
+												Apenas usuários logados
+											</SelectItem>
+											<SelectItem value={'FOR_ADMINISTRATORS'}>
+												Apenas Administradores
+											</SelectItem>
+										</SelectContent>
+									</Select>
+
+									<FormMessage className="text-right" />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="config.collaboration"
+							defaultValue={table?.config?.collaboration ?? 'RESTRICTED'}
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Tipo</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl>
+											<SelectTrigger className="focus:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white">
+												<SelectValue
+													placeholder="Selecione um tipo para a coluna"
+													className="placeholder:text-gray-100"
+												/>
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<SelectItem value={'RESTRICTED'}>
+												Restrita, todas as contribuições devem ser revisadas e
+												precisam de aprovação
+											</SelectItem>
+											<SelectItem value={'OPEN'}>
+												Aberta, apenas as contribuições de edição e exclusão
+												precisam de aprovação
+											</SelectItem>
+										</SelectContent>
+									</Select>
+
+									<FormMessage className="text-right" />
+								</FormItem>
+							)}
+						/>
+
+						<AdministratorField />
 
 						<div className="inline-flex justify-end w-full gap-4 pt-4">
 							<Button className="bg-blue-700 hover:bg-blue-600 border border-transparent py-2 px-3 rounded-lg text-neutral-50 max-w-40 w-full">

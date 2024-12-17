@@ -10,6 +10,9 @@ export interface Table {
 	identifier: string;
 	config?: {
 		layout?: 'grid' | 'list';
+		visibility?: 'PUBLIC' | 'FOR_LOGGED_IN' | 'FOR_ADMINISTRATORS';
+		collaboration?: 'RESTRICTED' | 'OPEN';
+		administrators?: string[];
 	};
 	category: string | null;
 	data_collection: string;

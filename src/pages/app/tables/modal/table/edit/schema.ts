@@ -18,6 +18,11 @@ export const Schema = z.object({
 			.boolean()
 			.default(false)
 			.transform((v) => (v ? 'grid' : 'list')),
+		visibility: z
+			.enum(['PUBLIC', 'FOR_LOGGED_IN', 'FOR_ADMINISTRATORS'])
+			.default('PUBLIC'),
+		collaboration: z.enum(['RESTRICTED', 'OPEN']).default('RESTRICTED'),
+		administrators: z.array(z.string()).default([]),
 	}),
 });
 
