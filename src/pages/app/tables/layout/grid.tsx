@@ -40,6 +40,7 @@ export function Grid({ rows }: Props): React.ReactElement {
 
 	const { findManyColumnByTableId } = useTable();
 	const columns = findManyColumnByTableId(params.id!);
+	
 	return (
 		<main className="flex-1 w-full flex flex-col  rounded-md gap-4">
 			<section className="grid grid-cols-4 gap-4">
