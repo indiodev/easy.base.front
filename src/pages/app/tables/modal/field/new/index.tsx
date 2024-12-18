@@ -33,9 +33,8 @@ import {
 
 import { Separator } from '@components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { tanstack } from '@libs/tanstack';
-import { COLUMN_TYPE, QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
+import { useTable } from '@hooks/use-table';
+import { COLUMN_TYPE } from '@models/base.model';
 import { useColumnCreateMutation } from '@mutation/column/new.mutation';
 import { LoaderCircle, Plus, Trash } from 'lucide-react';
 import React from 'react';
@@ -54,11 +53,10 @@ const NewField = React.forwardRef<
 		resolver: zodResolver(Schema),
 	});
 
-	const tables = tanstack.getQueryData<Table[]>([QUERY.TABLE_LIST]);
+	const { tables, findTableByCollection } = useTable();
 
-	const collection = tables?.find(
-		(table) =>
-			table.data_collection === form.watch('config.relation.collection'),
+	const collection = findTableByCollection(
+		form.watch('config.relation.collection'),
 	);
 
 	const { append, fields, remove } = useFieldArray({

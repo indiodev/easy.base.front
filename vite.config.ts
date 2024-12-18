@@ -19,6 +19,7 @@ export default defineConfig({
 			'@query': resolve(__dirname, './src/query'),
 			'@debounces': resolve(__dirname, './src/debounces'),
 			'@hooks': resolve(__dirname, './src/hooks'),
+			'@context': resolve(__dirname, './src/context'),
 		},
 	},
 });

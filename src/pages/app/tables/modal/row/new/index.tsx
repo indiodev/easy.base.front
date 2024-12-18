@@ -17,7 +17,7 @@ import {
 } from '@components/ui/dialog';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
-import { useTableColumns } from '@hooks/use-table-columns';
+import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
@@ -36,7 +36,8 @@ const NewRow = React.forwardRef<
 	const params = useParams();
 	const { query } = useQueryStore();
 
-	const { columns, hasMoreThanFiveColumns } = useTableColumns();
+	const { findManyColumnByTableId } = useTable();
+	const columns = findManyColumnByTableId(params.id!);
 
 	const { mutateAsync: create_row, status: create_row_status } =
 		useRowCreateMutation({
@@ -95,7 +96,12 @@ const NewRow = React.forwardRef<
 				ref={ref}
 				{...props}
 			/>
-			<DialogContent className="py-4 px-6">
+			<DialogContent
+				className={cn(
+					'py-4 px-6',
+					// hasMoreThanFiveColumns && 'max-w-4xl w-full',
+				)}
+			>
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
 						Crie um registro
@@ -108,66 +114,70 @@ const NewRow = React.forwardRef<
 
 				<Form {...form}>
 					<form
-						className={cn(
-							hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
-							!hasMoreThanFiveColumns && 'flex flex-col gap-4',
-						)}
 						onSubmit={onSubmit}
+						className="flex flex-col gap-4"
 					>
-						{columns?.map((column) => {
-							if (column?.type === COLUMN_TYPE.RELATIONAL) {
-								return (
-									<RelationalField
-										column={column}
-										key={column._id}
-									/>
-								);
-							}
+						<div
+						// className={cn(
+						// 	hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4 ',
+						// 	!hasMoreThanFiveColumns && 'flex flex-col gap-4',
+						// )}
+						>
+							{columns?.map((column) => {
+								if (column?.type === COLUMN_TYPE.RELATIONAL) {
+									return (
+										<RelationalField
+											column={column}
+											key={column._id}
+										/>
+									);
+								}
 
-							if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
-								return (
-									<MultiRelationalField
-										column={column}
-										key={column._id}
-									/>
-								);
-							}
+								if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+									return (
+										<MultiRelationalField
+											column={column}
+											key={column._id}
+										/>
+									);
+								}
 
-							if (column?.type === COLUMN_TYPE.DATE) {
-								return (
-									<DateField
-										key={column._id}
-										column={column}
-									/>
-								);
-							}
+								if (column?.type === COLUMN_TYPE.DATE) {
+									return (
+										<DateField
+											key={column._id}
+											column={column}
+										/>
+									);
+								}
 
-							if (column?.type === COLUMN_TYPE.DROPDOWN)
-								return (
-									<DropdownField
-										column={column}
-										key={column._id}
-									/>
-								);
+								if (column?.type === COLUMN_TYPE.DROPDOWN)
+									return (
+										<DropdownField
+											column={column}
+											key={column._id}
+										/>
+									);
 
-							if (column?.type === COLUMN_TYPE.LONG_TEXT)
-								return (
-									<LongTextField
-										key={column._id}
-										column={column}
-									/>
-								);
+								if (column?.type === COLUMN_TYPE.LONG_TEXT)
+									return (
+										<LongTextField
+											key={column._id}
+											column={column}
+										/>
+									);
 
-							if (column?.type === COLUMN_TYPE.SHORT_TEXT)
-								return (
-									<ShortTextField
-										key={column._id}
-										column={column}
-									/>
-								);
-						})}
+								if (column?.type === COLUMN_TYPE.SHORT_TEXT)
+									return (
+										<ShortTextField
+											key={column._id}
+											column={column}
+										/>
+									);
+							})}
+						</div>
 
-						<div className="flex justify-end gap-4">
+						<div className="flex justify-end gap-4 w-full ">
 							<DialogClose asChild>
 								<Button
 									className="bg-transparent shadow-none border border-red-200 text-red-500 hover:bg-red-50"

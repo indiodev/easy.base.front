@@ -34,9 +34,8 @@ import {
 
 import { Separator } from '@components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { tanstack } from '@libs/tanstack';
-import { COLUMN_FORMAT, COLUMN_TYPE, QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
+import { useTable } from '@hooks/use-table';
+import { COLUMN_FORMAT, COLUMN_TYPE } from '@models/base.model';
 import { useColumnUpdateMutation } from '@mutation/column/update.mutation';
 import { LoaderCircle, Plus, Trash } from 'lucide-react';
 import React from 'react';
@@ -59,18 +58,15 @@ const EditField = React.forwardRef<
 		resolver: zodResolver(Schema),
 	});
 
-	const tables = tanstack.getQueryData<Table[]>([QUERY.TABLE_LIST]);
+	const { tables, findTableByCollection, findOneColumn } = useTable();
 
-	const table = tables?.find((t) => t._id === params.id);
-
-	const collection = tables?.find(
-		(table) =>
-			table.data_collection === form.watch('config.relation.collection'),
+	const collection = findTableByCollection(
+		form.watch('config.relation.collection'),
 	);
-
-	const column = table?.columns?.find(
-		(c) => c._id === searchParams?.get('field_id'),
-	);
+	const column = findOneColumn({
+		tableId: params.id!,
+		columnId: searchParams?.get('field_id')!,
+	});
 
 	const { append, fields, remove } = useFieldArray({
 		control: form.control,
@@ -106,24 +102,6 @@ const EditField = React.forwardRef<
 			tableId: params.id!,
 		});
 	});
-
-	// const setConfig = React.useCallback(
-	// 	(config: Column['config']) => {
-	// 		form.setValue('config.options', config.options);
-	// 		form.setValue('config.default', config.default);
-	// 		form.setValue('config.display', Boolean(config.display));
-	// 		form.setValue('config.filter', Boolean(config.filter));
-	// 		form.setValue('config.required', Boolean(config.required));
-	// 		form.setValue('config.format', config.format);
-	// 	},
-	// 	[form],
-	// );
-
-	// React.useEffect(() => {
-	// 	if (column) {
-	// 		setConfig(column.config);
-	// 	}
-	// }, [column, setConfig]);
 
 	return (
 		<Dialog

@@ -19,7 +19,7 @@ import {
 	TableRow,
 } from '@components/ui/table';
 import { useQueryStore } from '@hooks/use-query';
-import { useTableColumns } from '@hooks/use-table-columns';
+import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { Row } from '@models/row.model';
@@ -52,7 +52,8 @@ export function List({ rows }: Props): React.ReactElement {
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
-	const { columns, setColumns } = useTableColumns();
+	const { findManyColumnByTableId } = useTable();
+	const columns = findManyColumnByTableId(params.id!);
 
 	const { mutateAsync: update_table } = useUserUpdateTableMutation({
 		onSuccess() {
@@ -76,7 +77,7 @@ export function List({ rows }: Props): React.ReactElement {
 						as="tr"
 						axis="x"
 						onReorder={(order) => {
-							setColumns(order);
+							// setColumns(order);
 							update_table({
 								column_order: {
 									root: order.map((item) => item._id),

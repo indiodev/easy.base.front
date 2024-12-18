@@ -7,12 +7,14 @@ import { ShortTextField } from '@components/global/short-text';
 import { Button } from '@components/ui/button';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
-import { useTableColumns } from '@hooks/use-table-columns';
+import { useTable } from '@hooks/use-table';
 import { COLUMN_TYPE } from '@models/base.model';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
 export function Filter() {
 	const { merge } = useQueryStore();
+	const params = useParams();
 
 	const form = useForm();
 
@@ -32,7 +34,8 @@ export function Filter() {
 		merge(payload);
 	});
 
-	const { columns } = useTableColumns();
+	const { findManyColumnByTableId } = useTable();
+	const columns = findManyColumnByTableId(params.id!);
 
 	return (
 		<Form {...form}>

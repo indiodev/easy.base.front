@@ -31,10 +31,10 @@ import {
 import { Switch } from '@components/ui/switch';
 import { Textarea } from '@components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
 import { useTableUpdateMutation } from '@mutation/table/update.mutation';
 import { LoaderCircle, PencilLine } from 'lucide-react';
 import React from 'react';
@@ -49,9 +49,9 @@ const EditTable = React.forwardRef<
 	const [open, setOpen] = React.useState(false);
 	const params = useParams();
 
-	const table = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((table) => table._id === params.id);
+	const { findTableById } = useTable();
+
+	const table = findTableById(params.id!);
 
 	const [fileImage, setFileImage] = React.useState<string | undefined>();
 
@@ -80,13 +80,12 @@ const EditTable = React.forwardRef<
 	const onSubmit = form.handleSubmit(({ logo, ...data }) => {
 		console.info({
 			logo,
-			...data,
 		});
 
 		update_table({
 			_id: table?._id,
-			...table,
 			...data,
+			...table,
 		});
 	});
 

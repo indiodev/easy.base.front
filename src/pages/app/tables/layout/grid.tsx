@@ -8,13 +8,18 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu';
-import { useTableColumns } from '@hooks/use-table-columns';
+import { useTable } from '@hooks/use-table';
 import { COLUMN_TYPE } from '@models/base.model';
 import { Row } from '@models/row.model';
 import { format } from 'date-fns';
 import { Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
 import React from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+	useLocation,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
 	rows: Row['value'][];
@@ -23,6 +28,7 @@ interface Props {
 export function Grid({ rows }: Props): React.ReactElement {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const params = useParams();
 
 	const [, setSearchParams] = useSearchParams(
 		new URLSearchParams(location?.search),
@@ -32,8 +38,8 @@ export function Grid({ rows }: Props): React.ReactElement {
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
-	const { columns } = useTableColumns();
-
+	const { findManyColumnByTableId } = useTable();
+	const columns = findManyColumnByTableId(params.id!);
 	return (
 		<main className="flex-1 w-full flex flex-col  rounded-md gap-4">
 			<section className="grid grid-cols-4 gap-4">

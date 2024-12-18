@@ -22,8 +22,7 @@ import { MultiRelationalField } from '@components/global/multi-relational';
 import { RelationalField } from '@components/global/relational';
 import { ShortTextField } from '@components/global/short-text';
 import { useQueryStore } from '@hooks/use-query';
-import { useTableColumns } from '@hooks/use-table-columns';
-import { cn } from '@libs/utils';
+import { useTable } from '@hooks/use-table';
 import { Row } from '@models/row.model';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
@@ -50,7 +49,8 @@ const EditRow = React.forwardRef<
 		query,
 	])?.data;
 
-	const { columns, hasMoreThanFiveColumns } = useTableColumns();
+	const { findManyColumnByTableId } = useTable();
+	const columns = findManyColumnByTableId(params.id!);
 
 	const row = rows?.find((row) => row._id === row_id);
 
@@ -147,10 +147,10 @@ const EditRow = React.forwardRef<
 
 				<Form {...form}>
 					<form
-						className={cn(
-							hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
-							!hasMoreThanFiveColumns && 'flex flex-col gap-4',
-						)}
+						// className={cn(
+						// 	hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
+						// 	!hasMoreThanFiveColumns && 'flex flex-col gap-4',
+						// )}
 						onSubmit={onSubmit}
 					>
 						{columns?.map((column) => {

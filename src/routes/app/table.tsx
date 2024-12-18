@@ -1,3 +1,4 @@
+import { TableProvider } from '@context/table.context';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -21,12 +22,20 @@ export function Router(): React.ReactElement {
 			<Route path="/*">
 				<Route
 					path=":id"
-					element={<TablePage />}
+					element={
+						<TableProvider>
+							<TablePage />
+						</TableProvider>
+					}
 				/>
 
 				<Route
 					path=":tableId/view/:id"
-					element={<ViewRowPage />}
+					element={
+						<TableProvider>
+							<ViewRowPage />
+						</TableProvider>
+					}
 				/>
 			</Route>
 		</Routes>

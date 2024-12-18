@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { useTableColumns } from '@hooks/use-table-columns';
+import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
 import { QUERY } from '@models/base.model';
 import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
@@ -25,7 +25,8 @@ const TableFieldOrder = React.forwardRef<
 	const params = useParams();
 	const [open, setOpen] = React.useState(false);
 
-	const { columns, setColumns } = useTableColumns();
+	const { findManyColumnByTableId } = useTable();
+	const columns = findManyColumnByTableId(params.id!);
 
 	const { mutateAsync: update_table, status: update_table_status } =
 		useUserUpdateTableMutation({
@@ -78,7 +79,10 @@ const TableFieldOrder = React.forwardRef<
 				>
 					<Reorder.Group
 						axis="y"
-						onReorder={setColumns}
+						onReorder={(order) => {
+							console.log(order);
+							// setColumns
+						}}
 						values={columns}
 						className="flex flex-col space-y-1 select-none"
 					>

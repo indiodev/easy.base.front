@@ -74,7 +74,9 @@
 					["@store", "./src/store"],
 					["@query", "./src/query"],
 					["@debounces", "./src/debounces"],
-					["@hooks", "./src/hooks"]
+					["@hooks", "./src/hooks"],
+					["@context", "./src/context"]
+
 
 				],
 				"extensions": [".ts", ".tsx", ".js", ".jsx", ".json"]
