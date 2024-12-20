@@ -13,10 +13,10 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 		label: 'Dropdown',
 		type: COLUMN_TYPE.DROPDOWN,
 	},
-	// {
-	// 	label: 'Arquivo',
-	// 	type: COLUMN_TYPE.FILE,
-	// },
+	{
+		label: 'Arquivo',
+		type: COLUMN_TYPE.FILE,
+	},
 	{
 		label: 'Data',
 		type: COLUMN_TYPE.DATE,

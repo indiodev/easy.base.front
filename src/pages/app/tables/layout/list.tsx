@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TableOrderColumn } from '@components/global/table-order-column';
+
+import { HeadOrderColumn } from '@components/global/table/head-order-column';
 import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import {
@@ -94,7 +95,7 @@ export function List({ rows }: Props): React.ReactElement {
 							{columns?.map(
 								(col) =>
 									col?.config?.display && (
-										<TableOrderColumn
+										<HeadOrderColumn
 											key={col._id}
 											column={col}
 										>
@@ -118,7 +119,7 @@ export function List({ rows }: Props): React.ReactElement {
 												</Button>
 												<span>{col.title}</span>
 											</div>
-										</TableOrderColumn>
+										</HeadOrderColumn>
 									),
 							)}
 							<TableHead className="w-[80px]"></TableHead>

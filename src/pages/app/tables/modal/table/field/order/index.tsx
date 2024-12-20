@@ -1,4 +1,4 @@
-import { OrderColumn } from '@components/global/order-column';
+import { OrderColumn } from '@components/global/row/order-column';
 import { Button } from '@components/ui/button';
 import {
 	Dialog,

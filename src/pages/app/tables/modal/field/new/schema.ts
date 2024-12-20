@@ -11,6 +11,14 @@ const config = z.object({
 	display: z.boolean().default(false),
 	filter: z.boolean().default(false),
 	multiple: z.boolean().default(false),
+	accept: z
+		.array(
+			z.object({
+				value: z.string().trim(),
+				label: z.string().trim(),
+			}),
+		)
+		.optional(),
 	default: z.string().optional(),
 	relation: z
 		.object({

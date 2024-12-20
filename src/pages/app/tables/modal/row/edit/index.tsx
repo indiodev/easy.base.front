@@ -15,12 +15,12 @@ import { tanstack } from '@libs/tanstack';
 import { COLUMN_TYPE, MetaResponse, QUERY } from '@models/base.model';
 import { useRowUpdateMutation } from '@mutation/row/update.mutation';
 
-import { DateField } from '@components/global/date';
-import { DropdownField } from '@components/global/dropdown';
-import { LongTextField } from '@components/global/long-text';
-import { MultiRelationalField } from '@components/global/multi-relational';
-import { RelationalField } from '@components/global/relational';
-import { ShortTextField } from '@components/global/short-text';
+import { DateField } from '@components/global/row/date';
+import { DropdownField } from '@components/global/row/dropdown';
+import { LongTextField } from '@components/global/row/long-text';
+import { MultiRelationalField } from '@components/global/row/multi-relational';
+import { RelationalField } from '@components/global/row/relational';
+import { ShortTextField } from '@components/global/row/short-text';
 import { useQueryStore } from '@hooks/use-query';
 import { useTable } from '@hooks/use-table';
 import { Row } from '@models/row.model';

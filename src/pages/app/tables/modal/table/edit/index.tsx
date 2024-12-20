@@ -8,7 +8,7 @@ import {
 	DialogTrigger,
 } from '@components/ui/dialog';
 
-import { AdministratorField } from '@components/global/administrator';
+import { AdministratorField } from '@components/global/table/administrator';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import { Button } from '@components/ui/button';
 import {

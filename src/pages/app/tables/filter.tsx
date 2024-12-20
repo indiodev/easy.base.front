@@ -1,9 +1,9 @@
-import { DropdownField } from '@components/global/dropdown';
-import { FilterDateField } from '@components/global/filter-date';
-import { LongTextField } from '@components/global/long-text';
-import { MultiRelationalField } from '@components/global/multi-relational';
-import { RelationalField } from '@components/global/relational';
-import { ShortTextField } from '@components/global/short-text';
+import { DropdownField } from '@components/global/row/dropdown';
+import { FilterDateField } from '@components/global/row/filter-date';
+import { LongTextField } from '@components/global/row/long-text';
+import { MultiRelationalField } from '@components/global/row/multi-relational';
+import { RelationalField } from '@components/global/row/relational';
+import { ShortTextField } from '@components/global/row/short-text';
 import { Button } from '@components/ui/button';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';

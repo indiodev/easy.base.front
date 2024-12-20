@@ -80,11 +80,6 @@ export const TableProvider = ({ children }: TableContextProps) => {
 				findTableByCollection,
 				findOneColumn,
 				findManyColumnByTableId,
-				// table,
-				// columns,
-				// updateColumn,
-				// addColumn,
-				// hasMoreThanFiveColumns,
 			}}
 		>
 			{children}

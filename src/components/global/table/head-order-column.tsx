@@ -7,7 +7,7 @@ interface Props {
 	children: React.ReactNode;
 }
 
-export function TableOrderColumn({ column, children }: Props) {
+export function HeadOrderColumn({ column, children }: Props) {
 	return (
 		<Reorder.Item
 			as="th"
