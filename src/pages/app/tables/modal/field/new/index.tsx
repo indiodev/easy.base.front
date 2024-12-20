@@ -37,7 +37,7 @@ import { COLUMN_TYPE } from '@models/base.model';
 import { useColumnCreateMutation } from '@mutation/column/new.mutation';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
 const NewField = React.forwardRef<
@@ -50,11 +50,6 @@ const NewField = React.forwardRef<
 
 	const form = useForm<Type>({
 		resolver: zodResolver(Schema),
-	});
-
-	const { append, fields, remove } = useFieldArray({
-		control: form.control,
-		name: 'config.options',
 	});
 
 	const { mutateAsync: create_column, status: create_column_status } =
