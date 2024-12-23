@@ -16,13 +16,17 @@ import { COLUMN_TYPE } from '@models/base.model';
 import { Select } from '@radix-ui/react-select';
 import { useFormContext } from 'react-hook-form';
 
-export function TypeField() {
+interface Props {
+	defaultValue?: COLUMN_TYPE;
+}
+export function TypeField({ defaultValue = COLUMN_TYPE.SHORT_TEXT }: Props) {
 	const form = useFormContext();
 
 	return (
 		<FormField
 			control={form.control}
 			name="type"
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Tipo</FormLabel>

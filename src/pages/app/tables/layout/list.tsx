@@ -61,9 +61,6 @@ export function List({ rows }: Props): React.ReactElement {
 			tanstack.refetchQueries({
 				queryKey: [QUERY.USER_PROFILE],
 			});
-			// tanstack.refetchQueries({
-			// 	queryKey: [QUERY.ROW_PAGINATE, params.id!, query],
-			// });
 		},
 		onError(error) {
 			console.error(error);
@@ -141,6 +138,22 @@ export function List({ rows }: Props): React.ReactElement {
 
 									if (!(col.slug in row))
 										return <TableCell key={KEY}>N/A</TableCell>;
+
+									if (col.type === COLUMN_TYPE.FILE) {
+										return (
+											<TableCell key={KEY}>
+												{row[col.slug]?.[0] && (
+													<img
+														src={row[col.slug]?.[0]}
+														alt=""
+														className="w-20 h-20 rounded-md object-cover"
+													/>
+												)}
+												{!row[col.slug]?.[0] && 'N/A'}
+												{/* {row[col.slug]?.[0]} */}
+											</TableCell>
+										);
+									}
 
 									if (col.type === COLUMN_TYPE.RELATIONAL) {
 										const slug_relation = col.config.relation!.slug;

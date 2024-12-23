@@ -13,14 +13,21 @@ import {
 	SelectValue,
 } from '@components/ui/select';
 import { COLUMN_DATE_FORMAT_LIST } from '@libs/constant';
+import { COLUMN_FORMAT } from '@models/base.model';
 import { useFormContext } from 'react-hook-form';
 
-export function DateFormatField() {
+interface Props {
+	defaultValue?: COLUMN_FORMAT;
+}
+export function DateFormatField({
+	defaultValue = COLUMN_FORMAT['DD_MM_YYYY'],
+}: Props) {
 	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name="config.format"
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Formato</FormLabel>

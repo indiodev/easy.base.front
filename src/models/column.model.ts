@@ -9,6 +9,7 @@ export interface Column {
 	data: string | null;
 	config: {
 		options?: { name: string }[];
+		multiple?: boolean;
 		display?: boolean;
 		required?: boolean;
 		filter?: boolean;

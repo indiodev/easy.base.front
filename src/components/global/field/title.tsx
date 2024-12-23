@@ -8,13 +8,18 @@ import {
 import { Input } from '@components/ui/input';
 import { useFormContext } from 'react-hook-form';
 
-export function TitleField() {
+interface Props {
+	defaultValue?: string;
+}
+
+export function TitleField({ defaultValue = '' }: Props) {
 	const form = useFormContext();
 
 	return (
 		<FormField
 			control={form.control}
 			name="title"
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Nome</FormLabel>

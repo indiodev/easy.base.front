@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { tanstack } from '@libs/tanstack';
-import { QUERY } from '@models/base.model';
+import { MetaResponse, QUERY } from '@models/base.model';
 import { Column } from '@models/column.model';
+import { Row } from '@models/row.model';
 import { Table } from '@models/table.model';
 import React from 'react';
 
@@ -8,6 +10,9 @@ type FindTableColumnById = {
 	columnId: string;
 	tableId: string;
 };
+
+type FindTableRowById = { tableId: string; query: Record<string, any> };
+
 export interface TableContextType {
 	tables: Table[];
 	findTableById: (id: string) => Table | null;
@@ -16,6 +21,8 @@ export interface TableContextType {
 	findManyColumnByTableId: (id: string) => Column[];
 	addColumnToTable: (tableId: string, column: Partial<Column>) => void;
 	updateColumnFromTable: (tableId: string, column: Partial<Column>) => void;
+	// findOneRow: (query: FindTableRowById) => Row['value'] | null;
+	findManyRowByTableId: (query: FindTableRowById) => Row['value'][];
 }
 
 export const TableContext = React.createContext<TableContextType | undefined>(
@@ -132,6 +139,19 @@ export const TableProvider = ({ children }: TableContextProps) => {
 		[tables],
 	);
 
+	const findManyRowByTableId = React.useCallback(
+		({ tableId, query }: FindTableRowById) => {
+			return (
+				tanstack.getQueryData<MetaResponse<Row['value'][]>>([
+					QUERY.ROW_PAGINATE,
+					tableId,
+					query,
+				])?.data ?? []
+			);
+		},
+		[],
+	);
+
 	React.useEffect(() => {
 		setTables(initialTables);
 	}, [initialTables]);
@@ -146,6 +166,7 @@ export const TableProvider = ({ children }: TableContextProps) => {
 				findManyColumnByTableId,
 				addColumnToTable,
 				updateColumnFromTable,
+				findManyRowByTableId,
 			}}
 		>
 			{children}

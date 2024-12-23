@@ -15,7 +15,13 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import { Form } from '@components/ui/form';
+import {
+	FileInput,
+	FileUploader,
+	FileUploaderContent,
+	FileUploaderItem,
+} from '@components/ui/file-upload';
+import { Form, FormField, FormItem, FormLabel } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
 import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
@@ -23,7 +29,7 @@ import { cn } from '@libs/utils';
 import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { useRowCreateMutation } from '@mutation/row/new.mutation';
 
-import { LoaderCircle } from 'lucide-react';
+import { CloudUploadIcon, LoaderCircle, PaperclipIcon } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -38,6 +44,10 @@ const NewRow = React.forwardRef<
 
 	const { findManyColumnByTableId } = useTable();
 	const columns = findManyColumnByTableId(params.id!);
+
+	console.log(columns);
+
+	const hasMoreThanFiveColumns = columns?.length! > 5;
 
 	const { mutateAsync: create_row, status: create_row_status } =
 		useRowCreateMutation({
@@ -73,6 +83,7 @@ const NewRow = React.forwardRef<
 
 		for (const [key, value] of entries) {
 			const isArray = Array.isArray(value);
+			console.log(key, typeof value);
 
 			if (isArray) for (const v of value) payload.append(`${key}[]`, v);
 
@@ -96,12 +107,7 @@ const NewRow = React.forwardRef<
 				ref={ref}
 				{...props}
 			/>
-			<DialogContent
-				className={cn(
-					'py-4 px-6',
-					// hasMoreThanFiveColumns && 'max-w-4xl w-full',
-				)}
-			>
+			<DialogContent className="py-4 px-6 max-w-4xl w-full overflow-hidden max-h-[720px]">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
 						Crie um registro
@@ -118,10 +124,10 @@ const NewRow = React.forwardRef<
 						className="flex flex-col gap-4"
 					>
 						<div
-						// className={cn(
-						// 	hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4 ',
-						// 	!hasMoreThanFiveColumns && 'flex flex-col gap-4',
-						// )}
+							className={cn(
+								hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
+								!hasMoreThanFiveColumns && 'flex flex-col gap-4',
+							)}
 						>
 							{columns?.map((column) => {
 								if (column?.type === COLUMN_TYPE.RELATIONAL) {
@@ -174,6 +180,59 @@ const NewRow = React.forwardRef<
 											column={column}
 										/>
 									);
+
+								if (column?.type === COLUMN_TYPE.FILE) {
+									return (
+										<FormField
+											control={form.control}
+											name={column?.slug}
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>{column?.title}</FormLabel>
+													<FileUploader
+														value={field.value}
+														onValueChange={field.onChange}
+														dropzoneOptions={{
+															multiple: true,
+															maxFiles: 10,
+															maxSize: 4 * 1024 * 1024,
+														}}
+														reSelect={true}
+														className="relative bg-background rounded-lg p-2 border border-dashed border-gray-500"
+													>
+														<FileInput className="outline-dashed outline-1 outline-white ">
+															<div className="flex items-center justify-center flex-col pt-3 pb-4 w-full ">
+																<CloudUploadIcon className="w-8 h-8 mb-3 text-gray-500 dark:text-gray-400" />
+																<p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
+																	<span>
+																		<strong>Clique para fazer upload</strong> ou
+																		arraste e solte.
+																	</span>
+																</p>
+																{/* <p className="text-xs text-gray-500 dark:text-gray-400">
+																	Arquivo de PDF ou de imagem (jpg ou png)
+																</p> */}
+															</div>
+														</FileInput>
+														{field.value && field.value.length > 0 && (
+															<FileUploaderContent>
+																{(field.value as File[]).map((file, index) => (
+																	<FileUploaderItem
+																		key={index}
+																		index={index}
+																	>
+																		<PaperclipIcon className="h-4 w-4 stroke-current" />
+																		<span>{file.name}</span>
+																	</FileUploaderItem>
+																))}
+															</FileUploaderContent>
+														)}
+													</FileUploader>
+												</FormItem>
+											)}
+										/>
+									);
+								}
 							})}
 						</div>
 

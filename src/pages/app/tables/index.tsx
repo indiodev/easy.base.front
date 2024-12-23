@@ -10,10 +10,10 @@ import {
 } from '@components/ui/select';
 import { Separator } from '@components/ui/separator';
 import { useQueryStore } from '@hooks/use-query';
+import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
 import { cn } from '@libs/utils';
 import { QUERY } from '@models/base.model';
-import { Table } from '@models/table.model';
 import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
 import { useRowPaginateQuery } from '@query/row/paginate.query';
 import { useUserProfileQuery } from '@query/user/profile.query';
@@ -36,9 +36,8 @@ export function Tables(): React.ReactElement {
 
 	const { query, merge, filter } = useQueryStore();
 
-	const table = tanstack
-		.getQueryData<Table[]>([QUERY.TABLE_LIST])
-		?.find((t) => t._id === params.id);
+	const { findTableById } = useTable();
+	const table = findTableById(params.id!);
 
 	const { data: row_paginate, status: row_paginate_status } =
 		useRowPaginateQuery({

@@ -12,7 +12,7 @@ import {
 } from '@components/ui/dialog';
 import { Form } from '@components/ui/form';
 import { tanstack } from '@libs/tanstack';
-import { COLUMN_TYPE, MetaResponse, QUERY } from '@models/base.model';
+import { COLUMN_TYPE, QUERY } from '@models/base.model';
 import { useRowUpdateMutation } from '@mutation/row/update.mutation';
 
 import { DateField } from '@components/global/row/date';
@@ -23,7 +23,7 @@ import { RelationalField } from '@components/global/row/relational';
 import { ShortTextField } from '@components/global/row/short-text';
 import { useQueryStore } from '@hooks/use-query';
 import { useTable } from '@hooks/use-table';
-import { Row } from '@models/row.model';
+import { cn } from '@libs/utils';
 import { LoaderCircle } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,14 +43,11 @@ const EditRow = React.forwardRef<
 
 	const row_id = searchParams.get('row_id');
 
-	const rows = tanstack.getQueryData<MetaResponse<Row['value'][]>>([
-		QUERY.ROW_PAGINATE,
-		params.id,
-		query,
-	])?.data;
-
-	const { findManyColumnByTableId } = useTable();
+	const { findManyColumnByTableId, findManyRowByTableId } = useTable();
 	const columns = findManyColumnByTableId(params.id!);
+	const rows = findManyRowByTableId({ tableId: params.id!, query });
+
+	const hasMoreThanFiveColumns = columns?.length! > 5;
 
 	const row = rows?.find((row) => row._id === row_id);
 
@@ -134,7 +131,7 @@ const EditRow = React.forwardRef<
 				ref={ref}
 				{...props}
 			/>
-			<DialogContent className="py-4 px-6 max-w-3xl w-full overflow-hidden max-h-[720px]">
+			<DialogContent className="py-4 px-6 max-w-4xl w-full overflow-hidden max-h-[720px]">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
 						Editar registro
@@ -147,10 +144,10 @@ const EditRow = React.forwardRef<
 
 				<Form {...form}>
 					<form
-						// className={cn(
-						// 	hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
-						// 	!hasMoreThanFiveColumns && 'flex flex-col gap-4',
-						// )}
+						className={cn(
+							hasMoreThanFiveColumns && 'grid grid-cols-2 gap-4',
+							!hasMoreThanFiveColumns && 'flex flex-col gap-4',
+						)}
 						onSubmit={onSubmit}
 					>
 						{columns?.map((column) => {

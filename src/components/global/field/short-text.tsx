@@ -14,14 +14,21 @@ import {
 	SelectValue,
 } from '@components/ui/select';
 import { COLUMN_TEXT_SHORT_FORMAT_LIST } from '@libs/constant';
+import { COLUMN_FORMAT } from '@models/base.model';
 import { useFormContext } from 'react-hook-form';
 
-export function ShortTextFormatField() {
+interface Props {
+	defaultValue?: COLUMN_FORMAT;
+}
+export function ShortTextFormatField({
+	defaultValue = COLUMN_FORMAT.ALPHANUMERIC,
+}: Props) {
 	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name="config.format"
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Formato</FormLabel>
@@ -56,12 +63,17 @@ export function ShortTextFormatField() {
 	);
 }
 
-export function ShortTextDefaultField() {
+export function ShortTextDefaultField({
+	defaultValue = '',
+}: {
+	defaultValue?: string;
+}) {
 	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name="config.default"
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Valor padrão</FormLabel>

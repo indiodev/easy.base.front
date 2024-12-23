@@ -7,14 +7,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@components/ui/form';
+import { Form } from '@components/ui/form';
 
 import { CollectionField } from '@components/global/field/collection';
 import { ColumnOptionField } from '@components/global/field/column-option';
@@ -31,7 +24,6 @@ import {
 } from '@components/global/field/short-text';
 import { TitleField } from '@components/global/field/title';
 import { TypeField } from '@components/global/field/type';
-import MultipleSelector from '@components/ui/multiple-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTable } from '@hooks/use-table';
 import { COLUMN_TYPE } from '@models/base.model';
@@ -139,43 +131,6 @@ const NewField = React.forwardRef<
 							</>
 						)}
 
-						{COLUMN_TYPE.FILE && (
-							<FormField
-								control={form.control}
-								name="config.accept"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Tipos de arquivo aceitos</FormLabel>
-										<FormControl>
-											<MultipleSelector
-												{...field}
-												defaultOptions={[
-													{
-														label: 'PDF',
-														value: 'pdf',
-													},
-													{
-														label: 'JPEG',
-														value: 'jpeg',
-													},
-													{
-														label: 'PNG',
-														value: 'png',
-													},
-												]}
-												placeholder="Selecione um tipo de arquivo aceito"
-												emptyIndicator={
-													<p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-														Nenhuma opção encontrada
-													</p>
-												}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						)}
 						{[COLUMN_TYPE.DROPDOWN, COLUMN_TYPE.FILE].includes(
 							form.watch('type'),
 						) && <MultipleField />}

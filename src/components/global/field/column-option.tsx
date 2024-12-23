@@ -47,7 +47,6 @@ export function ColumnOptionField() {
 								name={`config.options.${index}.name`}
 								render={({ field }) => (
 									<FormItem className="flex-1">
-										{/* <FormLabel>Opção {index + 1}</FormLabel> */}
 										<FormControl>
 											<Input
 												className="focus-visible:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"

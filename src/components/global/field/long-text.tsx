@@ -8,12 +8,17 @@ import {
 import { Textarea } from '@components/ui/textarea';
 import { useFormContext } from 'react-hook-form';
 
-export function LongTextDefaultField() {
+export function LongTextDefaultField({
+	defaultValue = '',
+}: {
+	defaultValue?: string;
+}) {
 	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name="config.default"
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Valor padrão</FormLabel>

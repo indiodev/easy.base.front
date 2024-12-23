@@ -8,13 +8,17 @@ import {
 import { Switch } from '@components/ui/switch';
 import { useFormContext } from 'react-hook-form';
 
-export function FilterField() {
+interface Props {
+	defaultValue?: boolean;
+}
+
+export function FilterField({ defaultValue = false }: Props) {
 	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name="config.filter"
-			defaultValue={form.watch('config.filter')}
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 					<div className="space-y-0.5">

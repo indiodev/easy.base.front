@@ -8,13 +8,16 @@ import {
 import { Switch } from '@components/ui/switch';
 import { useFormContext } from 'react-hook-form';
 
-export function DisplayField() {
+interface Props {
+	defaultValue?: boolean;
+}
+export function DisplayField({ defaultValue = false }: Props) {
 	const form = useFormContext();
 	return (
 		<FormField
 			control={form.control}
 			name="config.display"
-			defaultValue={form.watch('config.display')}
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 					<div className="space-y-0.5">
