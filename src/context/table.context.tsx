@@ -14,6 +14,8 @@ export interface TableContextType {
 	findTableByCollection: (collection: string) => Table | null;
 	findOneColumn: (query: FindTableColumnById) => Column | null;
 	findManyColumnByTableId: (id: string) => Column[];
+	addColumnToTable: (tableId: string, column: Partial<Column>) => void;
+	updateColumnFromTable: (tableId: string, column: Partial<Column>) => void;
 }
 
 export const TableContext = React.createContext<TableContextType | undefined>(
@@ -68,6 +70,68 @@ export const TableProvider = ({ children }: TableContextProps) => {
 		[tables],
 	);
 
+	const addColumnToTable = React.useCallback(
+		(tableId: string, column: Partial<Column>) => {
+			const table = tables.find((table) => table._id === tableId) ?? null;
+			if (!table) return;
+
+			const columns = [...table.columns, column] as Column[];
+
+			tanstack.setQueryData<Table[]>([QUERY.TABLE_LIST], (prev) => {
+				const data =
+					prev?.map((table) => {
+						if (table._id === tableId) {
+							return {
+								...table,
+								columns,
+							};
+						}
+						return table;
+					}) ?? [];
+				setTables(data);
+				return data;
+			});
+		},
+		[tables],
+	);
+
+	const updateColumnFromTable = React.useCallback(
+		(tableId: string, column: Partial<Column>) => {
+			const table = tables.find((table) => table._id === tableId) ?? null;
+			if (!table) return;
+
+			const columns = table?.columns.map((col) => {
+				if (col._id === column._id) {
+					return {
+						...col,
+						...column,
+					};
+				}
+				return col;
+			}) as Column[];
+
+			tanstack.invalidateQueries({
+				queryKey: [QUERY.TABLE_LIST],
+			});
+
+			tanstack.setQueryData<Table[]>([QUERY.TABLE_LIST], (prev) => {
+				const data =
+					prev?.map((table) => {
+						if (table._id === tableId) {
+							return {
+								...table,
+								columns,
+							};
+						}
+						return table;
+					}) ?? [];
+				setTables(data);
+				return data;
+			});
+		},
+		[tables],
+	);
+
 	React.useEffect(() => {
 		setTables(initialTables);
 	}, [initialTables]);
@@ -80,6 +144,8 @@ export const TableProvider = ({ children }: TableContextProps) => {
 				findTableByCollection,
 				findOneColumn,
 				findManyColumnByTableId,
+				addColumnToTable,
+				updateColumnFromTable,
 			}}
 		>
 			{children}

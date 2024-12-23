@@ -33,6 +33,7 @@ import { TitleField } from '@components/global/field/title';
 import { TypeField } from '@components/global/field/type';
 import MultipleSelector from '@components/ui/multiple-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTable } from '@hooks/use-table';
 import { COLUMN_TYPE } from '@models/base.model';
 import { useColumnCreateMutation } from '@mutation/column/new.mutation';
 import { LoaderCircle } from 'lucide-react';
@@ -40,6 +41,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { Schema, Type } from './schema';
+
 const NewField = React.forwardRef<
 	React.ElementRef<typeof DialogTrigger>,
 	React.ComponentPropsWithoutRef<typeof DialogTrigger>
@@ -52,18 +54,14 @@ const NewField = React.forwardRef<
 		resolver: zodResolver(Schema),
 	});
 
+	const { addColumnToTable } = useTable();
+
 	const { mutateAsync: create_column, status: create_column_status } =
 		useColumnCreateMutation({
-			onSuccess() {
-				// tanstack.refetchQueries({
-				// 	queryKey: [QUERY.TABLE_LIST],
-				// });
-
+			onSuccess(data) {
+				addColumnToTable(params.id!, data);
 				form.reset();
 				setOpen((state) => !state);
-				// REVER UMA FORMA MELHOR PARA QUE
-				// SE LISTE A NOVA COLUNA NA TABELA
-				location.reload();
 			},
 			onError(error) {
 				console.error(error);

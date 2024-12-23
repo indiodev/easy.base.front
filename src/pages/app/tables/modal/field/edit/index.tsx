@@ -58,7 +58,12 @@ const EditField = React.forwardRef<
 		resolver: zodResolver(Schema),
 	});
 
-	const { tables, findTableByCollection, findOneColumn } = useTable();
+	const {
+		tables,
+		findTableByCollection,
+		findOneColumn,
+		updateColumnFromTable,
+	} = useTable();
 
 	const collection = findTableByCollection(
 		form.watch('config.relation.collection'),
@@ -75,17 +80,19 @@ const EditField = React.forwardRef<
 
 	const { mutateAsync: update_column, status: update_column_status } =
 		useColumnUpdateMutation({
-			onSuccess() {
-				setOpen((state) => !state);
-				// tanstack.refetchQueries({
-				// 	queryKey: [QUERY.TABLE_LIST],
-				// });
+			onSuccess(data) {
+				console.log({ data });
+				updateColumnFromTable(params.id!, data);
+
+				setSearchParams((state) => {
+					state.delete('field_id');
+					return state;
+				});
 
 				form.reset();
-				// REVER UMA FORMA MELHOR PARA QUE
-				// SE LISTE A NOVA COLUNA NA TABELA
-				location.reload();
+				setOpen((state) => !state);
 			},
+
 			onError(error) {
 				console.error(error);
 			},

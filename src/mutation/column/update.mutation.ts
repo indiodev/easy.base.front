@@ -1,22 +1,28 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
-import { CreateOrUpdateColumn } from '@models/column.model';
+import { Column, CreateOrUpdateColumn } from '@models/column.model';
 import { Service } from '@services/index';
 
-async function mutator(payload: CreateOrUpdateColumn): Promise<void> {
-	await Service.column.update(payload);
+async function mutator(
+	payload: CreateOrUpdateColumn,
+): Promise<Partial<Column>> {
+	return await Service.column.update(payload);
 }
 
 interface Props {
-	onSuccess: () => void;
+	onSuccess: (data: Partial<Column>) => void;
 	onError: (error: Error | AxiosError) => void;
 }
 
 export function useColumnUpdateMutation({
 	onSuccess,
 	onError,
-}: Props): UseMutationResult<void, Error | AxiosError, CreateOrUpdateColumn> {
+}: Props): UseMutationResult<
+	Partial<Column>,
+	Error | AxiosError,
+	CreateOrUpdateColumn
+> {
 	return useMutation({
 		mutationFn: mutator,
 		onSuccess,

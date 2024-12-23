@@ -2,13 +2,13 @@ import { API } from '@libs/api';
 import { Column, CreateOrUpdateColumn } from '@models/column.model';
 
 export default class ColumnService {
-	async create(payload: CreateOrUpdateColumn) {
-		const { data } = await API.post('/columns', payload);
+	async create(payload: CreateOrUpdateColumn): Promise<Partial<Column>> {
+		const { data } = await API.post<Partial<Column>>('/columns', payload);
 		return data;
 	}
 
-	async update(payload: CreateOrUpdateColumn) {
-		const { data } = await API.patch(
+	async update(payload: CreateOrUpdateColumn): Promise<Partial<Column>> {
+		const { data } = await API.patch<Partial<Column>>(
 			`/columns/${payload?.column?._id}`,
 			payload,
 		);
