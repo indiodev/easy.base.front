@@ -84,6 +84,10 @@ export const TableProvider = ({ children }: TableContextProps) => {
 
 			const columns = [...table.columns, column] as Column[];
 
+			// tanstack.invalidateQueries({
+			// 	queryKey: [QUERY.TABLE_LIST],
+			// });
+
 			tanstack.setQueryData<Table[]>([QUERY.TABLE_LIST], (prev) => {
 				const data =
 					prev?.map((table) => {
@@ -117,9 +121,9 @@ export const TableProvider = ({ children }: TableContextProps) => {
 				return col;
 			}) as Column[];
 
-			tanstack.invalidateQueries({
-				queryKey: [QUERY.TABLE_LIST],
-			});
+			// tanstack.invalidateQueries({
+			// 	queryKey: [QUERY.TABLE_LIST],
+			// });
 
 			tanstack.setQueryData<Table[]>([QUERY.TABLE_LIST], (prev) => {
 				const data =

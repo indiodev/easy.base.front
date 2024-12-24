@@ -79,7 +79,20 @@ export const FileUploader = forwardRef<
 		const [activeIndex, setActiveIndex] = useState(-1);
 		const {
 			accept = {
-				'image/*': ['.jpg', '.jpeg', '.png', '.gif'],
+				// 'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.tiff', '.webp', '.ico'],
+				// 'application/*': [
+				//     '.pdf', '.zip', '.rar', '.7z', '.xml', '.json', '.doc', '.docx', '.xls', '.xlsx',
+				//     '.ppt', '.pptx', '.odt', '.ods', '.odp', '.epub', '.azw', '.eot', '.otf', '.ttf',
+				//     '.woff', '.woff2', '.xhtml', '.swf', '.tar', '.csv', '.css', '.html', '.htm',
+				//     '.sh', '.csh', '.js', '.ts', '.jar', '.vsd', '.abw', '.mpkg', '.bin', '.bz',
+				//     '.bz2', '.arc'
+				// ],
+				// 'audio/*': ['.aac', '.mp3', '.wav', '.weba', '.oga', '.mid', '.midi', '.3gp', '.3g2'],
+				// 'video/*': ['.avi', '.mp4', '.mpeg', '.webm', '.ogv', '.3gp', '.3g2'],
+				'image/*': [],
+				'application/*': [],
+				'audio/*': [],
+				'video/*': [],
 			},
 			maxFiles = 1,
 			maxSize = 4 * 1024 * 1024,

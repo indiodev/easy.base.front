@@ -14,12 +14,13 @@ interface Props {
 
 export function TitleField({ defaultValue = '' }: Props) {
 	const form = useFormContext();
+	form.setValue('title', defaultValue);
 
 	return (
 		<FormField
 			control={form.control}
 			name="title"
-			defaultValue={defaultValue}
+			// defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Nome</FormLabel>

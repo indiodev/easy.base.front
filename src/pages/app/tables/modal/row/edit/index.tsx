@@ -17,6 +17,7 @@ import { useRowUpdateMutation } from '@mutation/row/update.mutation';
 
 import { DateField } from '@components/global/row/date';
 import { DropdownField } from '@components/global/row/dropdown';
+import { FileField } from '@components/global/row/file';
 import { LongTextField } from '@components/global/row/long-text';
 import { MultiRelationalField } from '@components/global/row/multi-relational';
 import { RelationalField } from '@components/global/row/relational';
@@ -216,13 +217,24 @@ const EditRow = React.forwardRef<
 									/>
 								);
 
-							return (
-								<ShortTextField
-									key={column._id}
-									column={column}
-									defaultValue={row?.[column.slug!]}
-								/>
-							);
+							if (column.type === COLUMN_TYPE.SHORT_TEXT)
+								return (
+									<ShortTextField
+										key={column._id}
+										column={column}
+										defaultValue={row?.[column.slug!]}
+									/>
+								);
+
+							if (column?.type === COLUMN_TYPE.FILE) {
+								return (
+									<FileField
+										key={column._id}
+										column={column}
+										defaultValue={row?.[column.slug!]}
+									/>
+								);
+							}
 						})}
 
 						<div className="flex justify-end gap-4">

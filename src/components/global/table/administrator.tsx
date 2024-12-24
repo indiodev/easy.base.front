@@ -18,6 +18,7 @@ export function AdministratorField({
 	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
+	form.setValue('config.administrators', defaultValue);
 
 	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
 

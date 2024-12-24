@@ -23,11 +23,12 @@ export function DateFormatField({
 	defaultValue = COLUMN_FORMAT['DD_MM_YYYY'],
 }: Props) {
 	const form = useFormContext();
+	form.setValue('config.format', defaultValue);
 	return (
 		<FormField
 			control={form.control}
 			name="config.format"
-			defaultValue={defaultValue}
+			// defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Formato</FormLabel>

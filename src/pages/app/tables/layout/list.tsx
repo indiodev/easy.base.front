@@ -27,7 +27,14 @@ import { Row } from '@models/row.model';
 import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
 import { format } from 'date-fns';
 import { AnimatePresence, Reorder } from 'framer-motion';
-import { ChevronsLeftRight, Ellipsis, Eye, Pencil, Trash } from 'lucide-react';
+import {
+	ChevronsLeftRight,
+	Ellipsis,
+	Eye,
+	Pencil,
+	SquareArrowOutUpRightIcon,
+	Trash,
+} from 'lucide-react';
 import React from 'react';
 import {
 	useLocation,
@@ -142,15 +149,16 @@ export function List({ rows }: Props): React.ReactElement {
 									if (col.type === COLUMN_TYPE.FILE) {
 										return (
 											<TableCell key={KEY}>
-												{row[col.slug]?.[0] && (
-													<img
-														src={row[col.slug]?.[0]}
-														alt=""
-														className="w-20 h-20 rounded-md object-cover"
-													/>
-												)}
+												<a
+													className="inline-flex gap-2 items-center underline"
+													target="_blank"
+													href={row[col.slug]?.[0]?.filename}
+													rel="noreferrer"
+												>
+													<SquareArrowOutUpRightIcon className="w-4 h-4" />
+													<span>Abrir documento</span>
+												</a>
 												{!row[col.slug]?.[0] && 'N/A'}
-												{/* {row[col.slug]?.[0]} */}
 											</TableCell>
 										);
 									}
