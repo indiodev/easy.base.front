@@ -14,13 +14,13 @@ interface Props {
 
 export function RequiredField({ defaultValue = false }: Props) {
 	const form = useFormContext();
-	form.setValue('config.required', defaultValue);
+	// form.setValue('config.required', defaultValue);
 
 	return (
 		<FormField
 			control={form.control}
 			name="config.required"
-			// defaultValue={defaultValue}
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 					<div className="space-y-0.5">

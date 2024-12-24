@@ -13,12 +13,12 @@ interface Props {
 }
 export function DisplayField({ defaultValue = false }: Props) {
 	const form = useFormContext();
-	form.setValue('config.display', defaultValue);
+	// form.setValue('config.display', defaultValue);
 	return (
 		<FormField
 			control={form.control}
 			name="config.display"
-			// defaultValue={defaultValue}
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
 					<div className="space-y-0.5">

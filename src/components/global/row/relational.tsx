@@ -21,7 +21,7 @@ export function RelationalField({
 	defaultValue?: Option[];
 }): React.ReactElement {
 	const form = useFormContext();
-	form.setValue(String(column?.slug), defaultValue);
+	// form.setValue(String(column?.slug), defaultValue);
 
 	const [options, setOptions] = React.useState<Option[]>(defaultValue || []);
 
@@ -42,7 +42,7 @@ export function RelationalField({
 		<FormField
 			control={form.control}
 			name={column!.slug!}
-			// defaultValue={defaultValue}
+			defaultValue={defaultValue}
 			render={({ field }) => {
 				const hasError = !!form.formState.errors[column!.slug!];
 				return (

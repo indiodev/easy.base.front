@@ -21,13 +21,13 @@ interface Props {
 }
 export function TypeField({ defaultValue = COLUMN_TYPE.SHORT_TEXT }: Props) {
 	const form = useFormContext();
-	form.setValue('type', defaultValue);
+	// form.setValue('type', defaultValue);
 
 	return (
 		<FormField
 			control={form.control}
 			name="type"
-			// defaultValue={defaultValue}
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Tipo</FormLabel>

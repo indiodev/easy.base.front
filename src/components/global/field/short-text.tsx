@@ -69,12 +69,12 @@ export function ShortTextDefaultField({
 	defaultValue?: string;
 }) {
 	const form = useFormContext();
-	form.setValue('config.default', defaultValue);
+	// form.setValue('config.default', defaultValue);
 	return (
 		<FormField
 			control={form.control}
 			name="config.default"
-			// defaultValue={defaultValue}
+			defaultValue={defaultValue}
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel>Valor padrão</FormLabel>
