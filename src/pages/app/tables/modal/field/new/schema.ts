@@ -30,9 +30,11 @@ const config = z.object({
 	options: z
 		.array(
 			z.object({
-				name: z.string().trim(),
+				label: z.coerce.string().trim(),
+				value: z.coerce.string().trim(),
 			}),
 		)
+		.min(1, { message: 'Pelo menos uma opção deve ser adicionada' })
 		.optional(),
 });
 

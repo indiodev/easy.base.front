@@ -1,75 +1,73 @@
-import { Button } from '@components/ui/button';
 import {
 	FormControl,
 	FormField,
 	FormItem,
+	FormLabel,
 	FormMessage,
 } from '@components/ui/form';
-import { Input } from '@components/ui/input';
-import { Separator } from '@components/ui/separator';
-import { PlusIcon, TrashIcon } from 'lucide-react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import MultipleSelector, { Option } from '@components/ui/multiple-selector';
+import { useFormContext } from 'react-hook-form';
 
-export function ColumnOptionField() {
+export function ColumnOptionField({
+	defaultValue,
+}: {
+	defaultValue?: Option[];
+}) {
 	const form = useFormContext();
 
-	const { append, fields, remove } = useFieldArray({
-		control: form.control,
-		name: 'config.options',
-	});
+	console.log(defaultValue);
 
 	return (
-		<section className="flex w-full flex-col space-y-2 py-4">
-			<Separator />
-			<div className="inline-flex justify-between items-start">
-				<h2>Opções</h2>
-				<Button
-					type="button"
-					className="bg-transparent hover:bg-transparent hover:text-blue-600 text-blue-600 shadow-none border-blue-500 border hover:border-blue-600 px-2 py-0 h-8"
-					onClick={() => {
-						append({
-							name: '',
-						});
-					}}
-				>
-					<PlusIcon className="w-4 h-4" />
-					<span>Adicionar</span>
-				</Button>
-			</div>
-
-			<div className="h-full flex-1 overflow-y-auto space-y-2">
-				{fields.map((field, index) => {
-					return (
-						<div className="px-2 inline-flex w-full gap-2 items-center">
-							<FormField
-								key={field.id}
-								control={form.control}
-								name={`config.options.${index}.name`}
-								render={({ field }) => (
-									<FormItem className="flex-1">
-										<FormControl>
-											<Input
-												className="focus-visible:ring-0 border border-blue-200 placeholder:text-blue-400 text-blue-600 focus-visible:ring-blue-600 bg-white"
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage className="text-right" />
-									</FormItem>
-								)}
+		<FormField
+			control={form.control}
+			name="config.options"
+			defaultValue={defaultValue}
+			// defaultValue={defaultValue}
+			render={({ field }) => {
+				// const hasError = !!form.formState.errors[column!.slug!];
+				return (
+					<FormItem>
+						<FormLabel>Opções do dropdown</FormLabel>
+						<FormControl>
+							<MultipleSelector
+								// onChange={(options) => {
+								// 	const values = options.flatMap(
+								// 		(option) => option.value,
+								// 	);
+								// 	field.onChange(values);
+								// }}
+								onChange={field.onChange}
+								// onSearch={async () => {
+								// 	return await ROW_FIND_MANY_DEBOUNCE({
+								// 		collection: column.config!.relation!.collection!,
+								// 		columnId: column.config!.relation!.path!,
+								// 	});
+								// }}
+								defaultOptions={defaultValue}
+								value={defaultValue}
+								// options={options}
+								creatable
+								triggerSearchOnFocus
+								placeholder="Escreva e adicione"
+								// loadingIndicator={
+								// 	<div className="py-1 text-center text-lg leading-10 text-muted-foreground inline-flex items-center justify-center w-full space-x-6">
+								// 		<span>Buscando registros</span>
+								// 		<LoaderCircle className="w-5 h-5 animate-spin stroke-blue-500" />
+								// 	</div>
+								// }
+								emptyIndicator={null}
+								// emptyIndicator={
+								// 	<p className="py-1 text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+								// 		Nenhum registro encontrado
+								// 	</p>
+								// }
+								// className={cn(hasError && 'border-red-500')}
 							/>
-
-							<Button
-								type="button"
-								onClick={() => remove(index)}
-								className="bg-transparent hover:bg-transparent border border-red-500 text-red-500 shadow-none px-2 py-0"
-							>
-								<TrashIcon className="w-4 h-4" />
-							</Button>
-						</div>
-					);
-				})}
-			</div>
-			<Separator />
-		</section>
+						</FormControl>
+						<FormMessage className="text-right" />
+					</FormItem>
+				);
+			}}
+		/>
 	);
 }

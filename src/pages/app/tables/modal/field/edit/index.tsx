@@ -141,7 +141,7 @@ const EditField = React.forwardRef<
 						<TypeField defaultValue={column?.type} />
 
 						{form.watch('type') === COLUMN_TYPE.DROPDOWN && (
-							<ColumnOptionField />
+							<ColumnOptionField defaultValue={column?.config?.options} />
 						)}
 
 						{form.watch('type') === COLUMN_TYPE.DATE && (

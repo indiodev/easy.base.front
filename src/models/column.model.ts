@@ -8,7 +8,7 @@ export interface Column {
 	type: COLUMN_TYPE;
 	data: string | null;
 	config: {
-		options?: { name: string }[];
+		options?: { label: string; value: string }[];
 		multiple?: boolean;
 		display?: boolean;
 		required?: boolean;
