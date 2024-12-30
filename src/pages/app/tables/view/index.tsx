@@ -1,5 +1,6 @@
 import { Loading } from '@components/loading';
 import { Button } from '@components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import {
 	MultiSelector,
 	MultiSelectorContent,
@@ -8,7 +9,6 @@ import {
 	MultiSelectorList,
 	MultiSelectorTrigger,
 } from '@components/ui/extension/multi-select';
-import { Input } from '@components/ui/input';
 import { Label } from '@components/ui/label';
 import { Textarea } from '@components/ui/textarea';
 import { useTable } from '@hooks/use-table';
@@ -80,16 +80,20 @@ export function View(): React.ReactElement {
 
 			<div className="grid grid-cols-2 gap-10">
 				{columns?.map((column) => {
+					const KEY = column?._id;
 					if (column?.type === COLUMN_TYPE.SHORT_TEXT) {
 						return (
-							<div className="flex flex-col space-y-2">
-								<Label>{column.title}</Label>
-								<Input
-									key={column._id}
-									value={row[column.slug!]}
-									disabled
-								/>
-							</div>
+							<Card
+								key={KEY}
+								className="p-0"
+							>
+								<CardHeader className="p-3">
+									<CardTitle>{column?.title}</CardTitle>
+								</CardHeader>
+								<CardContent className="p-3">
+									<p>{row[column.slug!]}</p>
+								</CardContent>
+							</Card>
 						);
 					}
 
