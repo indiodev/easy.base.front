@@ -5,7 +5,7 @@ import type { AxiosError } from 'axios';
 import { Service } from '@services/index';
 
 type Payload = {
-	data: FormData;
+	data: unknown;
 	id: string;
 	tableId: string;
 };

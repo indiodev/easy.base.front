@@ -7,16 +7,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@components/ui/dialog';
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@components/ui/form';
+import { Form } from '@components/ui/form';
 
 import { CollectionField } from '@components/global/field/collection';
+import { ColumnOptionField } from '@components/global/field/column-option';
 import { DateFormatField } from '@components/global/field/date';
 import { DisplayField } from '@components/global/field/display';
 import { FilterField } from '@components/global/field/filter';
@@ -30,7 +24,6 @@ import {
 } from '@components/global/field/short-text';
 import { TitleField } from '@components/global/field/title';
 import { TypeField } from '@components/global/field/type';
-import MultipleSelector from '@components/ui/multiple-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTable } from '@hooks/use-table';
 import { COLUMN_TYPE } from '@models/base.model';
@@ -78,8 +71,6 @@ const NewField = React.forwardRef<
 		});
 	});
 
-	console.log(form.watch('config.options'));
-
 	return (
 		<Dialog
 			modal
@@ -113,62 +104,8 @@ const NewField = React.forwardRef<
 						<TitleField />
 						<TypeField />
 
-						{/* {form.watch('type') === COLUMN_TYPE.DROPDOWN && (
-							<ColumnOptionField />
-						)} */}
-
 						{form.watch('type') === COLUMN_TYPE.DROPDOWN && (
-							<FormField
-								control={form.control}
-								name="config.options"
-								// name={column!.slug!}
-								// defaultValue={defaultValue}
-								render={({ field }) => {
-									// const hasError = !!form.formState.errors[column!.slug!];
-									return (
-										<FormItem>
-											<FormLabel>Opções do dropdown</FormLabel>
-											<FormControl>
-												<MultipleSelector
-													// onChange={(options) => {
-													// 	const values = options.flatMap(
-													// 		(option) => option.value,
-													// 	);
-													// 	field.onChange(values);
-													// }}
-													onChange={field.onChange}
-													// onSearch={async () => {
-													// 	return await ROW_FIND_MANY_DEBOUNCE({
-													// 		collection: column.config!.relation!.collection!,
-													// 		columnId: column.config!.relation!.path!,
-													// 	});
-													// }}
-													// defaultOptions={options}
-													// value={defaultValue}
-													// options={options}
-													creatable
-													triggerSearchOnFocus
-													placeholder="Escreva e adicione"
-													// loadingIndicator={
-													// 	<div className="py-1 text-center text-lg leading-10 text-muted-foreground inline-flex items-center justify-center w-full space-x-6">
-													// 		<span>Buscando registros</span>
-													// 		<LoaderCircle className="w-5 h-5 animate-spin stroke-blue-500" />
-													// 	</div>
-													// }
-													emptyIndicator={null}
-													// emptyIndicator={
-													// 	<p className="py-1 text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-													// 		Nenhum registro encontrado
-													// 	</p>
-													// }
-													// className={cn(hasError && 'border-red-500')}
-												/>
-											</FormControl>
-											<FormMessage className="text-right" />
-										</FormItem>
-									);
-								}}
-							/>
+							<ColumnOptionField />
 						)}
 
 						{form.watch('type') === COLUMN_TYPE.DATE && <DateFormatField />}

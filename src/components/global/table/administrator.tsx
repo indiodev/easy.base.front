@@ -1,3 +1,6 @@
+import MultipleSelector, {
+	Option,
+} from '@components/ui/expansion/multiple-selector';
 import {
 	FormControl,
 	FormField,
@@ -5,7 +8,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@components/ui/form';
-import MultipleSelector, { Option } from '@components/ui/multiple-selector';
 import { USER_FIND_MANY_DEBOUNCE } from '@debounces/user/find-many.debouce';
 import { cn } from '@libs/utils';
 import { LoaderCircle } from 'lucide-react';

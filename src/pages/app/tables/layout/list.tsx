@@ -22,7 +22,7 @@ import {
 import { useQueryStore } from '@hooks/use-query';
 import { useTable } from '@hooks/use-table';
 import { tanstack } from '@libs/tanstack';
-import { COLUMN_TYPE, QUERY } from '@models/base.model';
+import { COLUMN_FORMAT, COLUMN_TYPE, QUERY } from '@models/base.model';
 import { Row } from '@models/row.model';
 import { useUserUpdateTableMutation } from '@mutation/user/update-table.mutation';
 import { format } from 'date-fns';
@@ -147,18 +147,26 @@ export function List({ rows }: Props): React.ReactElement {
 										return <TableCell key={KEY}>N/A</TableCell>;
 
 									if (col.type === COLUMN_TYPE.FILE) {
+										const BASE_URL =
+											import.meta.env.VITE_API_BASE_URL ||
+											'http://localhost:3333';
+
+										const FIRST_FILE = BASE_URL.concat(
+											row[col.slug]?.[0]?.filename,
+										);
+
 										return (
 											<TableCell key={KEY}>
 												<a
 													className="inline-flex gap-2 items-center underline"
 													target="_blank"
-													href={row[col.slug]?.[0]?.filename}
+													href={FIRST_FILE}
 													rel="noreferrer"
 												>
 													<SquareArrowOutUpRightIcon className="w-4 h-4" />
 													<span>Abrir documento</span>
 												</a>
-												{!row[col.slug]?.[0] && 'N/A'}
+												{/* {!row[col.slug]?.[0] && 'N/A'} */}
 											</TableCell>
 										);
 									}
@@ -192,7 +200,23 @@ export function List({ rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.DROPDOWN) {
-										return <TableCell key={KEY}>{row[col.slug]}</TableCell>;
+										const [first, ...rest] = row[col.slug];
+										if (!col.config?.multiple) {
+											return (
+												<TableCell key={KEY}>
+													<Badge variant="outline">{first ?? 'N/A'}</Badge>
+												</TableCell>
+											);
+										}
+
+										return (
+											<TableCell key={KEY}>
+												<Badge variant="outline">{first || 'N/A'}</Badge>
+												{rest?.length > 0 && (
+													<Badge variant="outline">+{rest?.length}</Badge>
+												)}
+											</TableCell>
+										);
 									}
 
 									if (col.type === COLUMN_TYPE.DATE) {
@@ -211,6 +235,24 @@ export function List({ rows }: Props): React.ReactElement {
 									}
 
 									if (col.type === COLUMN_TYPE.SHORT_TEXT) {
+										const format = col?.config?.format;
+
+										if (format === COLUMN_FORMAT.URL) {
+											return (
+												<TableCell key={KEY}>
+													<a
+														className="inline-flex gap-2 items-center underline"
+														target="_blank"
+														href={row[col.slug]}
+														rel="noreferrer"
+													>
+														<SquareArrowOutUpRightIcon className="w-4 h-4" />
+														<span>{row[col.slug]}</span>
+													</a>
+												</TableCell>
+											);
+										}
+
 										return <TableCell key={KEY}>{row[col.slug]}</TableCell>;
 									}
 								})}

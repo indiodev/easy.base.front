@@ -1,3 +1,6 @@
+import MultipleSelector, {
+	Option,
+} from '@components/ui/expansion/multiple-selector';
 import {
 	FormControl,
 	FormField,
@@ -5,7 +8,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@components/ui/form';
-import MultipleSelector, { Option } from '@components/ui/multiple-selector';
 import { ROW_FIND_MANY_DEBOUNCE } from '@debounces/row/find-many.debounce';
 import { cn } from '@libs/utils';
 import { Column } from '@models/column.model';

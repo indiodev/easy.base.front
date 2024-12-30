@@ -18,8 +18,8 @@ import {
 	useDropzone,
 } from 'react-dropzone';
 import { toast } from 'sonner';
-import { buttonVariants } from './button';
-import { Input } from './input';
+import { buttonVariants } from '../button';
+import { Input } from '../input';
 
 type DirectionOptions = 'rtl' | 'ltr' | undefined;
 

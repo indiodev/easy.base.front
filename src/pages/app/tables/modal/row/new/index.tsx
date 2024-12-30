@@ -40,8 +40,6 @@ const NewRow = React.forwardRef<
 	const { findManyColumnByTableId } = useTable();
 	const columns = findManyColumnByTableId(params.id!);
 
-	console.log(columns);
-
 	const hasMoreThanFiveColumns = columns?.length! > 5;
 
 	const { mutateAsync: create_row, status: create_row_status } =
@@ -74,18 +72,7 @@ const NewRow = React.forwardRef<
 
 		if (existEmpty) return;
 
-		const payload = new FormData();
-
-		for (const [key, value] of entries) {
-			const isArray = Array.isArray(value);
-			console.log(key, typeof value);
-
-			if (isArray) for (const v of value) payload.append(`${key}[]`, v);
-
-			if (!isArray) payload.append(key, value);
-		}
-
-		create_row({ data: payload, id: params?.id! });
+		create_row({ data, id: params?.id! });
 	});
 
 	return (

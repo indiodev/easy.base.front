@@ -1,3 +1,6 @@
+import MultipleSelector, {
+	Option,
+} from '@components/ui/expansion/multiple-selector';
 import {
 	FormControl,
 	FormField,
@@ -5,7 +8,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@components/ui/form';
-import MultipleSelector, { Option } from '@components/ui/multiple-selector';
 import { useFormContext } from 'react-hook-form';
 
 export function ColumnOptionField({
@@ -14,8 +16,6 @@ export function ColumnOptionField({
 	defaultValue?: Option[];
 }) {
 	const form = useFormContext();
-
-	console.log(defaultValue);
 
 	return (
 		<FormField

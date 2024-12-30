@@ -27,7 +27,6 @@ export default class TableService {
 	}
 
 	public async update({ _id, ...payload }: Partial<Table>): Promise<Table> {
-		console.log({ _id, ...payload });
 		const { data } = await API.put(`/tables/${_id}`, payload);
 		return data;
 	}

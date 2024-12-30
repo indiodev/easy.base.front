@@ -60,7 +60,6 @@ const EditField = React.forwardRef<
 	const { mutateAsync: update_column, status: update_column_status } =
 		useColumnUpdateMutation({
 			onSuccess(data) {
-				console.log({ data });
 				updateColumnFromTable(params.id!, data);
 
 				setSearchParams((state) => {
@@ -88,8 +87,6 @@ const EditField = React.forwardRef<
 			tableId: params.id!,
 		});
 	});
-
-	console.log(form.getValues());
 
 	React.useEffect(() => {
 		if (column?.config && column?.config) {

@@ -1,12 +1,12 @@
 import debounce from 'debounce-promise';
 
-import { Option } from '@components/ui/multiple-selector';
+import { Option } from '@components/ui/expansion/multiple-selector';
 import { Service } from '@services/index';
 
 export const USER_FIND_MANY_DEBOUNCE = debounce(
 	async (query: Partial<{ search: string }>): Promise<Option[]> => {
 		const users = await Service.user.list();
-		console.log({ query });
+		console.info({ query });
 
 		return users?.map((user) => {
 			return {

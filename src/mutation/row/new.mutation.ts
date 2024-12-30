@@ -6,7 +6,7 @@ import { Row } from '@models/row.model';
 import { Service } from '@services/index';
 
 type Payload = {
-	data: FormData;
+	data: unknown;
 	id: string;
 };
 async function mutator(payload: Payload): Promise<Row> {

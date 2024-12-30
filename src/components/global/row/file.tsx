@@ -3,7 +3,7 @@ import {
 	FileUploader,
 	FileUploaderContent,
 	FileUploaderItem,
-} from '@components/ui/file-upload';
+} from '@components/ui/extension/file-upload';
 import { FormField, FormItem, FormLabel } from '@components/ui/form';
 import { Column } from '@models/column.model';
 import { CloudUploadIcon, PaperclipIcon } from 'lucide-react';
@@ -17,13 +17,8 @@ export function FileField({
 	defaultValue?: unknown;
 }) {
 	const form = useFormContext();
-	console.log('defaultValue', defaultValue);
-	// form.setValue(
-	// 	String(column?.slug),
-	// 	defaultValue?.map((item) => ({
-	// 		name: item?.filename?.split('/').pop(),
-	// 	})),
-	// );
+	console.info({ defaultValue });
+
 	return (
 		<FormField
 			control={form.control}

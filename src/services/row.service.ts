@@ -8,7 +8,7 @@ export default class RowService {
 		id,
 		data: payload,
 	}: {
-		data: FormData;
+		data: unknown;
 		id: string;
 	}): Promise<Row> {
 		const { data } = await API.post(`/tables/${id}/row`, payload, {
@@ -25,7 +25,7 @@ export default class RowService {
 		id,
 		data: payload,
 	}: {
-		data: FormData;
+		data: unknown;
 		tableId: string;
 		id: string;
 	}): Promise<Row> {

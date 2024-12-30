@@ -93,18 +93,8 @@ const EditRow = React.forwardRef<
 
 		if (existEmpty) return;
 
-		const payload = new FormData();
-
-		for (const [key, value] of entries) {
-			const isArray = Array.isArray(value);
-
-			if (isArray) for (const v of value) payload.append(`${key}[]`, v);
-
-			if (!isArray) payload.append(key, value);
-		}
-
 		update_row({
-			data: payload,
+			data,
 			tableId: params?.id!,
 			id: row_id!,
 		});
@@ -209,13 +199,17 @@ const EditRow = React.forwardRef<
 									/>
 								);
 
-							if (column.type === COLUMN_TYPE.DROPDOWN)
+							if (column.type === COLUMN_TYPE.DROPDOWN) {
+								if (!defaultValue) defaultValue = [];
+
 								return (
 									<DropdownField
 										key={column._id}
 										column={column}
+										defaultValue={defaultValue}
 									/>
 								);
+							}
 
 							if (column.type === COLUMN_TYPE.SHORT_TEXT)
 								return (

@@ -1,6 +1,6 @@
 import debounce from 'debounce-promise';
 
-import { Option } from '@components/ui/multiple-selector';
+import { Option } from '@components/ui/expansion/multiple-selector';
 import { Service } from '@services/index';
 
 export const ROW_FIND_MANY_DEBOUNCE = debounce(
