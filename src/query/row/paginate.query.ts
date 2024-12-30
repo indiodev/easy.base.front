@@ -8,19 +8,14 @@ import { MetaResponse, QUERY, QueryParams } from '@models/base.model';
 import { Row } from '@models/row.model';
 import { Service } from '@services/index';
 
-async function fetcher(
-	query: QueryParams,
-): Promise<MetaResponse<Row['value'][]>> {
+async function fetcher(query: QueryParams): Promise<MetaResponse<Row[]>> {
 	return await Service.row.paginate(query);
 }
 
 export function useRowPaginateQuery({
 	id,
 	...query
-}: QueryParams): UseQueryResult<
-	MetaResponse<Row['value'][]>,
-	Error | AxiosError
-> {
+}: QueryParams): UseQueryResult<MetaResponse<Row[]>, Error | AxiosError> {
 	return useQuery({
 		queryKey: [QUERY.ROW_PAGINATE, id, query],
 		queryFn: () => fetcher({ ...query, id }),

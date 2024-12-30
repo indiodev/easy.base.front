@@ -24,6 +24,7 @@ interface MultiSelectorProps
 	values: string[];
 	onValuesChange: (value: string[]) => void;
 	loop?: boolean;
+	disabled?: boolean;
 }
 
 interface MultiSelectContextProps {
@@ -37,6 +38,7 @@ interface MultiSelectContextProps {
 	setActiveIndex: React.Dispatch<React.SetStateAction<number>>;
 	ref: React.RefObject<HTMLInputElement>;
 	handleSelect: (e: React.SyntheticEvent<HTMLInputElement>) => void;
+	disabled?: boolean;
 }
 
 const MultiSelectContext = createContext<MultiSelectContextProps | null>(null);
@@ -62,6 +64,7 @@ const MultiSelector = ({
 	className,
 	children,
 	dir,
+	disabled,
 	...props
 }: MultiSelectorProps) => {
 	const [inputValue, setInputValue] = useState('');
@@ -199,6 +202,7 @@ const MultiSelector = ({
 				setActiveIndex,
 				ref: inputRef,
 				handleSelect,
+				disabled,
 			}}
 		>
 			<Command
@@ -220,7 +224,7 @@ const MultiSelectorTrigger = forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => {
-	const { value, onValueChange, activeIndex } = useMultiSelect();
+	const { value, onValueChange, activeIndex, disabled } = useMultiSelect();
 
 	const mousePreventDefault = useCallback((e: React.MouseEvent) => {
 		e.preventDefault();
@@ -231,10 +235,11 @@ const MultiSelectorTrigger = forwardRef<
 		<div
 			ref={ref}
 			className={cn(
-				'flex flex-wrap gap-1 p-1 py-2 ring-1 ring-muted rounded-lg bg-background',
+				'flex flex-wrap gap-1 px-1 py-1.5 ring-1 ring-muted rounded-lg bg-background',
 				{
 					'ring-1 focus-within:ring-ring': activeIndex === -1,
 				},
+				disabled && 'opacity-50 cursor-not-allowed',
 				className,
 			)}
 			{...props}
@@ -294,7 +299,7 @@ const MultiSelectorInput = forwardRef<
 			onFocus={() => setOpen(true)}
 			onClick={() => setActiveIndex(-1)}
 			className={cn(
-				'ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1',
+				'ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1 disabled:cursor-not-allowed disabled:opacity-50',
 				className,
 				activeIndex !== -1 && 'caret-transparent',
 			)}

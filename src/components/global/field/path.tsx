@@ -18,9 +18,9 @@ import { useFormContext } from 'react-hook-form';
 export function PathField() {
 	const form = useFormContext();
 
-	const { findTableByCollection } = useTable();
+	const { findOneTableByCollection } = useTable();
 
-	const collection = findTableByCollection(
+	const collection = findOneTableByCollection(
 		form.watch('config.relation.collection'),
 	);
 

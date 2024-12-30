@@ -44,7 +44,7 @@ import {
 } from 'react-router-dom';
 import { Modal } from '../modal';
 interface Props {
-	rows: Row['value'][];
+	rows: Row[];
 }
 
 export function List({ rows }: Props): React.ReactElement {
@@ -60,8 +60,8 @@ export function List({ rows }: Props): React.ReactElement {
 	const removeRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 	const editRowButtonRef = React.useRef<HTMLButtonElement | null>(null);
 
-	const { findManyColumnByTableId } = useTable();
-	const columns = findManyColumnByTableId(params.id!);
+	const { findManyColumn } = useTable();
+	const columns = findManyColumn(params.id!);
 
 	const { mutateAsync: update_table } = useUserUpdateTableMutation({
 		onSuccess() {

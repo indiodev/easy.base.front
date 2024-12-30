@@ -4,25 +4,37 @@ import { MetaResponse, QUERY } from '@models/base.model';
 import { Column } from '@models/column.model';
 import { Row } from '@models/row.model';
 import { Table } from '@models/table.model';
+import { useTableListQuery } from '@query/table/list.query';
 import React from 'react';
 
-type FindTableColumnById = {
+type FinOneColumn = {
 	columnId: string;
 	tableId: string;
 };
 
-type FindTableRowById = { tableId: string; query: Record<string, any> };
+type FindManyRow = { tableId: string; query: Record<string, any> };
+type FindOneRow = {
+	tableId: string;
+	id: string;
+	query: Record<string, any>;
+};
 
 export interface TableContextType {
+	// TABLES
+	isPending: boolean;
+	isSuccess: boolean;
+	isError: boolean;
 	tables: Table[];
-	findTableById: (id: string) => Table | null;
-	findTableByCollection: (collection: string) => Table | null;
-	findOneColumn: (query: FindTableColumnById) => Column | null;
-	findManyColumnByTableId: (id: string) => Column[];
-	addColumnToTable: (tableId: string, column: Partial<Column>) => void;
-	updateColumnFromTable: (tableId: string, column: Partial<Column>) => void;
-	// findOneRow: (query: FindTableRowById) => Row['value'] | null;
-	findManyRowByTableId: (query: FindTableRowById) => Row['value'][];
+	findOneTable: (id: string) => Table | null;
+	findOneTableByCollection: (collection: string) => Table | null;
+	// COLUMNS
+	findOneColumn: (query: FinOneColumn) => Column | null;
+	findManyColumn: (id: string) => Column[];
+	addColumn: (tableId: string, column: Partial<Column>) => void;
+	updateColumn: (tableId: string, column: Partial<Column>) => void;
+	// ROWS
+	findManyRow: (query: FindManyRow) => Row[];
+	findOneRow: (query: FindOneRow) => Row | null;
 }
 
 export const TableContext = React.createContext<TableContextType | undefined>(
@@ -34,23 +46,30 @@ type TableContextProps = {
 };
 
 export const TableProvider = ({ children }: TableContextProps) => {
+	// TABLES
+	const { data: response, status } = useTableListQuery();
 	const [tables, setTables] = React.useState<Table[]>([]);
 
+	const isPending = status === 'pending';
+	const isSuccess = status === 'success';
+	const isError = status === 'error';
+
 	const loadTables = React.useCallback(() => {
-		const table_list = tanstack.getQueryData<Table[]>([QUERY.TABLE_LIST]);
-		return table_list ?? [];
-	}, []);
+		if (isPending) return [];
+		if (isError) return [];
+		return response ?? [];
+	}, [isError, isPending, response]);
 
 	const initialTables = React.useMemo(() => loadTables(), [loadTables]);
 
-	const findTableById = React.useCallback(
+	const findOneTable = React.useCallback(
 		(id: string) => {
 			return tables.find((table) => table._id === id) ?? null;
 		},
 		[tables],
 	);
 
-	const findTableByCollection = React.useCallback(
+	const findOneTableByCollection = React.useCallback(
 		(collection: string) => {
 			return (
 				tables.find((table) => table.data_collection === collection) ?? null
@@ -59,8 +78,10 @@ export const TableProvider = ({ children }: TableContextProps) => {
 		[tables],
 	);
 
+	// COLUMNS
+
 	const findOneColumn = React.useCallback(
-		(query: FindTableColumnById) => {
+		(query: FinOneColumn) => {
 			return (
 				tables
 					.find((table) => table._id === query.tableId)
@@ -70,14 +91,14 @@ export const TableProvider = ({ children }: TableContextProps) => {
 		[tables],
 	);
 
-	const findManyColumnByTableId = React.useCallback(
+	const findManyColumn = React.useCallback(
 		(id: string) => {
 			return tables.find((table) => table._id === id)?.columns ?? [];
 		},
 		[tables],
 	);
 
-	const addColumnToTable = React.useCallback(
+	const addColumn = React.useCallback(
 		(tableId: string, column: Partial<Column>) => {
 			const table = tables.find((table) => table._id === tableId) ?? null;
 			if (!table) return;
@@ -106,7 +127,7 @@ export const TableProvider = ({ children }: TableContextProps) => {
 		[tables],
 	);
 
-	const updateColumnFromTable = React.useCallback(
+	const updateColumn = React.useCallback(
 		(tableId: string, column: Partial<Column>) => {
 			const table = tables.find((table) => table._id === tableId) ?? null;
 			if (!table) return;
@@ -143,18 +164,29 @@ export const TableProvider = ({ children }: TableContextProps) => {
 		[tables],
 	);
 
-	const findManyRowByTableId = React.useCallback(
-		({ tableId, query }: FindTableRowById) => {
-			return (
-				tanstack.getQueryData<MetaResponse<Row['value'][]>>([
-					QUERY.ROW_PAGINATE,
-					tableId,
-					query,
-				])?.data ?? []
-			);
-		},
-		[],
-	);
+	// ROWS
+
+	const findManyRow = React.useCallback(({ tableId, query }: FindManyRow) => {
+		const rows = tanstack.getQueryData<MetaResponse<Row[]>>([
+			QUERY.ROW_PAGINATE,
+			tableId,
+			query,
+		])?.data;
+		return rows ?? [];
+	}, []);
+
+	const findOneRow = React.useCallback(({ tableId, id, query }: FindOneRow) => {
+		const rows =
+			tanstack.getQueryData<MetaResponse<Row[]>>([
+				QUERY.ROW_PAGINATE,
+				tableId,
+				query,
+			])?.data ?? [];
+
+		const row = rows?.find((row) => row._id === id);
+		console.info({ rows, row, query, tableId });
+		return row ?? null;
+	}, []);
 
 	React.useEffect(() => {
 		setTables(initialTables);
@@ -163,14 +195,21 @@ export const TableProvider = ({ children }: TableContextProps) => {
 	return (
 		<TableContext.Provider
 			value={{
+				// TABLES
 				tables,
-				findTableById,
-				findTableByCollection,
+				isPending,
+				isSuccess,
+				isError,
+				findOneTable,
+				findOneTableByCollection,
+				// COLUMNS
 				findOneColumn,
-				findManyColumnByTableId,
-				addColumnToTable,
-				updateColumnFromTable,
-				findManyRowByTableId,
+				findManyColumn,
+				addColumn,
+				updateColumn,
+				// ROWS
+				findManyRow,
+				findOneRow,
 			}}
 		>
 			{children}

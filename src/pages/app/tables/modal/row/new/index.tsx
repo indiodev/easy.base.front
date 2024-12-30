@@ -37,8 +37,8 @@ const NewRow = React.forwardRef<
 	const params = useParams();
 	const { query } = useQueryStore();
 
-	const { findManyColumnByTableId } = useTable();
-	const columns = findManyColumnByTableId(params.id!);
+	const { findManyColumn } = useTable();
+	const columns = findManyColumn(params.id!);
 
 	const hasMoreThanFiveColumns = columns?.length! > 5;
 

@@ -44,13 +44,16 @@ const EditRow = React.forwardRef<
 
 	const row_id = searchParams.get('row_id');
 
-	const { findManyColumnByTableId, findManyRowByTableId } = useTable();
-	const columns = findManyColumnByTableId(params.id!);
-	const rows = findManyRowByTableId({ tableId: params.id!, query });
+	const { findManyColumn, findOneRow } = useTable();
+	const columns = findManyColumn(params.id!);
 
 	const hasMoreThanFiveColumns = columns?.length! > 5;
 
-	const row = rows?.find((row) => row._id === row_id);
+	const row = findOneRow({
+		id: row_id!,
+		query,
+		tableId: params.id!,
+	});
 
 	const [open, setOpen] = React.useState(false);
 

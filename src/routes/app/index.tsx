@@ -1,3 +1,4 @@
+import { TableProvider } from '@context/table.context';
 import { Layout } from '@layouts/index';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -56,7 +57,11 @@ export function Router(): React.ReactElement {
 		<Routes>
 			<Route
 				path="app/*"
-				element={<Layout.App />}
+				element={
+					<TableProvider>
+						<Layout.App />
+					</TableProvider>
+				}
 			>
 				<Route
 					path="dashboard/*"

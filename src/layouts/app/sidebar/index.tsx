@@ -19,21 +19,11 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from '@components/ui/sidebar';
+import { MENU } from '@libs/menu';
 import { cn } from '@libs/utils';
 import { useUserProfileQuery } from '@query/user/profile.query';
 import { AuthStore } from '@store/auth.store';
-import {
-	ChevronsLeft,
-	ChevronsRight,
-	ChevronUp,
-	Home,
-	Inbox,
-	LayoutGrid,
-	LogOut,
-	Settings,
-	User,
-	Users,
-} from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, ChevronUp, LogOut } from 'lucide-react';
 import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from '../modal';
@@ -90,102 +80,80 @@ export function Sidebar() {
 				<SidebarContent className="bg-blue-50/50">
 					<SidebarGroup>
 						<SidebarMenu>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									asChild
-									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-									isActive={location.pathname === '/app/dashboard'}
-								>
-									<NavLink to="/app/dashboard">
-										<Home className="h-5 w-5 text-neutral-600" />
-										<span className="text-lg text-neutral-600">Inicio</span>
-									</NavLink>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-						</SidebarMenu>
+							{MENU.APP.SIDEBAR.map((menu) => {
+								const KEY = `${menu.pathname}` as const;
+								const hasNotification = menu.pathname === '/app/notifications';
 
-						<Separator className="mt-1 mb-1" />
+								return (
+									<React.Fragment key={KEY}>
+										<SidebarMenuItem>
+											<SidebarMenuButton
+												asChild
+												className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+												isActive={location.pathname === menu.pathname}
+												onClick={() => {
+													if (isMobile) {
+														toggleSidebar();
+														return;
+													}
+												}}
+											>
+												<NavLink to={menu.pathname}>
+													<menu.icon className="h-5 w-5 text-foreground" />
+													<span className="text-lg text-foreground">
+														{menu.label}
+													</span>
+												</NavLink>
+											</SidebarMenuButton>
+											{hasNotification && (
+												<SidebarMenuBadge className="border h-8 min-w-6 peer-hover/menu-button:text-white peer-data-[active=true]/menu-button:text-white bg-blue-400 text-white">
+													24
+												</SidebarMenuBadge>
+											)}
+										</SidebarMenuItem>
+										{menu?.hasSeparator && <Separator className="mt-1 mb-1" />}
+									</React.Fragment>
+								);
+							})}
+						</SidebarMenu>
 
 						<Tables onClick={() => newTableButtonRef?.current?.click()} />
 
-						<Separator className="mt-1 mb-1" />
-
 						<SidebarMenu>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									asChild
-									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-									isActive={location.pathname === '/app/forms'}
-								>
-									<NavLink to="/app/forms">
-										<LayoutGrid className="h-5 w-5 text-neutral-600" />
-										<span className="text-lg text-neutral-600">
-											Formulários
-										</span>
-									</NavLink>
-								</SidebarMenuButton>
-							</SidebarMenuItem>
-							<SidebarMenuItem>
-								<SidebarMenuButton
-									asChild
-									className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-									isActive={location.pathname === '/app/notifications'}
-								>
-									<NavLink to="/app/notifications">
-										<Inbox className="h-5 w-5 text-neutral-600" />
-										<span className="text-lg text-neutral-600">
-											Notificações
-										</span>
-									</NavLink>
-								</SidebarMenuButton>
-								<SidebarMenuBadge className="border h-8 min-w-6 peer-hover/menu-button:text-white peer-data-[active=true]/menu-button:text-white bg-blue-400 text-white">
-									24
-								</SidebarMenuBadge>
-							</SidebarMenuItem>
-
 							{(isMobile || !open) && (
 								<React.Fragment>
-									<SidebarMenuItem>
-										<SidebarMenuButton
-											asChild
-											className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-											isActive={location.pathname === '/app/users'}
-										>
-											<NavLink to="/app/users">
-												<Users className="h-5 w-5 text-neutral-600" />
-												<span className="text-lg text-neutral-600">
-													Usuários
-												</span>
-											</NavLink>
-										</SidebarMenuButton>
-									</SidebarMenuItem>
-									<SidebarMenuItem>
-										<SidebarMenuButton
-											asChild
-											className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-											isActive={location.pathname === '/app/settings'}
-										>
-											<NavLink to="/app/settings">
-												<Settings className="h-5 w-5 text-neutral-600" />
-												<span className="text-lg text-neutral-600">
-													Configurações
-												</span>
-											</NavLink>
-										</SidebarMenuButton>
-									</SidebarMenuItem>
+									<Separator className="mt-1 mb-1" />
 
-									<SidebarMenuItem>
-										<SidebarMenuButton
-											asChild
-											className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
-											isActive={location.pathname === '/app/profile'}
-										>
-											<NavLink to="/app/profile">
-												<User className="h-5 w-5 text-neutral-600" />
-												<span className="text-lg text-neutral-600">Perfil</span>
-											</NavLink>
-										</SidebarMenuButton>
-									</SidebarMenuItem>
+									{MENU?.APP?.DROPDOWN?.map((menu) => {
+										const KEY = `${menu.pathname}` as const;
+										return (
+											<React.Fragment key={KEY}>
+												<SidebarMenuItem>
+													<SidebarMenuButton
+														asChild
+														className="py-6 [&[data-active=true]]:bg-blue-400 [&[data-active=true]>span]:text-white [&[data-active=true]>svg]:text-white"
+														isActive={location.pathname === menu.pathname}
+														onClick={() => {
+															if (isMobile) {
+																toggleSidebar();
+																return;
+															}
+														}}
+													>
+														<NavLink to={menu.pathname}>
+															<menu.icon className="h-5 w-5 text-foreground" />
+															<span className="text-lg text-foreground">
+																{menu.label}
+															</span>
+														</NavLink>
+													</SidebarMenuButton>
+												</SidebarMenuItem>
+												{menu?.hasSeparator && (
+													<Separator className="mt-1 mb-1" />
+												)}
+											</React.Fragment>
+										);
+									})}
 
 									<SidebarMenuItem>
 										<SidebarMenuButton
@@ -248,39 +216,25 @@ export function Sidebar() {
 										side="top"
 										className="w-[--radix-popper-anchor-width] bg-blue-500"
 									>
-										<DropdownMenuItem asChild>
-											<NavLink
-												to="/app/profile"
-												className="space-x-1 group"
-											>
-												<User className="h-5 w-5 text-white group-hover:text-blue-500" />
-												<span className="text-lg text-white group-hover:text-blue-500">
-													Perfil
-												</span>
-											</NavLink>
-										</DropdownMenuItem>
-										<DropdownMenuItem asChild>
-											<NavLink
-												to="/app/users"
-												className="space-x-1 group"
-											>
-												<User className="h-5 w-5 text-white group-hover:text-blue-500" />
-												<span className="text-lg text-white group-hover:text-blue-500">
-													Usuários
-												</span>
-											</NavLink>
-										</DropdownMenuItem>
-										<DropdownMenuItem asChild>
-											<NavLink
-												to="/app/settings"
-												className="space-x-1 group"
-											>
-												<Settings className="h-5 w-5 text-white group-hover:text-blue-500" />
-												<span className="text-lg text-white group-hover:text-blue-500">
-													Configurações
-												</span>
-											</NavLink>
-										</DropdownMenuItem>
+										{MENU.APP.DROPDOWN.map((menu) => {
+											const KEY = `${menu.pathname}` as const;
+											return (
+												<DropdownMenuItem
+													asChild
+													key={KEY}
+												>
+													<NavLink
+														to={menu.pathname}
+														className="space-x-1 group"
+													>
+														<menu.icon className="h-5 w-5 text-white group-hover:text-foreground" />
+														<span className="text-lg text-white group-hover:text-foreground">
+															{menu.label}
+														</span>
+													</NavLink>
+												</DropdownMenuItem>
+											);
+										})}
 										<DropdownMenuItem asChild>
 											<SidebarMenuButton
 												className="py-5 group"

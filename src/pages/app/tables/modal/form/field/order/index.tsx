@@ -25,9 +25,9 @@ const FormFieldOrder = React.forwardRef<
 	const params = useParams();
 	const [open, setOpen] = React.useState(false);
 
-	const { findManyColumnByTableId } = useTable();
+	const { findManyColumn } = useTable();
 
-	const columns = findManyColumnByTableId(params.id!);
+	const columns = findManyColumn(params.id!);
 
 	const { mutateAsync: update_table, status: update_table_status } =
 		useUserUpdateTableMutation({

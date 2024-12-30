@@ -49,9 +49,9 @@ const EditTable = React.forwardRef<
 	const [open, setOpen] = React.useState(false);
 	const params = useParams();
 
-	const { findTableById } = useTable();
+	const { findOneTable } = useTable();
 
-	const table = findTableById(params.id!);
+	const table = findOneTable(params.id!);
 
 	const [fileImage, setFileImage] = React.useState<string | undefined>();
 

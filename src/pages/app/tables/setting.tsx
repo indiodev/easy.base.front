@@ -45,8 +45,8 @@ export const Setting = React.forwardRef<
 		new URLSearchParams(location?.search),
 	);
 
-	const { findManyColumnByTableId } = useTable();
-	const columns = findManyColumnByTableId(params.id!);
+	const { findManyColumn } = useTable();
+	const columns = findManyColumn(params.id!);
 
 	return (
 		<React.Fragment>

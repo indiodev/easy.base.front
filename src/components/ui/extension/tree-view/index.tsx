@@ -4,13 +4,7 @@ import { cn } from '@libs/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React, { forwardRef, useCallback, useRef } from 'react';
 import useResizeObserver from 'use-resize-observer';
-import {
-	CollapseButton,
-	File,
-	Folder,
-	Tree,
-	TreeViewElement,
-} from './tree-view-api';
+import { CollapseButton, File, Folder, Tree, TreeViewElement } from './api';
 
 // TODO: Add the ability to add custom icons
 

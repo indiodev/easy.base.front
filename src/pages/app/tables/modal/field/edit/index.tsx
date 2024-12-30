@@ -46,7 +46,7 @@ const EditField = React.forwardRef<
 		new URLSearchParams(location?.search),
 	);
 
-	const { findOneColumn, updateColumnFromTable } = useTable();
+	const { findOneColumn, updateColumn } = useTable();
 
 	const column = findOneColumn({
 		tableId: params.id!,
@@ -60,7 +60,7 @@ const EditField = React.forwardRef<
 	const { mutateAsync: update_column, status: update_column_status } =
 		useColumnUpdateMutation({
 			onSuccess(data) {
-				updateColumnFromTable(params.id!, data);
+				updateColumn(params.id!, data);
 
 				setSearchParams((state) => {
 					state.delete('field_id');

@@ -36,8 +36,8 @@ export function Tables(): React.ReactElement {
 
 	const { query, merge, filter } = useQueryStore();
 
-	const { findTableById } = useTable();
-	const table = findTableById(params.id!);
+	const { findOneTable } = useTable();
+	const table = findOneTable(params.id!);
 
 	const { data: row_paginate, status: row_paginate_status } =
 		useRowPaginateQuery({

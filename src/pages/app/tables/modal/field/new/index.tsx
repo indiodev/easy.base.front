@@ -46,12 +46,12 @@ const NewField = React.forwardRef<
 		resolver: zodResolver(Schema),
 	});
 
-	const { addColumnToTable } = useTable();
+	const { addColumn } = useTable();
 
 	const { mutateAsync: create_column, status: create_column_status } =
 		useColumnCreateMutation({
 			onSuccess(data) {
-				addColumnToTable(params.id!, data);
+				addColumn(params.id!, data);
 				form.reset();
 				setOpen((state) => !state);
 			},

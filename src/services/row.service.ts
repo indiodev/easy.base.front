@@ -48,7 +48,7 @@ export default class RowService {
 	public async paginate({
 		id,
 		...query
-	}: QueryParams): Promise<MetaResponse<Row['value'][]>> {
+	}: QueryParams): Promise<MetaResponse<Row[]>> {
 		const { data } = await API.get(`/tables/${id}/row/paginate`, {
 			params: {
 				...query,

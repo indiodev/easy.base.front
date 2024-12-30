@@ -34,8 +34,8 @@ export function Filter() {
 		merge(payload);
 	});
 
-	const { findManyColumnByTableId } = useTable();
-	const columns = findManyColumnByTableId(params.id!);
+	const { findManyColumn } = useTable();
+	const columns = findManyColumn(params.id!);
 
 	return (
 		<Form {...form}>
