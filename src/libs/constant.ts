@@ -39,6 +39,10 @@ export const COLUMN_TYPE_LIST: { type: COLUMN_TYPE; label: string }[] = [
 		label: 'Avaliação (Curtidas)',
 		type: COLUMN_TYPE.LIKE,
 	},
+	{
+		label: 'Árvore',
+		type: COLUMN_TYPE.TREE,
+	},
 ];
 
 export const COLUMN_TEXT_SHORT_FORMAT_LIST = [

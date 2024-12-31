@@ -5,6 +5,12 @@ import { MultiRelationalField } from '@components/global/row/multi-relational';
 import { RelationalField } from '@components/global/row/relational';
 import { ShortTextField } from '@components/global/row/short-text';
 import { Button } from '@components/ui/button';
+import {
+	CollapseButton,
+	Item,
+	SubItem,
+	Tree,
+} from '@components/ui/extension/tree-view/api';
 import { Form } from '@components/ui/form';
 import { useQueryStore } from '@hooks/use-query';
 import { useTable } from '@hooks/use-table';
@@ -36,6 +42,52 @@ export function Filter() {
 
 	const { findManyColumn } = useTable();
 	const columns = findManyColumn(params.id!);
+
+	const elements = [
+		{
+			id: '1',
+			isSelectable: true,
+			name: 'Categoria Principal',
+			children: [
+				{
+					id: '2',
+					isSelectable: true,
+					name: 'app.tsx',
+				},
+				{
+					id: '3',
+					isSelectable: true,
+					name: 'components',
+					children: [
+						{
+							id: '20',
+							isSelectable: true,
+							name: 'pages',
+							children: [
+								{
+									id: '21',
+									isSelectable: true,
+									name: 'interface.ts',
+								},
+							],
+						},
+					],
+				},
+				{
+					id: '6',
+					isSelectable: true,
+					name: 'ui',
+					children: [
+						{
+							id: '7',
+							isSelectable: true,
+							name: 'carousel.tsx',
+						},
+					],
+				},
+			],
+		},
+	];
 
 	return (
 		<Form {...form}>
@@ -99,6 +151,43 @@ export function Filter() {
 								/>
 							);
 					})}
+
+					<Tree
+						className="rounded-md h-60 bg-background overflow-hidden p-2"
+						// initialSelectedId="21"
+						// elements={elements}
+					>
+						<Item
+							element="Categoria Principal"
+							value="1"
+						>
+							<SubItem value="2">
+								<p> app.tsx </p>
+							</SubItem>
+							<Item
+								value="3"
+								element="components"
+							>
+								<Item
+									value="20"
+									element="pages"
+								>
+									<SubItem value="21">
+										<p>interface.ts</p>
+									</SubItem>
+								</Item>
+							</Item>
+							<Item
+								value="6"
+								element="ui"
+							>
+								<SubItem value="7">
+									<p>carousel.tsx</p>
+								</SubItem>
+							</Item>
+						</Item>
+						<CollapseButton elements={elements} />
+					</Tree>
 
 					<Button className="bg-blue-600 hover:bg-blue-500">Pesquisar</Button>
 				</form>

@@ -23,6 +23,7 @@ import {
 	ShortTextFormatField,
 } from '@components/global/field/short-text';
 import { TitleField } from '@components/global/field/title';
+import { TreeField } from '@components/global/field/tree';
 import { TypeField } from '@components/global/field/type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTable } from '@hooks/use-table';
@@ -85,7 +86,7 @@ const NewField = React.forwardRef<
 				ref={ref}
 				{...props}
 			/>
-			<DialogContent className="py-4 px-6 max-w-3xl w-full overflow-hidden max-h-[720px] h-full">
+			<DialogContent className="py-4 px-6 max-w-4xl w-full overflow-hidden max-h-[720px] h-full overflow-y-auto">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-medium">
 						Adicionar nova coluna
@@ -103,6 +104,8 @@ const NewField = React.forwardRef<
 					>
 						<TitleField />
 						<TypeField />
+
+						{form.watch('type') === COLUMN_TYPE.TREE && <TreeField />}
 
 						{form.watch('type') === COLUMN_TYPE.DROPDOWN && (
 							<ColumnOptionField />
@@ -149,7 +152,10 @@ const NewField = React.forwardRef<
 							<Button
 								className="bg-blue-600 hover:bg-blue-500"
 								type="submit"
-								disabled={create_column_status === 'pending'}
+								// disabled={
+								// 	create_column_status === 'pending' || !form.formState.isValid
+								// }
+								disabled
 							>
 								{create_column_status === 'pending' && (
 									<LoaderCircle className="w-6 h-6 animate-spin" />

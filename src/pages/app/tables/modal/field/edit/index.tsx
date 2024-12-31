@@ -24,6 +24,7 @@ import {
 	ShortTextFormatField,
 } from '@components/global/field/short-text';
 import { TitleField } from '@components/global/field/title';
+import { TreeField } from '@components/global/field/tree';
 import { TypeField } from '@components/global/field/type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTable } from '@hooks/use-table';
@@ -136,6 +137,8 @@ const EditField = React.forwardRef<
 					>
 						<TitleField defaultValue={column?.title} />
 						<TypeField defaultValue={column?.type} />
+
+						{form.watch('type') === COLUMN_TYPE.TREE && <TreeField />}
 
 						{form.watch('type') === COLUMN_TYPE.DROPDOWN && (
 							<ColumnOptionField defaultValue={column?.config?.options} />

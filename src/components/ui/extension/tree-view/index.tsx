@@ -4,7 +4,7 @@ import { cn } from '@libs/utils';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React, { forwardRef, useCallback, useRef } from 'react';
 import useResizeObserver from 'use-resize-observer';
-import { CollapseButton, File, Folder, Tree, TreeViewElement } from './api';
+import { CollapseButton, File, Item, Tree, TreeViewElement } from './api';
 
 // TODO: Add the ability to add custom icons
 
@@ -106,18 +106,30 @@ export const TreeItem = forwardRef<
 						className="w-full"
 					>
 						{element.children && element.children?.length > 0 ? (
-							<Folder
+							// <Folder
+							// 	element={element.name}
+							// 	value={element.id}
+							// 	isSelectable={element.isSelectable}
+							// >
+							// 	<TreeItem
+							// 		key={element.id}
+							// 		aria-label={`folder ${element.name}`}
+							// 		elements={element.children}
+							// 		indicator={indicator}
+							// 	/>
+							// </Folder>
+							<Item
 								element={element.name}
 								value={element.id}
 								isSelectable={element.isSelectable}
 							>
 								<TreeItem
 									key={element.id}
-									aria-label={`folder ${element.name}`}
+									aria-label={`item tree ${element.name}`}
 									elements={element.children}
 									indicator={indicator}
 								/>
-							</Folder>
+							</Item>
 						) : (
 							<File
 								value={element.id}

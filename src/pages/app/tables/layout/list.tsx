@@ -191,9 +191,7 @@ export function List({ rows }: Props): React.ReactElement {
 													{first?.[slug_relation] || 'N/A'}
 												</Badge>
 												{rest?.length > 0 && (
-													<Badge variant="outline">
-														+{rest?.length} {col?.title}
-													</Badge>
+													<Badge variant="outline">+{rest?.length}</Badge>
 												)}
 											</TableCell>
 										);

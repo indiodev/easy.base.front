@@ -27,6 +27,7 @@ export enum COLUMN_TYPE {
 	MULTI_RELATIONAL = 'MULTI_RELATIONAL',
 	LIKE = 'LIKE',
 	RATING = 'RATING',
+	TREE = 'TREE',
 }
 
 export enum COLUMN_FORMAT {
