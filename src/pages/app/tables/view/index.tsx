@@ -1,16 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Loading } from '@components/loading';
+import { Badge } from '@components/ui/badge';
 import { Button } from '@components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
-import {
-	MultiSelector,
-	MultiSelectorContent,
-	MultiSelectorInput,
-	MultiSelectorItem,
-	MultiSelectorList,
-	MultiSelectorTrigger,
-} from '@components/ui/extension/multi-select';
-import { Label } from '@components/ui/label';
-import { Textarea } from '@components/ui/textarea';
 import { useTable } from '@hooks/use-table';
 import { COLUMN_TYPE } from '@models/base.model';
 import { useRowShowQuery } from '@query/row/show.query';
@@ -78,7 +70,7 @@ export function View(): React.ReactElement {
 		<section className="bg-slate-50 flex-1 flex-col space-y-4 p-6">
 			<Header />
 
-			<div className="grid grid-cols-2 gap-10">
+			<div className="grid grid-cols-2 gap-4">
 				{columns?.map((column) => {
 					const KEY = column?._id;
 					if (column?.type === COLUMN_TYPE.SHORT_TEXT) {
@@ -90,7 +82,7 @@ export function View(): React.ReactElement {
 								<CardHeader className="p-3">
 									<CardTitle>{column?.title}</CardTitle>
 								</CardHeader>
-								<CardContent className="p-3">
+								<CardContent className="px-3 pb-2 pt-0 opacity-70">
 									<p>{row[column.slug!]}</p>
 								</CardContent>
 							</Card>
@@ -99,60 +91,86 @@ export function View(): React.ReactElement {
 
 					if (column?.type === COLUMN_TYPE.LONG_TEXT) {
 						return (
-							<div className="flex flex-col space-y-2">
-								<Label>{column.title}</Label>
-								<Textarea
-									key={column._id}
-									value={row[column.slug!]}
-									disabled
-								></Textarea>
-							</div>
+							<Card
+								key={KEY}
+								className="p-0"
+							>
+								<CardHeader className="p-3">
+									<CardTitle>{column?.title}</CardTitle>
+								</CardHeader>
+								<CardContent className="px-3 pb-2 pt-0 opacity-70">
+									<p>{row[column.slug!]}</p>
+								</CardContent>
+							</Card>
 						);
 					}
 
 					if (column?.type === COLUMN_TYPE?.DROPDOWN) {
 						return (
-							<div className="flex flex-col">
-								<Label>{column.title}</Label>
-								<MultiSelector
-									values={row[column.slug!]}
-									onValuesChange={() => {
-										console.log('change');
-									}}
-									loop
-									disabled
-									// className="cursor-not-allowed"
-								>
-									<MultiSelectorTrigger>
-										<MultiSelectorInput
-											// placeholder="Select your framework"
-											disabled
-											className="p-0"
-										/>
-									</MultiSelectorTrigger>
-									<MultiSelectorContent>
-										<MultiSelectorList>
-											{column?.config?.options?.map((option) => (
-												<MultiSelectorItem
-													key={option.value}
-													value={option.value}
-												>
-													{option.value}
-												</MultiSelectorItem>
-											))}
-										</MultiSelectorList>
-									</MultiSelectorContent>
-								</MultiSelector>
-							</div>
+							<Card
+								key={KEY}
+								className="p-0"
+							>
+								<CardHeader className="p-3">
+									<CardTitle>{column?.title}</CardTitle>
+								</CardHeader>
+								<CardContent className="px-3 pb-2 pt-0 opacity-70 flex gap-2">
+									{((row[column.slug!] ?? []) as string[]).map(
+										(item: string) => (
+											<Badge
+												variant="outline"
+												key={item}
+											>
+												{item}
+											</Badge>
+										),
+									)}
+								</CardContent>
+							</Card>
 						);
 					}
 
 					if (column?.type === COLUMN_TYPE.RELATIONAL) {
-						console.log(row[column.slug!]);
+						const relation_slug = column.config!.relation!.slug;
+
+						const value = row[column.slug!];
 						return (
-							<div className="flex flex-col">
-								<Label>{column.title}</Label>
-							</div>
+							<Card
+								key={KEY}
+								className="p-0"
+							>
+								<CardHeader className="p-3">
+									<CardTitle>{column?.title}</CardTitle>
+								</CardHeader>
+								<CardContent className="px-3 pb-2 pt-0 opacity-70 flex gap-2">
+									<p>{value[relation_slug!]}</p>
+								</CardContent>
+							</Card>
+						);
+					}
+
+					if (column?.type === COLUMN_TYPE.MULTI_RELATIONAL) {
+						const relation_slug = column.config!.relation!.slug;
+						const values = row[column.slug!] as Record<string, any>[];
+						return (
+							<Card
+								key={KEY}
+								className="p-0"
+							>
+								<CardHeader className="p-3">
+									<CardTitle>{column?.title}</CardTitle>
+								</CardHeader>
+								<CardContent className="px-3 pb-2 pt-0 opacity-70 flex gap-2">
+									{values.map((item) => (
+										<Badge
+											variant="outline"
+											key={item._id!}
+										>
+											{item[relation_slug!]}
+										</Badge>
+									))}
+								</CardContent>
+							</Card>
 						);
 					}
 				})}
